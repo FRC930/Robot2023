@@ -13,9 +13,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
+import frc.robot.Utilities.SwerveModuleConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -30,11 +28,23 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+
+     /* Modules */
+     public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 259.980);
+     public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, 233.877);
+     public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 0, 0, 71.895);
+     public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 143.965);
+     
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
+
+    public static final int kDriverControllerPort = 0;
+  
+    
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_driverController = new XboxController(kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,10 +82,10 @@ public class RobotContainer {
     // Create config for trajectory
     TrajectoryConfig config =
         new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
+                DriveSubsystem.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
+            .setKinematics(DriveSubsystem.kDriveKinematics);
 
     // An example trajectory to follow.  All units in meters.
     Trajectory exampleTrajectory =
@@ -97,7 +107,7 @@ public class RobotContainer {
         new SwerveControllerCommand(
             exampleTrajectory,
             m_robotDrive::getPose, // Functional interface to feed supplier
-            DriveConstants.kDriveKinematics,
+            DriveSubsystem.kDriveKinematics,
 
             // Position controllers
             new PIDController(AutoConstants.kPXController, 0, 0),
