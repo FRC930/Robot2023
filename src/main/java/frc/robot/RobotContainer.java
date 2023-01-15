@@ -119,18 +119,6 @@ public class RobotContainer {
             //TODO REMOVE? AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    // SwerveControllerCommand swerveControllerCommand =
-    // new SwerveControllerCommand(
-    //     exampleTrajectory,
-    //     m_robotDrive::getPose, // Functional interface to feed supplier
-    //     DriveSubsystem.kDriveKinematics,
-
-    //     // Position controllers
-    //     new PIDController(kPXController, 0, 0),//TODO REMOVE? AutoConstants.kPXController, 0, 0),
-    //     new PIDController(kPYController, 0, 0),//TODO REMOVE? AutoConstants.kPYController, 0, 0),
-    //     thetaController,
-    //     m_robotDrive::setModuleStates,
-    //     m_robotDrive);
     SwerveControllerCommand swerveControllerCommand =
         new SwerveControllerCommand(
             exampleTrajectory,
