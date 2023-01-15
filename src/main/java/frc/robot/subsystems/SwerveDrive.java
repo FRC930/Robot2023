@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.SwerveModuleConstants;
 
 
-import org.littletonrobotics.junction.Logger;
+// import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
         public static final double kTrackWidth = Units.inchesToMeters(24.0);//0.5;
@@ -212,7 +212,7 @@ private SwerveModulePosition[] mSwerveModPositions;
     m_pigeon.getSimCollection().setRawHeading(-Units.radiansToDegrees(m_simYaw));
 
         // Log odometry pose
-   Logger.getInstance().recordOutput("Odometry/Robot", m_odometry.getPoseMeters());
+  //  Logger.getInstance().recordOutput("Odometry/Robot", m_odometry.getPoseMeters());
 
   }
 
