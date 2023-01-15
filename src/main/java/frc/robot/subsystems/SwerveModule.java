@@ -16,6 +16,9 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.REVPhysicsSim;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -26,15 +29,26 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
-import frc.robot.Utilities.SwerveModuleConstants;
+
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.CtreUtils;
+import frc.robot.utilities.RevUtils;
+import frc.robot.utilities.SwerveModuleConstants;
 
 
-public class SwerveModule {
+public class SwerveModule extends SubsystemBase {
+  private final int POS_SLOT = 0;
+  private final int VEL_SLOT = 1;
+  private final int SIM_SLOT = 2;
 
-  public static final double kWheelDiameterMeters = 0.15;
+  public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(18); // TODO is this right?
+  
+  // TODO Verify values
+  public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);//0.15;
   public static final double kMaxModuleAngularSpeedRadiansPerSecond = 2 * Math.PI;
   public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 2 * Math.PI;
   public static final double ksDriveVoltSecondsPerMeter = 0.667 / 12;
@@ -42,6 +56,7 @@ public class SwerveModule {
   public static final double kaDriveVoltSecondsSquaredPerMeter = 0.27 / 12;
   public static final double kvTurnVoltSecondsPerRadian = 1.47; // originally 1.5
   public static final double kaTurnVoltSecondsSquaredPerRadian = 0.348; // originally 0.3
+  // TODO Verify values
   public static final double kDriveMotorGearRatio = 6.12;
   public static final double kTurningMotorGearRatio = 12.8;
   public static final int kNeoCPR = 42;
@@ -58,17 +73,21 @@ public class SwerveModule {
   public static final double kPModuleDriveController = 1;
 
   public static final boolean invertGyro = false;
-  public static final double trackWidth = Units.inchesToMeters(23);
-  public static final double wheelBase = Units.inchesToMeters(23);
+  public static final double trackWidth = Units.inchesToMeters(24);
+  public static final double wheelBase = Units.inchesToMeters(26);
   
   private final PIDController m_drivePIDController =
       new PIDController(kPModuleDriveController, 0, 0);
 
   private CANSparkMax m_driveMotor;
   private CANSparkMax m_turningMotor;
-  private CANCoder m_moduleEncoder;
+  private CANCoder m_angleEncoder;
+
+  public final RelativeEncoder m_driveEncoder;
+  private final RelativeEncoder m_turnEncoder;
+  
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ksDriveVoltSecondsPerMeter, kaDriveVoltSecondsSquaredPerMeter, kvDriveVoltSecondsSquaredPerMeter);
-private final ProfiledPIDController m_turningProfiledPIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 2 * Math.PI))
+private final ProfiledPIDController m_turningProfiledPIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 2 * Math.PI));
 
   // Using a TrapezoidProfile PIDController to allow for smooth turning
   private final ProfiledPIDController m_turningPIDController =
@@ -84,19 +103,34 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
     new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
     new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-    new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));  
+    new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
   
+
   public SwerveDriveOdometry swerveOdometry;
-  public SwerveModule[] mSwerveMods;
-  public SwerveModulePosition[] mSwerveModPositions;
-  public Pigeon2 gyro;
-  public PIDController autoXController;
-  public PIDController autoYController;
-  public PIDController autoThetaController;
-  public SwerveModule swerveModule1;
-  public SwerveModule swerveModule2;
-  public SwerveModule swerveModule3;
-  public SwerveModule swerveModule4;
+  // TODO REMOVE? public SwerveModule[] mSwerveMods;
+  // TODO REMOVE? public SwerveModulePosition[] mSwerveModPositions;
+  // public Pigeon2 gyro;  // TODO WHY IN HERE
+
+  //TODO are these used???
+  // public PIDController autoXController;
+  // public PIDController autoYController;
+  // public PIDController autoThetaController;
+
+  private double m_angleOffset;
+
+  private final SparkMaxPIDController m_driveController;
+  private SparkMaxPIDController m_turnController;
+
+  double m_currentAngle;
+  double m_lastAngle;
+
+  private double m_simDriveEncoderPosition;
+  private double m_simDriveEncoderVelocity;
+  private double m_simAngleDifference;
+  private double m_simTurnAngleIncrement;
+  private int m_moduleNumber;
+  private Pose2d m_pose;
+
   /**
    * Constructs a SwerveModule.
    *
@@ -108,32 +142,51 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
    * @param turningEncoderReversed Whether the turning encoder is reversed.
    */
   public SwerveModule(SwerveModuleConstants swerveModuleConstants) { 
-    m_driveMotor = new CANSparkMax(swerveModuleConstants.driveEncoderChannel, CANSparkMaxLowLevel.MotorType.kBrushed);
-    m_turningMotor = new CANSparkMax(swerveModuleConstants.turningEncoderChannel, CANSparkMaxLowLevel.MotorType.kBrushed);
+    m_driveMotor = new CANSparkMax(swerveModuleConstants.driveMotorChannel, CANSparkMaxLowLevel.MotorType.kBrushless);
+    m_turningMotor = new CANSparkMax(swerveModuleConstants.turningMotorChannel, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    m_moduleEncoder = new CANCoder(swerveModuleConstants.cancoderID);
+    m_angleEncoder = new CANCoder(swerveModuleConstants.cancoderID, "rio"); // TODO CanBUS Pass in
+    m_angleOffset = swerveModuleConstants.angleOffset;
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveMotor.restoreFactoryDefaults();
-    setDriveMotorConfig(m_driveMotor);
+    RevUtils.setDriveMotorConfig(m_driveMotor);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     m_turningMotor.restoreFactoryDefaults();
-    setTurnMotorConfig(m_turningMotor);
+    RevUtils.setTurnMotorConfig(m_turningMotor);
     m_turningMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    m_moduleEncoder.configFactoryDefault();
-    m_moduleEncoder.configAllSettings(generateCanCoderConfig());
+    m_angleEncoder.configFactoryDefault();
+    m_angleEncoder.configAllSettings(CtreUtils.generateCanCoderConfig());
 
-    m_driveMotor.getEncoder().setPositionConversionFactor(kDriveRevToMeters);
-    m_driveMotor.getEncoder().setVelocityConversionFactor(kDriveRpmToMetersPerSecond);
+    m_driveEncoder = m_driveMotor.getEncoder();
+    m_driveEncoder.setPositionConversionFactor(kDriveRevToMeters);
+    m_driveEncoder.setVelocityConversionFactor(kDriveRpmToMetersPerSecond);
 
-    m_turningMotor.getEncoder().setPositionConversionFactor(kTurnRotationsToDegrees);
-    m_turningMotor.getEncoder().setVelocityConversionFactor(kTurnRotationsToDegrees / 60);
+    m_turnEncoder = m_turningMotor.getEncoder();
+    m_turnEncoder.setPositionConversionFactor(kTurnRotationsToDegrees);
+    m_turnEncoder.setVelocityConversionFactor(kTurnRotationsToDegrees / 60);
 
-    
+    // REVs
+    m_driveController = m_driveMotor.getPIDController();
+    m_turnController = m_turningMotor.getPIDController();
+
+    if (RobotBase.isSimulation()) {
+      REVPhysicsSim.getInstance().addSparkMax(m_driveMotor, DCMotor.getNEO(1));
+      REVPhysicsSim.getInstance().addSparkMax(m_turningMotor, DCMotor.getNEO(1));
+      m_driveController.setP(1, SIM_SLOT);
+    }
+
+    resetAngleToAbsolute();
+  }
+
+  // TODO DO we need? maybe for debugging in
+  public SwerveModule(int moduleNumber, SwerveModuleConstants frontLeftModuleConstants) {
+    this(frontLeftModuleConstants);
+    m_moduleNumber = moduleNumber;
   }
 
   /**
@@ -142,8 +195,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(
-        m_driveEncoder.getRate(), new Rotation2d(m_turningEncoder.getDistance()));
+    return new SwerveModuleState(getDriveMetersPerSecond(), getHeadingRotation2d());
   }
 
   /**
@@ -152,92 +204,159 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(
-        m_driveEncoder.getDistance(), new Rotation2d(m_turningEncoder.getDistance()));
+    return new SwerveModulePosition(getDriveMeters(), getHeadingRotation2d());
   }
 
-  /**
-   * Sets the desired state for the module.
-   *
-   * @param desiredState Desired state with speed and angle.
-   */
-  public void setDesiredState(SwerveModuleState desiredState) {
-    // Optimize the reference state to avoid spinning further than 90 degrees
-    SwerveModuleState state =
-        SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningEncoder.getDistance()));
-
-    // Calculate the drive output from the drive PID controller.
-    final double driveOutput =
-        m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
-
-    // Calculate the turning motor output from the turning PID controller.
-    final double turnOutput =
-        m_turningPIDController.calculate(m_turningEncoder.getDistance(), state.angle.getRadians());
-
-    // Calculate the turning motor output from the turning PID controller.
-    m_driveMotor.set(driveOutput);
-    m_turningMotor.set(turnOutput);
+  public void resetAngleToAbsolute() {
+    double angle = m_angleEncoder.getAbsolutePosition() - m_angleOffset;
+    m_turnEncoder.setPosition(angle);
   }
 
-  /** Zeroes all the SwerveModule encoders. */
-  public void resetEncoders() {
-    m_driveEncoder.reset();
-    m_turningEncoder.reset();
+  public double getHeadingDegrees() {
+    if(RobotBase.isReal())
+      return m_turnEncoder.getPosition();
+    else
+      return m_currentAngle;
   }
+
+  public Rotation2d getHeadingRotation2d() {
+    return Rotation2d.fromDegrees(getHeadingDegrees());
+  }
+
+  public double getDriveMeters() {
+    if(RobotBase.isReal())
+      return m_driveEncoder.getPosition();
+    else
+      return m_simDriveEncoderPosition;
+  }
+  public double getDriveMetersPerSecond() {
+    if(RobotBase.isReal())
+      return m_driveEncoder.getVelocity();
+    else
+      return m_simDriveEncoderVelocity;
+  }
+
+  // /**
+  //  * Sets the desired state for the module.
+  //  *
+  //  * @param desiredState Desired state with speed and angle.
+  //  */
+  // public void setDesiredState(SwerveModuleState desiredState) {
+  //   // Optimize the reference state to avoid spinning further than 90 degrees
+  //   SwerveModuleState state =
+  //       SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningEncoder.getDistance()));
+
+  //   // Calculate the drive output from the drive PID controller.
+  //   final double driveOutput =
+  //       m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
+
+  //   // Calculate the turning motor output from the turning PID controller.
+  //   final double turnOutput =
+  //       m_turningPIDController.calculate(m_turningEncoder.getDistance(), state.angle.getRadians());
+
+  //   // Calculate the turning motor output from the turning PID controller.
+  //   m_driveMotor.set(driveOutput);
+  //   m_turningMotor.set(turnOutput);
+  // }
+  public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+    desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
+
+    if (isOpenLoop) {
+      double percentOutput = desiredState.speedMetersPerSecond / kMaxSpeedMetersPerSecond;
+      m_driveMotor.set(percentOutput);
+    } else {
+      int DRIVE_PID_SLOT = RobotBase.isReal() ? VEL_SLOT : SIM_SLOT;
+      m_driveController.setReference(
+              desiredState.speedMetersPerSecond,
+              CANSparkMax.ControlType.kVelocity,
+              DRIVE_PID_SLOT
+      );
+    }
+
+    double angle =
+            (Math.abs(desiredState.speedMetersPerSecond) <= (kMaxSpeedMetersPerSecond * 0.01))
+                    ? m_lastAngle
+                    : desiredState.angle.getDegrees(); // Prevent rotating module if speed is less than 1%. Prevents Jittering.
+    m_turnController.setReference(angle, CANSparkMax.ControlType.kPosition, POS_SLOT);
+    // TODO REVExample was missing this line (m_angle did not make sense otherwise)!!!
+    m_lastAngle = angle;
+
+
+    if (RobotBase.isSimulation()) {
+      simUpdateDrivePosition(desiredState);
+//      simTurnPosition(angle); // TODO Determine why commented out in REVexample
+      m_currentAngle = angle;
+
+    }
+  }
+
+  private void simUpdateDrivePosition(SwerveModuleState state) {
+    m_simDriveEncoderVelocity = state.speedMetersPerSecond;
+    double distancePer20Ms = m_simDriveEncoderVelocity / 50.0;
+
+    m_simDriveEncoderPosition += distancePer20Ms;
+  }
+  private void simTurnPosition(double angle) {
+    if (angle != m_currentAngle && m_simTurnAngleIncrement == 0) {
+      m_simAngleDifference = angle - m_currentAngle;
+      m_simTurnAngleIncrement = m_simAngleDifference / 20.0;// 10*20ms = .2 sec move time
+    }
+
+    if (m_simTurnAngleIncrement != 0) {
+      m_currentAngle += m_simTurnAngleIncrement;
+
+      if ((Math.abs(angle - m_currentAngle)) < .1) {
+        m_currentAngle = angle;
+        m_simTurnAngleIncrement = 0;
+      }
+    }
+  }
+
+//TODO IS THIS NEEDED  
+//  /** Zeroes all the SwerveModule encoders. */
+//  public void resetEncoders() {
+//    m_driveEncoder.reset();
+//    m_turningEncoder.reset();
+//  }
 
   public SwerveDriveKinematics getSwerveKinematics() {
     return swerveKinematics;
 }
 
-public PIDController getAutoXController() {
-    return autoXController;
-}
+//TODO ARE THESE Needed
+// public PIDController getAutoXController() {
+//     return autoXController;
+// }
 
-public PIDController getAutoYController() {
-    return autoYController;
-}
+// public PIDController getAutoYController() {
+//     return autoYController;
+// }
 
-public PIDController getAutoThetaController() {
-    return autoThetaController;
-}
+// public PIDController getAutoThetaController() {
+//     return autoThetaController;
+// }
 
-public void resetOdometry(Pose2d pose) {
-  swerveOdometry.resetPosition(getYaw(), mSwerveModPositions, pose);
-}
+// public void resetOdometry(Pose2d pose) {
+//   swerveOdometry.resetPosition(getYaw(), mSwerveModPositions, pose);
+// }
 
-public Rotation2d getYaw() {
-  double[] ypr = new double[3];
-  gyro.getYawPitchRoll(ypr);
-  return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
-}
-  private static void setDriveMotorConfig(CANSparkMax motorController) {
-    motorController.getPIDController().setFF(0.0);
-    motorController.getPIDController().setP(0.1);
-    motorController.getPIDController().setI(0.0);
-    motorController.getPIDController().setD(0.0);
-    motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 10);
-    motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-    motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 50);
-    motorController.setSmartCurrentLimit(60, 35);
-    motorController.setOpenLoopRampRate(0.25);
-    motorController.setOpenLoopRampRate(0.1);
+// public Rotation2d getYaw() {
+//   double[] ypr = new double[3];
+//   gyro.getYawPitchRoll(ypr);
+//   return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+// }
+
+  // TODO NOT SURE WHAT FOR m_pose never gotten
+  public void setModulePose(Pose2d pose) {
+    m_pose = pose;
+  }
+  // TODO NOT SURE WHAT FOR
+  public Pose2d getModulePose() {
+    return m_pose;
   }
 
-  private static void setTurnMotorConfig(CANSparkMax motorController) {
-    motorController.getPIDController().setFF(0.0);
-    motorController.getPIDController().setP(0.2);
-    motorController.getPIDController().setI(0.0);
-    // motorController.getPIDController().setD(12.0);
-    motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
-    motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-    motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
-    motorController.setSmartCurrentLimit(40, 25);
-  }
-  private static CANCoderConfiguration generateCanCoderConfig() {
-    CANCoderConfiguration sensorConfig = new CANCoderConfiguration();
-    sensorConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-    sensorConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-    sensorConfig.sensorTimeBase = SensorTimeBase.PerSecond;
-    return sensorConfig;
+  @Override
+  public void simulationPeriodic() {
+    REVPhysicsSim.getInstance().run();
   }
 }

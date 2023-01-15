@@ -1,21 +1,16 @@
 package frc.robot.utilities;
 
-import edu.wpi.first.wpilibj.DigitalSource;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-
-public class SwerveModuleConstants {
-
-    
+public class SwerveModuleConstants {    
   
-    public final int driveEncoderChannel;
-    public final int turningEncoderChannel;
-    public final  boolean turningEncoderReversed;
-    public final boolean driveEncoderReversed;
+    public final int driveMotorChannel;
+    public final int turningMotorChannel;
+    // public final int driveEncoderChannel;
+    // public final int turningEncoderChannel;
+    // public final  boolean turningEncoderReversed;
+    // public final boolean driveEncoderReversed;
     public final int cancoderID;
     public final double angleOffset;
  
-
 
     /**
      * Swerve Module Constants to be used when creating swerve modules.
@@ -24,20 +19,19 @@ public class SwerveModuleConstants {
      * @param canCoderID
      * @param angleOffset
      */
-    public SwerveModuleConstants(int driveMotorChannel,
-    int turningMotorChannel,
-    int driveEncoderChannel,
-    int turningEncoderChannel,
-    int cancoderID,
-    boolean driveEncoderReversed,
-    boolean turningEncoderReversed,
-    double angleOffset) {
+    public SwerveModuleConstants(int driveMotorID,
+        int turningMotorID,
+        int cancoderID,
+        double angleOffset) {
+
+        this.driveMotorChannel = driveMotorID;
+        this.turningMotorChannel = turningMotorID;
         this.cancoderID = cancoderID;
         this.angleOffset = angleOffset;
-        this.driveEncoderChannel = driveEncoderChannel;
-        this.turningEncoderChannel = turningEncoderChannel;
-        this.driveEncoderReversed = driveEncoderReversed;
-        this.turningEncoderReversed = turningEncoderReversed;
-        
-    };
+        // this.driveEncoderChannel = 0;
+        // this.turningEncoderChannel = 0;
+        // this.driveEncoderReversed = false;
+        // this.turningEncoderReversed = false;
+    }
+
 }
