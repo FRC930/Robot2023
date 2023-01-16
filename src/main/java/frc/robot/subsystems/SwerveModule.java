@@ -4,12 +4,19 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.Constants.ModuleConstants;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -21,6 +28,10 @@ public class SwerveModule {
   private final Encoder m_driveEncoder;
   private final Encoder m_turningEncoder;
 
+  public static final boolean invertGyro = false;
+  public static final double trackWidth = Units.inchesToMeters(23);
+  public static final double wheelBase = Units.inchesToMeters(23);
+  
   private final PIDController m_drivePIDController =
       new PIDController(ModuleConstants.kPModuleDriveController, 0, 0);
 
@@ -34,6 +45,23 @@ public class SwerveModule {
               ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond,
               ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared));
 
+  public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+    new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+    new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+    new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+    new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));  
+  
+  public SwerveDriveOdometry swerveOdometry;
+  public SwerveModule[] mSwerveMods;
+  public SwerveModulePosition[] mSwerveModPositions;
+  public Pigeon2 gyro;
+  public PIDController autoXController;
+  public PIDController autoYController;
+  public PIDController autoThetaController;
+  public SwerveModule swerveModule1;
+  public SwerveModule swerveModule2;
+  public SwerveModule swerveModule3;
+  public SwerveModule swerveModule4;
   /**
    * Constructs a SwerveModule.
    *
@@ -127,4 +155,30 @@ public class SwerveModule {
     m_driveEncoder.reset();
     m_turningEncoder.reset();
   }
+
+  public SwerveDriveKinematics getSwerveKinematics() {
+    return swerveKinematics;
+}
+
+public PIDController getAutoXController() {
+    return autoXController;
+}
+
+public PIDController getAutoYController() {
+    return autoYController;
+}
+
+public PIDController getAutoThetaController() {
+    return autoThetaController;
+}
+
+public void resetOdometry(Pose2d pose) {
+  swerveOdometry.resetPosition(getYaw(), mSwerveModPositions, pose);
+}
+
+public Rotation2d getYaw() {
+  double[] ypr = new double[3];
+  gyro.getYawPitchRoll(ypr);
+  return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
+}
 }
