@@ -32,12 +32,14 @@ import java.util.List;
 public class RobotContainer {
 
 
-     /* Modules */
-     public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 259.980);
-     public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, 233.877);
-     public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 0, 0, 71.895);
-     public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 143.965);
-     
+    /* Modules */
+    public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 289.072);
+    public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, 53.613);
+    public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 0, 0, 268.154);
+    public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 187.295);
+    //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
+    //page 100
+
   // The robot's subsystems
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
