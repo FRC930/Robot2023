@@ -22,9 +22,9 @@ import frc.robot.utilities.SwerveModuleConstants;
 // import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
-        public static final double kTrackWidth = Units.inchesToMeters(24.0);//0.5;
+        public static final double kTrackWidth = Units.inchesToMeters(18.5);//0.5;
         // Distance between centers of right and left wheels on robot
-        public static final double kWheelBase = Units.inchesToMeters(26.0);//0.7;
+        public static final double kWheelBase = Units.inchesToMeters(20.5);//0.7;
         // Distance between front and back wheels on robot
     
         public static final Translation2d[] kModuleTranslations = {
@@ -55,11 +55,12 @@ public class SwerveDrive extends SubsystemBase {
 //           new ProfiledPIDController(kP_Theta, 0, kD_Theta, kThetaControllerConstraints);
 
   private double m_simYaw;
-
+  //TODO
   public static final double kPXController = 0.4; //0.076301;
   public static final double kPYController = 0.4; //0.076301;
-  
-public static final double kMaxSpeedMetersPerSecond = 3;
+
+public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
+//TODO
 private static final double kMaxRotationRadiansPerSecond = Math.PI * 2.0;
 
   //TODO they use ProfiledPIDController

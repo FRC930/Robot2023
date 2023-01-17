@@ -44,23 +44,23 @@ public class SwerveModule extends SubsystemBase {
   private final int POS_SLOT = 0;
   private final int VEL_SLOT = 1;
   private final int SIM_SLOT = 2;
-
-  public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(18); // TODO is this right?
+  //https://www.swervedrivespecialties.com/products/mk4i-swerve-module?variant=39598777303153
+  //MK4I L2
+  public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
   
-  // TODO Verify values
-  public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);//0.15;
-  public static final double kMaxModuleAngularSpeedRadiansPerSecond = 2 * Math.PI;
-  public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 2 * Math.PI;
-  public static final double ksDriveVoltSecondsPerMeter = 0.667 / 12;
-  public static final double kvDriveVoltSecondsSquaredPerMeter = 2.44 / 12;
-  public static final double kaDriveVoltSecondsSquaredPerMeter = 0.27 / 12;
-  public static final double kvTurnVoltSecondsPerRadian = 1.47; // originally 1.5
-  public static final double kaTurnVoltSecondsSquaredPerRadian = 0.348; // originally 0.3
-  // TODO Verify values
-  public static final double kDriveMotorGearRatio = 6.12;
-  public static final double kTurningMotorGearRatio = 12.8;
+  //Verified Values
+  public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);
+  public static final double kMaxModuleAngularSpeedRadiansPerSecond = 180; //2 * Math.PI; last year 930 used 180
+  public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 180; //2 * Math.PI; last year 930 used 180
+  public static final double ksDriveVoltSecondsPerMeter = 0.667 / 12; //TODO
+  public static final double kvDriveVoltSecondsSquaredPerMeter = 2.44 / 12; //TODO
+  public static final double kaDriveVoltSecondsSquaredPerMeter = 0.27 / 12; //TODO
+  public static final double kvTurnVoltSecondsPerRadian = 1.47; // originally 1.5 //TODO REMOVE
+  public static final double kaTurnVoltSecondsSquaredPerRadian = 0.348; // originally 0.3 //TODO REMOVEE
+  //Verified Values
+  public static final double kDriveMotorGearRatio = 6.75;
+  public static final double kTurningMotorGearRatio = 150/7;//12.8;
   public static final int kNeoCPR = 42;
-  public static final int kCANCoderCPR = 4096; // Figure this out for Neo Motors.
   public static final double kDriveRevToMeters =
             ((kWheelDiameterMeters * Math.PI) / kDriveMotorGearRatio);
   public static final double kDriveRpmToMetersPerSecond =
@@ -68,14 +68,12 @@ public class SwerveModule extends SubsystemBase {
   public static final double kTurnRotationsToDegrees =
             360.0 / kTurningMotorGearRatio;
 
-
+  //TODO
   public static final double kPModuleTurningController = 1;
   public static final double kPModuleDriveController = 1;
 
   public static final boolean invertGyro = false;
-  public static final double trackWidth = Units.inchesToMeters(24);
-  public static final double wheelBase = Units.inchesToMeters(26);
-  
+
   private final PIDController m_drivePIDController =
       new PIDController(kPModuleDriveController, 0, 0);
 
@@ -98,14 +96,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
           new TrapezoidProfile.Constraints(
               kMaxModuleAngularSpeedRadiansPerSecond,
               kMaxModuleAngularAccelerationRadiansPerSecondSquared));
-
-  public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-    new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-    new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-    new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-    new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
   
-
   public SwerveDriveOdometry swerveOdometry;
   // TODO REMOVE? public SwerveModule[] mSwerveMods;
   // TODO REMOVE? public SwerveModulePosition[] mSwerveModPositions;
@@ -320,7 +311,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
 //  }
 
   public SwerveDriveKinematics getSwerveKinematics() {
-    return swerveKinematics;
+    return SwerveDrive.kDriveKinematics;
 }
 
 //TODO ARE THESE Needed
