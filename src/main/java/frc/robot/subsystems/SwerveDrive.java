@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.SwerveModuleConstants;
 
 
-// import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
         public static final double kTrackWidth = Units.inchesToMeters(18.5);//0.5;
@@ -43,12 +42,7 @@ public class SwerveDrive extends SubsystemBase {
 
   private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); //TODO pass in id and canbus   CAN.pigeon);
 
-  private SwerveDriveOdometry m_odometry;// TODO remove need to do in constructor =
-        //   new SwerveDriveOdometry(
-        //           kDriveKinematics,
-        //           getHeadingRotation2d(),
-        //           getModulePositions(),
-        //           new Pose2d());
+  private SwerveDriveOdometry m_odometry;
 // TODO what needed for 
 //   private ProfiledPIDController m_xController =
 //           new ProfiledPIDController(kP_X, 0, kD_X, kThetaControllerConstraints);
@@ -64,42 +58,25 @@ public class SwerveDrive extends SubsystemBase {
 
 public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
 //TODO
-private static final double kMaxRotationRadiansPerSecond = Math.PI * 2.0;
+private static final double kMaxRotationRadiansPerSecond = Math.PI * 2.0; // Last year 11.5?
+private static final boolean invertGyro = false;
 
   //TODO they use ProfiledPIDController
   public PIDController autoXController;
   public PIDController autoYController;
   public PIDController autoThetaController;
 
-  
-  private SwerveModule swerveModule1;
-  private SwerveModule swerveModule2;
-  private SwerveModule swerveModule3;
-  private SwerveModule swerveModule4;
-private SwerveModule[] mSwerveMods;
-private SwerveModulePosition[] mSwerveModPositions;
+  private SwerveModule[] mSwerveMods;
 
   public SwerveDrive(SwerveModuleConstants frontLeftModuleConstants, SwerveModuleConstants frontRightModuleConstants, SwerveModuleConstants backLeftModuleConstants, SwerveModuleConstants backRightModuleConstants) {
 
-        swerveModule1 = new SwerveModule(0, frontLeftModuleConstants);
-        swerveModule2 = new SwerveModule(1, frontRightModuleConstants);
-        swerveModule3 = new SwerveModule(2, backLeftModuleConstants);
-        swerveModule4 = new SwerveModule(3, backRightModuleConstants);
-    
         mSwerveMods = new SwerveModule[] {  
-            swerveModule1,
-            swerveModule2,
-            swerveModule3,
-            swerveModule4
-        };
-    
-        mSwerveModPositions = new SwerveModulePosition[] {
-            swerveModule1.getPosition(),
-            swerveModule2.getPosition(),
-            swerveModule3.getPosition(),
-            swerveModule4.getPosition()
-        };
-    
+          new SwerveModule(0, frontLeftModuleConstants),
+          new SwerveModule(1, frontRightModuleConstants),
+          new SwerveModule(2, backLeftModuleConstants),
+          new SwerveModule(3, backRightModuleConstants)
+          };
+
         m_odometry = new SwerveDriveOdometry(
                 kDriveKinematics,
                 getHeadingRotation2d(),
@@ -133,13 +110,7 @@ private SwerveModulePosition[] mSwerveModPositions;
                     : new ChassisSpeeds(throttle, strafe, rotation);
 
     SwerveModuleState[] moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, kMaxSpeedMetersPerSecond);
-
-    for (int i = 0; i < mSwerveMods.length; i++) {
-        SwerveModule module = mSwerveMods[i];
-        module.setDesiredState(moduleStates[i], isOpenLoop);
-    }
+    setSwerveModuleStates(moduleStates, isOpenLoop);
   }
 
   public void setSwerveModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
@@ -201,9 +172,12 @@ private SwerveModulePosition[] mSwerveModPositions;
     }
     //Logs information about the robot with AdvantageScope
     Logger.getInstance().recordOutput("SwerveModuleStates/Measured",
-      getModuleStates());
+        getModuleStates());
 
+    // Log odometry pose
     Logger.getInstance().recordOutput("Odometry/Robot", m_odometry.getPoseMeters());
+
+
   }
 
   private void updateSmartDashboard() {}
@@ -229,10 +203,6 @@ private SwerveModulePosition[] mSwerveModPositions;
 
     Unmanaged.feedEnable(20);
     m_pigeon.getSimCollection().setRawHeading(-Units.radiansToDegrees(m_simYaw));
-
-        // Log odometry pose
-  //  Logger.getInstance().recordOutput("Odometry/Robot", m_odometry.getPoseMeters());
-
   }
 
     public static SwerveDriveKinematics getSwerveKinematics() {
@@ -251,12 +221,13 @@ private SwerveModulePosition[] mSwerveModPositions;
 //     }
 
     public void resetOdometry(Pose2d initialPose) {
-        m_odometry.resetPosition(getYaw(), getModulePositions(), getPoseMeters());
+        m_odometry.resetPosition(getYaw(), getModulePositions(), initialPose);
     }
 
     private Rotation2d getYaw() {
-        // TODO gyro?
-        return getPoseMeters().getRotation();
+      double[] ypr = new double[3];
+      m_pigeon.getYawPitchRoll(ypr);
+      return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
    }
 
     public void setSwerveModuleStates(SwerveModuleState[] states) {

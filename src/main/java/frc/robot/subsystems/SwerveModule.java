@@ -71,6 +71,8 @@ public class SwerveModule extends SubsystemBase {
   public static final double kTurnRotationsToDegrees =
             360.0 / kTurningMotorGearRatio;
 
+  // TODO use LoggedTunableNumber for PID values see advantagekit example
+
   //TODO
   public static final double kPModuleTurningController = 1;
   public static final double kPModuleDriveController = 1;
@@ -166,6 +168,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
 
     // REVs
     m_driveController = m_driveMotor.getPIDController();
+    // NOTE: TODO look at if m_driveController.set... if using LoggedTunableNumber        
     m_turnController = m_turningMotor.getPIDController();
 
     if (RobotBase.isSimulation()) {
@@ -254,7 +257,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
   // }
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
-    
+
     //Logs information about the robot with AdvantageScope
     double velocityRadPerSec = 
     desiredState.speedMetersPerSecond / ((kWheelDiameterMeters/2) * kDriveMotorGearRatio * (2 * Math.PI));
@@ -293,7 +296,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     //Logs information about the robot with AdvantageScope
     Logger.getInstance().recordOutput(
       "SwerveSetPointValue/Turn/" + Integer.toString(getModuleNumber()),
-      Units.degreesToRadians(angle));
+    Units.degreesToRadians(angle));
 
     if (RobotBase.isSimulation()) {
       simUpdateDrivePosition(desiredState);
