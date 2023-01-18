@@ -7,11 +7,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public final class RevUtils {
   public static void setTurnMotorConfig(CANSparkMax motorController) {
-    // TODO TUNE
+    // TODO Tune Manually
     motorController.getPIDController().setFF(0.0);
-    motorController.getPIDController().setP(0.2);
+    motorController.getPIDController().setP(0.15);
     motorController.getPIDController().setI(0.0);
-    // motorController.getPIDController().setD(12.0);
+    motorController.getPIDController().setD(0.075);
 
     // TODO Help reduce CAN utilization
     motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);

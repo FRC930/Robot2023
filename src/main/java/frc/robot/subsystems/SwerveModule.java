@@ -9,6 +9,9 @@ import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
@@ -251,14 +254,29 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
   // }
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
+    
+    //Logs information about the robot with AdvantageScope
+    double velocityRadPerSec = 
+    desiredState.speedMetersPerSecond / ((kWheelDiameterMeters/2) * kDriveMotorGearRatio * (2 * Math.PI));
+  Logger.getInstance().recordOutput(
+    "SwerveSetPointValues/DriveRadSec/" + Integer.toString(getModuleNumber()),
+    velocityRadPerSec);
+  Logger.getInstance().recordOutput(
+    "SwerveSetPointValue/DriveRadMin/" + Integer.toString(getModuleNumber()),
+    velocityRadPerSec * 60.0);
+  Logger.getInstance().recordOutput(
+    "SwerveSetPointValues/DriveM/" + Integer.toString(getModuleNumber()),
+    desiredState.speedMetersPerSecond);
 
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / kMaxSpeedMetersPerSecond;
       m_driveMotor.set(percentOutput);
     } else {
+      //TODO currently doesn't work
       int DRIVE_PID_SLOT = RobotBase.isReal() ? VEL_SLOT : SIM_SLOT;
       m_driveController.setReference(
-              desiredState.speedMetersPerSecond,
+              // desiredState.speedMetersPerSecond,
+              velocityRadPerSec * 60,
               CANSparkMax.ControlType.kVelocity,
               DRIVE_PID_SLOT
       );
@@ -272,6 +290,10 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     // TODO REVExample was missing this line (m_angle did not make sense otherwise)!!!
     m_lastAngle = angle;
 
+    //Logs information about the robot with AdvantageScope
+    Logger.getInstance().recordOutput(
+      "SwerveSetPointValue/Turn/" + Integer.toString(getModuleNumber()),
+      Units.degreesToRadians(angle));
 
     if (RobotBase.isSimulation()) {
       simUpdateDrivePosition(desiredState);
@@ -279,6 +301,11 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
       m_currentAngle = angle;
 
     }
+  }
+
+  //gets the swerve module number
+  private int getModuleNumber() {
+    return m_moduleNumber;
   }
 
   private void simUpdateDrivePosition(SwerveModuleState state) {

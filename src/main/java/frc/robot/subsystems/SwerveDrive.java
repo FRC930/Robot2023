@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.unmanaged.Unmanaged;
 
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -117,9 +120,11 @@ private SwerveModulePosition[] mSwerveModPositions;
           double rotation,
           boolean isFieldRelative,
           boolean isOpenLoop) {
-    throttle *= kMaxSpeedMetersPerSecond;
-    strafe *= kMaxSpeedMetersPerSecond;
-    rotation *= kMaxRotationRadiansPerSecond;
+    
+    //Applies a Deadband of 0.05 to the controllers input
+    throttle = (MathUtil.applyDeadband(throttle, 0.05))* kMaxSpeedMetersPerSecond;
+    strafe = (MathUtil.applyDeadband(strafe, 0.05)) * kMaxSpeedMetersPerSecond;
+    rotation = (MathUtil.applyDeadband(rotation, 0.05)) * kMaxRotationRadiansPerSecond;
 
     ChassisSpeeds chassisSpeeds =
             isFieldRelative
@@ -194,6 +199,11 @@ private SwerveModulePosition[] mSwerveModPositions;
                       modulePositionFromChassis,
                       module.getHeadingRotation2d().plus(getHeadingRotation2d())));
     }
+    //Logs information about the robot with AdvantageScope
+    Logger.getInstance().recordOutput("SwerveModuleStates/Measured",
+      getModuleStates());
+
+    Logger.getInstance().recordOutput("Odometry/Robot", m_odometry.getPoseMeters());
   }
 
   private void updateSmartDashboard() {}
@@ -202,6 +212,14 @@ private SwerveModulePosition[] mSwerveModPositions;
   public void periodic() {
     updateOdometry();
     updateSmartDashboard();
+    
+    //Logs information about the robot with AdvantageScope
+    Logger.getInstance().recordOutput("Drive/Gryo" + "connected", m_pigeon.getLastError().equals(ErrorCode.OK));
+    Logger.getInstance().recordOutput("Drive/Gryo" + "positionUnits", m_pigeon.getYaw());
+    double[] xyzDps = new double[3];
+    m_pigeon.getRawGyro(xyzDps);
+    Logger.getInstance().recordOutput("Drive/Gyro" + "velocityRadPerSec", Units.degreesToRadians(xyzDps[2]));
+    
   }
 
   @Override

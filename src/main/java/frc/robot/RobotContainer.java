@@ -33,10 +33,12 @@ public class RobotContainer {
 
 
     /* Modules */
-    public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 289.072);
-    public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, 53.613);
-    public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 0, 0, 268.154);
-    public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 187.295);
+    //Cannot use an ID of 0
+    //Changed the turningMotorID and cancoderID from 0 to 3
+    public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 110.215);
+    public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, 235.898);
+    public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 3, 3, 89.121);
+    public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 3.516);
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
 
@@ -75,7 +77,7 @@ public class RobotContainer {
                     m_driverController.getLeftY(),
                     m_driverController.getLeftX(),
                     m_driverController.getRightX(),
-                    false, false),
+                    false, true),
             m_robotDrive));
       // TODO this forgot line for simulation
       m_fieldSim.initSim();
