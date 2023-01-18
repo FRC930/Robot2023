@@ -59,15 +59,17 @@ public class SwerveModule extends SubsystemBase {
   public static final double kvTurnVoltSecondsPerRadian = 1.47; // originally 1.5 //TODO REMOVE
   public static final double kaTurnVoltSecondsSquaredPerRadian = 0.348; // originally 0.3 //TODO REMOVEE
   //Verified Values
-  public static final double kDriveMotorGearRatio = 6.75;
-  public static final double kTurningMotorGearRatio = 150/7;//12.8;
+  // https://www.swervedrivespecialties.com/collections/kits/products/mk4i-swerve-module?variant=39598777303153
+  public static final double kDriveMotorGearRatio = 6.75; // MK4i L2 Neo
+  public static final double kTurningMotorGearRatio = 150/7; // MK4i turning ratio MK4i Neo
   public static final int kNeoCPR = 42;
+  public static final int kNeoRPM = 5676;
   public static final double kDriveRevToMeters =
-            ((kWheelDiameterMeters * Math.PI) / kDriveMotorGearRatio);
+            ((kWheelDiameterMeters * Math.PI) / (kNeoCPR * kDriveMotorGearRatio));
   public static final double kDriveRpmToMetersPerSecond =
-            kDriveRevToMeters / 60.0;
+            (kDriveRevToMeters * kNeoRPM)/ 60.0;
   public static final double kTurnRotationsToDegrees =
-            360.0 / kTurningMotorGearRatio;
+            360.0 / (kTurningMotorGearRatio * kNeoCPR);
 
   // TODO use LoggedTunableNumber for PID values see advantagekit example
 
