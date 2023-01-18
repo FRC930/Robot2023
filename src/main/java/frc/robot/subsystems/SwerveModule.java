@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.Pigeon2;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -102,16 +100,6 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
               kMaxModuleAngularSpeedRadiansPerSecond,
               kMaxModuleAngularAccelerationRadiansPerSecondSquared));
   
-  public SwerveDriveOdometry swerveOdometry;
-  // TODO REMOVE? public SwerveModule[] mSwerveMods;
-  // TODO REMOVE? public SwerveModulePosition[] mSwerveModPositions;
-  // public Pigeon2 gyro;  // TODO WHY IN HERE
-
-  //TODO are these used???
-  // public PIDController autoXController;
-  // public PIDController autoYController;
-  // public PIDController autoThetaController;
-
   private double m_angleOffset;
 
   private final SparkMaxPIDController m_driveController;
@@ -233,28 +221,6 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
       return m_simDriveEncoderVelocity;
   }
 
-  // /**
-  //  * Sets the desired state for the module.
-  //  *
-  //  * @param desiredState Desired state with speed and angle.
-  //  */
-  // public void setDesiredState(SwerveModuleState desiredState) {
-  //   // Optimize the reference state to avoid spinning further than 90 degrees
-  //   SwerveModuleState state =
-  //       SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningEncoder.getDistance()));
-
-  //   // Calculate the drive output from the drive PID controller.
-  //   final double driveOutput =
-  //       m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
-
-  //   // Calculate the turning motor output from the turning PID controller.
-  //   final double turnOutput =
-  //       m_turningPIDController.calculate(m_turningEncoder.getDistance(), state.angle.getRadians());
-
-  //   // Calculate the turning motor output from the turning PID controller.
-  //   m_driveMotor.set(driveOutput);
-  //   m_turningMotor.set(turnOutput);
-  // }
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
 
@@ -333,39 +299,11 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     }
   }
 
-//TODO IS THIS NEEDED  
-//  /** Zeroes all the SwerveModule encoders. */
-//  public void resetEncoders() {
-//    m_driveEncoder.reset();
-//    m_turningEncoder.reset();
-//  }
 
   public SwerveDriveKinematics getSwerveKinematics() {
     return SwerveDrive.kDriveKinematics;
 }
 
-//TODO ARE THESE Needed
-// public PIDController getAutoXController() {
-//     return autoXController;
-// }
-
-// public PIDController getAutoYController() {
-//     return autoYController;
-// }
-
-// public PIDController getAutoThetaController() {
-//     return autoThetaController;
-// }
-
-// public void resetOdometry(Pose2d pose) {
-//   swerveOdometry.resetPosition(getYaw(), mSwerveModPositions, pose);
-// }
-
-// public Rotation2d getYaw() {
-//   double[] ypr = new double[3];
-//   gyro.getYawPitchRoll(ypr);
-//   return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
-// }
 
   // TODO NOT SURE WHAT FOR m_pose never gotten
   public void setModulePose(Pose2d pose) {
