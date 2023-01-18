@@ -77,7 +77,7 @@ public class RobotContainer {
                     m_driverController.getLeftY(),
                     m_driverController.getLeftX(),
                     m_driverController.getRightX(),
-                    false, true),
+                    true, true),
             m_robotDrive));
       // TODO this forgot line for simulation
       m_fieldSim.initSim();
