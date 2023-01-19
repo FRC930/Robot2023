@@ -99,9 +99,9 @@ private static final boolean invertGyro = false;
           boolean isOpenLoop) {
     
     //Applies a Deadband of 0.05 to the controllers input
-    throttle = (MathUtil.applyDeadband(throttle, 0.05))* kMaxSpeedMetersPerSecond;
-    strafe = (MathUtil.applyDeadband(strafe, 0.05)) * kMaxSpeedMetersPerSecond;
-    rotation = (MathUtil.applyDeadband(rotation, 0.05)) * kMaxRotationRadiansPerSecond;
+    throttle = (MathUtil.applyDeadband(throttle, 0.1))* kMaxSpeedMetersPerSecond;
+    strafe = (MathUtil.applyDeadband(strafe, 0.1)) * kMaxSpeedMetersPerSecond;
+    rotation = (MathUtil.applyDeadband(rotation, 0.1)) * kMaxRotationRadiansPerSecond;
 
     ChassisSpeeds chassisSpeeds =
             isFieldRelative

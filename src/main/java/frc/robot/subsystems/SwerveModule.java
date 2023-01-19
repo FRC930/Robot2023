@@ -61,7 +61,7 @@ public class SwerveModule extends SubsystemBase {
   //Verified Values
   // https://www.swervedrivespecialties.com/collections/kits/products/mk4i-swerve-module?variant=39598777303153
   public static final double kDriveMotorGearRatio = 6.75; // MK4i L2 Neo
-  public static final double kTurningMotorGearRatio = 150/7; // MK4i turning ratio MK4i Neo
+  public static final double kTurningMotorGearRatio = 150.0/7.0; // MK4i turning ratio MK4i Neo
   public static final int kNeoCPR = 42;
   public static final int kNeoRPM = 5676;
   public static final double kDriveRevToMeters =
@@ -69,7 +69,7 @@ public class SwerveModule extends SubsystemBase {
   public static final double kDriveRpmToMetersPerSecond =
             (kDriveRevToMeters * kNeoRPM)/ 60.0;
   public static final double kTurnRotationsToDegrees =
-            360.0 / (kTurningMotorGearRatio * kNeoCPR);
+            360.0 / (kTurningMotorGearRatio * 1);
 
   // TODO use LoggedTunableNumber for PID values see advantagekit example
 
@@ -224,19 +224,20 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-    desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
+    //TODO re-enable optimize once swerve module is working
+    //desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
 
     //Logs information about the robot with AdvantageScope
     double velocityRadPerSec = 
     desiredState.speedMetersPerSecond / ((kWheelDiameterMeters/2) * kDriveMotorGearRatio * (2 * Math.PI));
   Logger.getInstance().recordOutput(
-    "SwerveSetPointValues/DriveRadSec/" + Integer.toString(getModuleNumber()),
+    "SwerveSetPointValue/DriveRadSec/" + Integer.toString(getModuleNumber()),
     velocityRadPerSec);
   Logger.getInstance().recordOutput(
     "SwerveSetPointValue/DriveRadMin/" + Integer.toString(getModuleNumber()),
     velocityRadPerSec * 60.0);
   Logger.getInstance().recordOutput(
-    "SwerveSetPointValues/DriveM/" + Integer.toString(getModuleNumber()),
+    "SwerveSetPointValue/DriveM/" + Integer.toString(getModuleNumber()),
     desiredState.speedMetersPerSecond);
 
     if (isOpenLoop) {
@@ -257,10 +258,13 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
             (Math.abs(desiredState.speedMetersPerSecond) <= (kMaxSpeedMetersPerSecond * 0.01))
                     ? m_lastAngle
                     : desiredState.angle.getDegrees(); // Prevent rotating module if speed is less than 1%. Prevents Jittering.
+    angle = desiredState.angle.getDegrees();
     m_turnController.setReference(angle, CANSparkMax.ControlType.kPosition, POS_SLOT);
     // TODO REVExample was missing this line (m_angle did not make sense otherwise)!!!
     m_lastAngle = angle;
-
+    Logger.getInstance().recordOutput(
+      "SwerveSetPointValue/TurnD/" + Integer.toString(getModuleNumber()),
+    (angle));
     //Logs information about the robot with AdvantageScope
     Logger.getInstance().recordOutput(
       "SwerveSetPointValue/Turn/" + Integer.toString(getModuleNumber()),

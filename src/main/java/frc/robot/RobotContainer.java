@@ -35,10 +35,10 @@ public class RobotContainer {
     /* Modules */
     //Cannot use an ID of 0
     //Changed the turningMotorID and cancoderID from 0 to 3
-    public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 110.215);
+    public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 106.215);
     public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, 235.898);
-    public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 3, 3, 89.121);
-    public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 3.516);
+    public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 3, 3, 88.121);
+    public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 3.616);
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
 
