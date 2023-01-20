@@ -233,5 +233,12 @@ private static final boolean invertGyro = false;
     public void setSwerveModuleStates(SwerveModuleState[] states) {
         setSwerveModuleStates(states, false);
     }
-
+  /**
+   * Resets each SwerveModule to the absolute position.
+   */
+  public void resetAngleToAbsolute() {
+    for (SwerveModule mod : mSwerveMods) {
+      mod.resetAngleToAbsolute();
+    }
+  }
 }

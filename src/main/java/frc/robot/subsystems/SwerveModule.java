@@ -146,15 +146,21 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_turningMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     m_angleEncoder.configFactoryDefault();
-    m_angleEncoder.configAllSettings(CtreUtils.generateCanCoderConfig());
+    CtreUtils.checkCtreError(
+    m_angleEncoder.configAllSettings(CtreUtils.generateCanCoderConfig()),
+      "Error setting configuration CANCoder encoder");
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_driveEncoder.setPositionConversionFactor(kDriveRevToMeters);
     m_driveEncoder.setVelocityConversionFactor(kDriveRpmToMetersPerSecond);
 
     m_turnEncoder = m_turningMotor.getEncoder();
-    m_turnEncoder.setPositionConversionFactor(kTurnRotationsToDegrees);
-    m_turnEncoder.setVelocityConversionFactor(kTurnRotationsToDegrees / 60);
+    RevUtils.checkNeoError(
+    m_turnEncoder.setPositionConversionFactor(kTurnRotationsToDegrees),
+      "Error setting Position Converstion on turn motor");
+    RevUtils.checkNeoError(  
+    m_turnEncoder.setVelocityConversionFactor(kTurnRotationsToDegrees / 60),
+      "Error setting Velocity Converstion on turn motor");
 
     // REVs
     m_driveController = m_driveMotor.getPIDController();
@@ -225,7 +231,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     //TODO re-enable optimize once swerve module is working
-    //desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
+    // desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
 
     //Logs information about the robot with AdvantageScope
     double velocityRadPerSec = 
@@ -265,6 +271,10 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     Logger.getInstance().recordOutput(
       "SwerveSetPointValue/TurnD/" + Integer.toString(getModuleNumber()),
     (angle));
+    Logger.getInstance().recordOutput(
+      "SwerveSetPointValue/TurnDC/" + Integer.toString(getModuleNumber()),
+    (m_angleEncoder.getAbsolutePosition()));
+
     //Logs information about the robot with AdvantageScope
     Logger.getInstance().recordOutput(
       "SwerveSetPointValue/Turn/" + Integer.toString(getModuleNumber()),

@@ -35,10 +35,10 @@ public class RobotContainer {
     /* Modules */
     //Cannot use an ID of 0
     //Changed the turningMotorID and cancoderID from 0 to 3
-    public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 106.215);
-    public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, 235.898);
-    public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 3, 3, 88.121);
-    public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 3.616);
+    public static final SwerveModuleConstants frontLeftModule = new SwerveModuleConstants(8, 9, 9, 106.215); //114.69
+    public static final SwerveModuleConstants frontRightModule = new SwerveModuleConstants(11, 10, 10, (235.898));  //235.1
+    public static final SwerveModuleConstants backLeftModule = new SwerveModuleConstants(1, 3, 3, 88.121);  //84.28
+    public static final SwerveModuleConstants backRightModule = new SwerveModuleConstants(18, 19, 19, 3.616); //9.75
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
 
@@ -74,9 +74,9 @@ public class RobotContainer {
             // TODO switch SwerveDrive Command and joyswitch deadband control see REV example
             () ->
                 m_robotDrive.drive(
-                    m_driverController.getLeftY(),
-                    m_driverController.getLeftX(),
-                    m_driverController.getRightX(),
+                    0.0, //m_driverController.getLeftY(),
+                    0.0, // m_driverController.getLeftX(),
+                    0.0, // m_driverController.getRightX(),
                     true, true),
             m_robotDrive));
       // TODO this forgot line for simulation
@@ -145,6 +145,11 @@ public class RobotContainer {
 
   public void periodic() {
     m_fieldSim.periodic();
+  }
+
+  public void disabledInit() {
+    // THis appears to cause robot angle to shift each time enable
+    //m_robotDrive.resetAngleToAbsolute();
   }
 
 }
