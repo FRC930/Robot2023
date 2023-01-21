@@ -57,7 +57,6 @@ public class RobotContainer {
   // The robot's subsystems
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
-  private final TeleopSwerve m_teleCommand = new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
 
     public static final int kDriverControllerPort = 0;
@@ -75,7 +74,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // Configure default commands
-    m_robotDrive.setDefaultCommand(m_teleCommand);
+    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
 
 
       // TODO this forgot line for simulation
