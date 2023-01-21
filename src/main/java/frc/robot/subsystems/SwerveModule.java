@@ -141,7 +141,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_driveMotor.restoreFactoryDefaults();
     RevUtils.setDriveMotorConfig(m_driveMotor);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_driveMotor.setInverted(false);
+    m_driveMotor.setInverted(true);
 
     m_turningMotor.restoreFactoryDefaults();
     RevUtils.setTurnMotorConfig(m_turningMotor);
