@@ -20,9 +20,10 @@ import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
-
+import frc.robot.commands.TeleopSwerve;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -30,7 +31,10 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
+    /* Drive Controls */
+    private final int translationAxis = XboxController.Axis.kLeftY.value;
+    private final int strafeAxis = XboxController.Axis.kLeftX.value;
+    private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Modules */
     //Cannot use an ID of 0
@@ -46,10 +50,14 @@ public class RobotContainer {
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
 
+    
+  // The driver's controller
+  CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
+
   // The robot's subsystems
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
-  
+  private final TeleopSwerve m_teleCommand = new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
 
     public static final int kDriverControllerPort = 0;
@@ -62,27 +70,14 @@ public class RobotContainer {
   
     
 
-  // The driver's controller
-  XboxController m_driverController = new XboxController(kDriverControllerPort);
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
     // Configure default commands
-    m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            // TODO switch SwerveDrive Command and joyswitch deadband control see REV example
-            () ->
-                m_robotDrive.drive(
-                    m_driverController.getLeftY(), //Throttle, forward
-                    m_driverController.getLeftX(), //Strafe, sideways
-                    m_driverController.getRightX(), //Rotate, turn
-                    true, true),
-            m_robotDrive));
+    m_robotDrive.setDefaultCommand(m_teleCommand);
+
+
       // TODO this forgot line for simulation
       m_fieldSim.initSim();
   }

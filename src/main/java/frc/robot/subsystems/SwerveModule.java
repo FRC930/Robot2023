@@ -141,6 +141,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_driveMotor.restoreFactoryDefaults();
     RevUtils.setDriveMotorConfig(m_driveMotor);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_driveMotor.setInverted(false);
 
     m_turningMotor.restoreFactoryDefaults();
     RevUtils.setTurnMotorConfig(m_turningMotor);
@@ -149,7 +150,6 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_turningMotor.setSmartCurrentLimit(25);
     m_turningMotor.enableVoltageCompensation(12.6);
     m_turningMotor.setInverted(true); // MK4i Steer Motor is inverted
-    m_driveMotor.setInverted(false);
 
     m_angleEncoder.configFactoryDefault();
     CtreUtils.checkCtreError(
