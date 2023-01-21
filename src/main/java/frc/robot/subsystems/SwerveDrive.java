@@ -54,8 +54,8 @@ public class SwerveDrive extends SubsystemBase {
 
   private double m_simYaw;
   //TODO
-  public static final double kPXController = 0.4; //0.076301;
-  public static final double kPYController = 0.4; //0.076301;
+  public static final double kPXController = 1; //0.076301;
+  public static final double kPYController = 1; //0.076301;
 
 public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
 //TODO
@@ -137,7 +137,8 @@ private static final boolean invertGyro = false;
   }
 
   public Rotation2d getHeadingRotation2d() {
-    return Rotation2d.fromDegrees(getHeadingDegrees());
+    return getYaw();
+    // return Rotation2d.fromDegrees(getHeadingDegrees());
   }
 
   public Pose2d getPoseMeters() {
