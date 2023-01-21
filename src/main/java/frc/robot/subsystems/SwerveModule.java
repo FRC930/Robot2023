@@ -179,11 +179,11 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
       m_driveController.setP(1, SIM_SLOT);
     }
 
-     /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
-      * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-      */
-    Timer.delay(1.0);
-    resetAngleToAbsolute();
+    //  /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
+    //   * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+    //   */
+    // Timer.delay(1.0);
+    // resetAngleToAbsolute();
   }
 
   // TODO DO we need? maybe for debugging in

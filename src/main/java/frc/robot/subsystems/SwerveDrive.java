@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.SwerveModuleConstants;
 
@@ -79,6 +80,12 @@ private static final boolean invertGyro = false;
           new SwerveModule(3, backRightModuleConstants)
           };
 
+        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
+        * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+        */
+        Timer.delay(1.0);
+        resetAngleToAbsolute();
+        
         m_odometry = new SwerveDriveOdometry(
                 kDriveKinematics,
                 getHeadingRotation2d(),
