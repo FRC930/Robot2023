@@ -12,11 +12,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.simulation.FieldSim;
+import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -30,11 +30,40 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+
+    /* Modules */
+    //Cannot use an ID of 0
+    //Changed the turningMotorID and cancoderID from 0 to 3
+    public static final SwerveModuleConstants frontLeftModule = 
+      new SwerveModuleConstants(8, 9, 9, 114.69);
+    public static final SwerveModuleConstants frontRightModule = 
+      new SwerveModuleConstants(11, 10, 10, 235.1);
+    public static final SwerveModuleConstants backLeftModule = 
+      new SwerveModuleConstants(1, 3, 3, 84.28);
+    public static final SwerveModuleConstants backRightModule = 
+      new SwerveModuleConstants(18, 19, 19, 9.75);
+    //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
+    //page 100
+
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
+  private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
+  
+  private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
+
+    public static final int kDriverControllerPort = 0;
+    //TODO REMOVE
+    private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+    private static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    private static final double kPXController = 1;
+    private static final double kPYController = 1;
+  
+    
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_driverController = new XboxController(kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,13 +75,16 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
+            // TODO switch SwerveDrive Command and joyswitch deadband control see REV example
             () ->
                 m_robotDrive.drive(
-                    m_driverController.getLeftY(),
-                    m_driverController.getLeftX(),
-                    m_driverController.getRightX(),
-                    false),
+                    m_driverController.getLeftY(), //Throttle, forward
+                    m_driverController.getLeftX(), //Strafe, sideways
+                    m_driverController.getRightX(), //Rotate, turn
+                    true, true),
             m_robotDrive));
+      // TODO this forgot line for simulation
+      m_fieldSim.initSim();
   }
 
   /**
@@ -72,10 +104,10 @@ public class RobotContainer {
     // Create config for trajectory
     TrajectoryConfig config =
         new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                SwerveDrive.kMaxSpeedMetersPerSecond,
+                kMaxAccelerationMetersPerSecondSquared) //TODO REMOVE? AutoConstants.kMaxAccelerationMetersPerSecondSquared)
             // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
+            .setKinematics(SwerveDrive.getSwerveKinematics());
 
     // An example trajectory to follow.  All units in meters.
     Trajectory exampleTrajectory =
@@ -90,26 +122,38 @@ public class RobotContainer {
 
     var thetaController =
         new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+          kMaxAngularSpeedRadiansPerSecond, 0, 0, new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared));
+            //TODO REMOVE? AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     SwerveControllerCommand swerveControllerCommand =
         new SwerveControllerCommand(
             exampleTrajectory,
-            m_robotDrive::getPose, // Functional interface to feed supplier
-            DriveConstants.kDriveKinematics,
+            m_robotDrive::getPoseMeters, // Functional interface to feed supplier
+            SwerveDrive.getSwerveKinematics(),
 
             // Position controllers
-            new PIDController(AutoConstants.kPXController, 0, 0),
-            new PIDController(AutoConstants.kPYController, 0, 0),
+            new PIDController(kPXController, 0, 0),//TODO REMOVE? AutoConstants.kPXController, 0, 0),
+            new PIDController(kPYController, 0, 0),//TODO REMOVE? AutoConstants.kPYController, 0, 0),
             thetaController,
-            m_robotDrive::setModuleStates,
+            m_robotDrive::setSwerveModuleStates,
             m_robotDrive);
 
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
   }
+
+  public void periodic() {
+    m_fieldSim.periodic();
+  }
+
+  public void disabledInit() {
+    // THis appears to cause robot angle to shift each time enable
+    //m_robotDrive.resetAngleToAbsolute();
+  }
+
 }
