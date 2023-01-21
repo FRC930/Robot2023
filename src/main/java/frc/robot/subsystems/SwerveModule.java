@@ -35,6 +35,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.CtreUtils;
 import frc.robot.utilities.RevUtils;
@@ -145,6 +146,11 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     RevUtils.setTurnMotorConfig(m_turningMotor);
     m_turningMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+    m_turningMotor.setSmartCurrentLimit(25);
+    m_turningMotor.enableVoltageCompensation(12.6);
+    m_turningMotor.setInverted(true); // MK4i Steer Motor is inverted
+    m_driveMotor.setInverted(false);
+
     m_angleEncoder.configFactoryDefault();
     CtreUtils.checkCtreError(
     m_angleEncoder.configAllSettings(CtreUtils.generateCanCoderConfig()),
@@ -173,6 +179,10 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
       m_driveController.setP(1, SIM_SLOT);
     }
 
+     /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
+      * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+      */
+    Timer.delay(1.0);
     resetAngleToAbsolute();
   }
 
@@ -231,7 +241,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     //TODO re-enable optimize once swerve module is working
-    // desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
+    desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
 
     //Logs information about the robot with AdvantageScope
     double velocityRadPerSec = 
