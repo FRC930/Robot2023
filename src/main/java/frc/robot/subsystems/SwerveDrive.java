@@ -66,6 +66,8 @@ private static final boolean invertGyro = false;
   public PIDController autoYController;
   public PIDController autoThetaController;
 
+  private SwerveModuleState[] moduleStates; 
+
   private SwerveModule[] mSwerveMods;
 
   public SwerveDrive(SwerveModuleConstants frontLeftModuleConstants, SwerveModuleConstants frontRightModuleConstants, SwerveModuleConstants backLeftModuleConstants, SwerveModuleConstants backRightModuleConstants) {
@@ -109,7 +111,7 @@ private static final boolean invertGyro = false;
                     throttle, strafe, rotation, getHeadingRotation2d())
                     : new ChassisSpeeds(throttle, strafe, rotation);
 
-    SwerveModuleState[] moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setSwerveModuleStates(moduleStates, isOpenLoop);
   }
 
@@ -193,7 +195,9 @@ private static final boolean invertGyro = false;
     double[] xyzDps = new double[3];
     m_pigeon.getRawGyro(xyzDps);
     Logger.getInstance().recordOutput("Drive/Gyro" + "velocityRadPerSec", Units.degreesToRadians(xyzDps[2]));
-    
+    if (moduleStates != null) {
+      Logger.getInstance().recordOutput("SwerveModuleStates/Subsystem", moduleStates);
+    }
   }
 
   @Override

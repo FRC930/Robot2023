@@ -13,9 +13,9 @@ public final class RevUtils {
   public static void setTurnMotorConfig(CANSparkMax motorController) {
     // TODO Tune Manually
     motorController.getPIDController().setFF(0.0);
-    motorController.getPIDController().setP(0.4);
+    motorController.getPIDController().setP(0.032);
     motorController.getPIDController().setI(0.0);
-    //motorController.getPIDController().setD(0.075);
+    // motorController.getPIDController().setD(0.02);
 
     // TODO Help reduce CAN utilization
     motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
