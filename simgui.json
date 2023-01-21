@@ -6,7 +6,6 @@
     },
     "windows": {
       "/SmartDashboard/Field2d": {
-        "image": "C:\\Users\\JackL\\Desktop\\2023-field.png",
         "window": {
           "visible": true
         }

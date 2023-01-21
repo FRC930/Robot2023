@@ -263,8 +263,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
       //TODO currently doesn't work
       int DRIVE_PID_SLOT = RobotBase.isReal() ? VEL_SLOT : SIM_SLOT;
       m_driveController.setReference(
-              // desiredState.speedMetersPerSecond,
-              velocityRadPerSec * 60,
+              desiredState.speedMetersPerSecond,
               CANSparkMax.ControlType.kVelocity,
               DRIVE_PID_SLOT
       );
