@@ -45,17 +45,17 @@ public class SwerveDrive extends SubsystemBase {
 
   private SwerveDriveOdometry m_odometry;
 // TODO what needed for 
-//   private ProfiledPIDController m_xController =
-//           new ProfiledPIDController(kP_X, 0, kD_X, kThetaControllerConstraints);
-//   private ProfiledPIDController m_yController =
-//           new ProfiledPIDController(kP_Y, 0, kD_Y, kThetaControllerConstraints);
-//   private ProfiledPIDController m_turnController =
-//           new ProfiledPIDController(kP_Theta, 0, kD_Theta, kThetaControllerConstraints);
+  // private ProfiledPIDController m_xController =
+  //         new ProfiledPIDController(kP_X, 0, kD_X, kThetaControllerConstraints);
+  // private ProfiledPIDController m_yController =
+  //         new ProfiledPIDController(kP_Y, 0, kD_Y, kThetaControllerConstraints);
+  // private ProfiledPIDController m_turnController =
+  //         new ProfiledPIDController(kP_Theta, 0, kD_Theta, kThetaControllerConstraints);
 
   private double m_simYaw;
   //TODO
-  public static final double kPXController = 0.4; //0.076301;
-  public static final double kPYController = 0.4; //0.076301;
+  public static final double kPXController = 1; //0.076301;
+  public static final double kPYController = 1; //0.076301;
 
 public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
 //TODO
@@ -66,6 +66,7 @@ private static final boolean invertGyro = false;
   public PIDController autoXController;
   public PIDController autoYController;
   public PIDController autoThetaController;
+
 
   private SwerveModuleState[] moduleStates; 
 
@@ -93,11 +94,11 @@ private static final boolean invertGyro = false;
                 new Pose2d());
     
     m_pigeon.setYaw(0);
-    // TODO WHAT ARE THESE for
-//     autoXController = new PIDController(kPXController, 0, 0);
-//     autoYController = new PIDController(kPYController, 0, 0);
-//     autoThetaController = new PIDController(
-//         0.33, 0, 0);
+    //used for Autonous
+    autoXController = new PIDController(kPXController, 0, 0);
+    autoYController = new PIDController(kPYController, 0, 0);
+    autoThetaController = new PIDController(
+        0.33, 0, 0);
   }
 
   public void drive(
@@ -136,7 +137,8 @@ private static final boolean invertGyro = false;
   }
 
   public Rotation2d getHeadingRotation2d() {
-    return Rotation2d.fromDegrees(getHeadingDegrees());
+    return getYaw();
+    // return Rotation2d.fromDegrees(getHeadingDegrees());
   }
 
   public Pose2d getPoseMeters() {
@@ -219,17 +221,17 @@ private static final boolean invertGyro = false;
     public static SwerveDriveKinematics getSwerveKinematics() {
         return kDriveKinematics;
     }
-//     public PIDController getAutoXController() {
-//         return autoXController;
-//     }
+    public PIDController getAutoXController() {
+        return autoXController;
+    }
 
-//     public PIDController getAutoYController() {
-//         return autoYController;
-//     }
+    public PIDController getAutoYController() {
+        return autoYController;
+    }
 
-//     public PIDController getAutoThetaController() {
-//         return autoThetaController;
-//     }
+    public PIDController getAutoThetaController() {
+        return autoThetaController;
+    }
 
     public void resetOdometry(Pose2d initialPose) {
         m_odometry.resetPosition(getYaw(), getModulePositions(), initialPose);
