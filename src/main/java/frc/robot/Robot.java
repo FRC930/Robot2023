@@ -110,14 +110,15 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
     //Needed for simulation
-    //m_robotContainer.periodic();
+    m_robotContainer.periodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.disabledInit();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -125,14 +126,8 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -165,7 +160,20 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().cancelAll();
   }
 
+  @Override
+  public void testExit(){
+      // TODO m_robotContaner.testExit();
+  }
+
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  /** This function is called once when the robot is first started up. */
+  @Override
+  public void simulationInit() {}
+
+  /** This function is called periodically whilst in simulation. */
+  @Override
+  public void simulationPeriodic() {}
 }
