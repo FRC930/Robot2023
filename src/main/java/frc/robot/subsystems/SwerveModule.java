@@ -44,13 +44,13 @@ import frc.robot.utilities.SwerveModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
   private final int POS_SLOT = 0;
-  private final int VEL_SLOT = 1;
+  private final int VEL_SLOT = 0;// Auto/ closed loop requires this to be 0 and not 1
   private final int SIM_SLOT = 2;
+
+  //verified Values
   //https://www.swervedrivespecialties.com/products/mk4i-swerve-module?variant=39598777303153
   //MK4I L2
   public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
-  
-  //Verified Values
   public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);
   public static final double kMaxModuleAngularSpeedRadiansPerSecond = 180; //2 * Math.PI; last year 930 used 180
   public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 180; //2 * Math.PI; last year 930 used 180
@@ -66,15 +66,15 @@ public class SwerveModule extends SubsystemBase {
   public static final int kNeoCPR = 42;
   public static final int kNeoRPM = 5676;
   public static final double kDriveRevToMeters =
-            ((kWheelDiameterMeters * Math.PI) / (kNeoCPR * kDriveMotorGearRatio));
+            ((kWheelDiameterMeters * Math.PI) / kDriveMotorGearRatio);
   public static final double kDriveRpmToMetersPerSecond =
-            (kDriveRevToMeters * kNeoRPM)/ 60.0;
+            kDriveRevToMeters/ 60.0;
   public static final double kTurnRotationsToDegrees =
-            360.0 / (kTurningMotorGearRatio * 1);
+            360.0 / kTurningMotorGearRatio;
 
   // TODO use LoggedTunableNumber for PID values see advantagekit example
 
-  //TODO
+  //TODO REMOVE IF NOT USED
   public static final double kPModuleTurningController = 1;
   public static final double kPModuleDriveController = 1;
 
@@ -90,8 +90,9 @@ public class SwerveModule extends SubsystemBase {
   public final RelativeEncoder m_driveEncoder;
   private final RelativeEncoder m_turnEncoder;
   
+  //TODO REMOVE IF NOT USED
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ksDriveVoltSecondsPerMeter, kaDriveVoltSecondsSquaredPerMeter, kvDriveVoltSecondsSquaredPerMeter);
-private final ProfiledPIDController m_turningProfiledPIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 2 * Math.PI));
+  private final ProfiledPIDController m_turningProfiledPIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 2 * Math.PI));
 
   // Using a TrapezoidProfile PIDController to allow for smooth turning
   private final ProfiledPIDController m_turningPIDController =
@@ -141,7 +142,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_driveMotor.restoreFactoryDefaults();
     RevUtils.setDriveMotorConfig(m_driveMotor);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_driveMotor.setInverted(true);
+    m_driveMotor.setInverted(true);//MK4i drive motor is inverted
 
     m_turningMotor.restoreFactoryDefaults();
     RevUtils.setTurnMotorConfig(m_turningMotor);
@@ -159,6 +160,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_driveEncoder = m_driveMotor.getEncoder();
     m_driveEncoder.setPositionConversionFactor(kDriveRevToMeters);
     m_driveEncoder.setVelocityConversionFactor(kDriveRpmToMetersPerSecond);
+    m_driveEncoder.setPosition(0);
 
     m_turnEncoder = m_turningMotor.getEncoder();
     RevUtils.checkNeoError(
