@@ -4,38 +4,26 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.CtreUtils;
 import frc.robot.utilities.RevUtils;
@@ -74,15 +62,6 @@ public class SwerveModule extends SubsystemBase {
 
   // TODO use LoggedTunableNumber for PID values see advantagekit example
 
-  //TODO REMOVE IF NOT USED
-  public static final double kPModuleTurningController = 1;
-  public static final double kPModuleDriveController = 1;
-
-  public static final boolean invertGyro = false;
-
-  private final PIDController m_drivePIDController =
-      new PIDController(kPModuleDriveController, 0, 0);
-
   private CANSparkMax m_driveMotor;
   private CANSparkMax m_turningMotor;
   private CANCoder m_angleEncoder;
@@ -90,20 +69,7 @@ public class SwerveModule extends SubsystemBase {
   public final RelativeEncoder m_driveEncoder;
   private final RelativeEncoder m_turnEncoder;
   
-  //TODO REMOVE IF NOT USED
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ksDriveVoltSecondsPerMeter, kaDriveVoltSecondsSquaredPerMeter, kvDriveVoltSecondsSquaredPerMeter);
-  private final ProfiledPIDController m_turningProfiledPIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 2 * Math.PI));
-
-  // Using a TrapezoidProfile PIDController to allow for smooth turning
-  private final ProfiledPIDController m_turningPIDController =
-      new ProfiledPIDController(
-          kPModuleTurningController,
-          0,
-          0,
-          new TrapezoidProfile.Constraints(
-              kMaxModuleAngularSpeedRadiansPerSecond,
-              kMaxModuleAngularAccelerationRadiansPerSecondSquared));
-  
+ 
   private double m_angleOffset;
 
   private final SparkMaxPIDController m_driveController;
@@ -181,11 +147,7 @@ public class SwerveModule extends SubsystemBase {
       m_driveController.setP(1, SIM_SLOT);
     }
 
-    //  /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
-    //   * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-    //   */
-    // Timer.delay(1.0);
-    // resetAngleToAbsolute();
+    //reset angle to Absolute is being called from swerve drive
   }
 
   // TODO DO we need? maybe for debugging in
@@ -329,7 +291,7 @@ public class SwerveModule extends SubsystemBase {
 
   public SwerveDriveKinematics getSwerveKinematics() {
     return SwerveDrive.kDriveKinematics;
-}
+  }
 
 
   // TODO NOT SURE WHAT FOR m_pose never gotten

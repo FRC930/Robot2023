@@ -12,7 +12,6 @@ import com.ctre.phoenix.unmanaged.Unmanaged;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,61 +24,54 @@ import frc.robot.utilities.SwerveModuleConstants;
 
 
 public class SwerveDrive extends SubsystemBase {
-        public static final double kTrackWidth = Units.inchesToMeters(18.5);//0.5;
-        // Distance between centers of right and left wheels on robot
-        public static final double kWheelBase = Units.inchesToMeters(20.5);//0.7;
-        // Distance between front and back wheels on robot
-    
-        public static final Translation2d[] kModuleTranslations = {
-          new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-          new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-          new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-          new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
+    public static final double kTrackWidth = Units.inchesToMeters(18.5);//0.5;
+    // Distance between centers of right and left wheels on robot
+    public static final double kWheelBase = Units.inchesToMeters(20.5);//0.7;
+    // Distance between front and back wheels on robot
+
+    public static final Translation2d[] kModuleTranslations = {
+      new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+      new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+      new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+      new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
     };
-    
-  public static final SwerveDriveKinematics kDriveKinematics =
-          new SwerveDriveKinematics(kModuleTranslations);
-    
 
-  private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); //TODO pass in id and canbus   CAN.pigeon);
-
-  private SwerveDriveOdometry m_odometry;
-// TODO what needed for 
-  // private ProfiledPIDController m_xController =
-  //         new ProfiledPIDController(kP_X, 0, kD_X, kThetaControllerConstraints);
-  // private ProfiledPIDController m_yController =
-  //         new ProfiledPIDController(kP_Y, 0, kD_Y, kThetaControllerConstraints);
-  // private ProfiledPIDController m_turnController =
-  //         new ProfiledPIDController(kP_Theta, 0, kD_Theta, kThetaControllerConstraints);
-
-  private double m_simYaw;
-  //TODO
-  public static final double kPXController = 1; //0.076301;
-  public static final double kPYController = 1; //0.076301;
-
-public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
-//TODO
-private static final double kMaxRotationRadiansPerSecond = Math.PI * 2.0; // Last year 11.5?
-private static final boolean invertGyro = false;
-
-  //TODO they use ProfiledPIDController
-  public PIDController autoXController;
-  public PIDController autoYController;
-  public PIDController autoThetaController;
+    public static final SwerveDriveKinematics kDriveKinematics =
+      new SwerveDriveKinematics(kModuleTranslations);
 
 
-  private SwerveModuleState[] moduleStates; 
+    private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); //TODO pass in id and canbus   CAN.pigeon);
 
-  private SwerveModule[] mSwerveMods;
+    private SwerveDriveOdometry m_odometry;
 
-  public SwerveDrive(SwerveModuleConstants frontLeftModuleConstants, SwerveModuleConstants frontRightModuleConstants, SwerveModuleConstants backLeftModuleConstants, SwerveModuleConstants backRightModuleConstants) {
+    private double m_simYaw;
+    //TODO TUNE FOR AUTO
+    public static final double kPXController = 1; //0.076301;
+    public static final double kPYController = 1; //0.076301;
 
-        mSwerveMods = new SwerveModule[] {  
-          new SwerveModule(0, frontLeftModuleConstants),
-          new SwerveModule(1, frontRightModuleConstants),
-          new SwerveModule(2, backLeftModuleConstants),
-          new SwerveModule(3, backRightModuleConstants)
-          };
+    public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
+    //TODO VALIDATE AND TURN
+    private static final double kMaxRotationRadiansPerSecond = Math.PI * 2.0; // Last year 11.5?
+    private static final boolean invertGyro = false;
+
+    //TODO they use ProfiledPIDController
+    public PIDController autoXController;
+    public PIDController autoYController;
+    public PIDController autoThetaController;
+
+
+    private SwerveModuleState[] moduleStates; 
+
+    private SwerveModule[] mSwerveMods;
+
+    public SwerveDrive(SwerveModuleConstants frontLeftModuleConstants, SwerveModuleConstants frontRightModuleConstants, SwerveModuleConstants backLeftModuleConstants, SwerveModuleConstants backRightModuleConstants) {
+
+      mSwerveMods = new SwerveModule[] {  
+        new SwerveModule(0, frontLeftModuleConstants),
+        new SwerveModule(1, frontRightModuleConstants),
+        new SwerveModule(2, backLeftModuleConstants),
+        new SwerveModule(3, backRightModuleConstants)
+      };
 
         /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
         * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
@@ -93,20 +85,20 @@ private static final boolean invertGyro = false;
                 getModulePositions(),
                 new Pose2d());
     
-    m_pigeon.setYaw(0);
-    //used for Autonous
-    autoXController = new PIDController(kPXController, 0, 0);
-    autoYController = new PIDController(kPYController, 0, 0);
-    autoThetaController = new PIDController(
+        m_pigeon.setYaw(0);
+        //used for Autonous
+        autoXController = new PIDController(kPXController, 0, 0);
+        autoYController = new PIDController(kPYController, 0, 0);
+        autoThetaController = new PIDController(
         0.33, 0, 0);
-  }
+    }
 
   public void drive(
           double throttle,
           double strafe,
           double rotation,
           boolean isFieldRelative,
-          boolean isOpenLoop) {
+          boolean isOpenLoop){
     
     //Applies a Deadband of 0.05 to the controllers input
     throttle = (MathUtil.applyDeadband(throttle, 0.1))* kMaxSpeedMetersPerSecond;
@@ -175,7 +167,7 @@ private static final boolean invertGyro = false;
               kModuleTranslations[i]
                       .rotateBy(getHeadingRotation2d())
                       .plus(getPoseMeters().getTranslation());
-//TODO WHAT IS THIS FOR
+//TODO WHAT IS THIS FOR 
       module.setModulePose(
               new Pose2d(
                       modulePositionFromChassis,
