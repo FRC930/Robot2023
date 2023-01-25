@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.AprilVisionUtility;
 import frc.robot.utilities.SwerveModuleConstants;
 
 
@@ -51,6 +52,9 @@ public class SwerveDrive extends SubsystemBase {
   //         new ProfiledPIDController(kP_Y, 0, kD_Y, kThetaControllerConstraints);
   // private ProfiledPIDController m_turnController =
   //         new ProfiledPIDController(kP_Theta, 0, kD_Theta, kThetaControllerConstraints);
+
+private AprilVisionUtility m_aprilCameraOne;
+
 
   private double m_simYaw;
   //TODO
@@ -99,6 +103,12 @@ private static final boolean invertGyro = false;
     autoYController = new PIDController(kPYController, 0, 0);
     autoThetaController = new PIDController(
         0.33, 0, 0);
+
+    m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+  }
+
+  public Pose2d getPose(){
+    return m_aprilCameraOne.getPose();
   }
 
   public void drive(
@@ -144,6 +154,7 @@ private static final boolean invertGyro = false;
   public Pose2d getPoseMeters() {
     return m_odometry.getPoseMeters();
   }
+
 
   public SwerveModule getSwerveModule(int moduleNumber) {
     return mSwerveMods[moduleNumber];
@@ -207,6 +218,7 @@ private static final boolean invertGyro = false;
     if (moduleStates != null) {
       Logger.getInstance().recordOutput("SwerveModuleStates/Subsystem", moduleStates);
     }
+    m_aprilCameraOne.updateCameraPos();
   }
 
   @Override
