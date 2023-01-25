@@ -17,7 +17,7 @@ public class TaxiOneBall extends SequentialCommandGroup {
         // An example trajectory to follow.  All units in meters.
         PathPlannerTrajectory pathPlannerExample = PathPlanner.loadPath("TaxiOneBall", 1, 2.5, false);
         Trajectory exampleTrajectory = pathPlannerExample;
-
+        
         var thetaController = s_Swerve.getAutoThetaController();
         thetaController.enableContinuousInput(-180.0, 180.0); //-Math.PI, Math.PI);
 
@@ -34,7 +34,7 @@ public class TaxiOneBall extends SequentialCommandGroup {
 
 
         addCommands(
-            new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
+            new InstantCommand(() -> s_Swerve.resetOdometry(pathPlannerExample.getInitialHolonomicPose())),
             swerveControllerCommand
         );
     }
