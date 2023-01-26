@@ -1,0 +1,24 @@
+{
+  "sourceUrl": "https://cad.onshape.com/documents/60efe7d015f381599c043626/w/9384402bd8ec4c2d35354f2f/e/b5a2a06f57de139c38a10a8e",
+  "rotations": [{ "axis": "x", "degrees": 90 }],
+  "position": [0.0, 0.0, 0],
+  "cameras": [
+    {
+      "name": "Front Camera",
+      "rotations": [{ "axis": "y", "degrees": 20 }],
+      "position": [0.2, 0, 0.8],
+      "resolution": [960, 720],
+      "fov": 100
+    },
+    {
+      "name": "Back Camera",
+      "rotations": [
+        { "axis": "y", "degrees": 20 },
+        { "axis": "z", "degrees": 180 }
+      ],
+      "position": [-0.2, 0, 0.8],
+      "resolution": [960, 720],
+      "fov": 100
+    }
+  ]
+}
