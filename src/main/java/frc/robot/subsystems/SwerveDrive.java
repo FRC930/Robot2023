@@ -45,7 +45,7 @@ public class SwerveDrive extends SubsystemBase {
     private SwerveDriveOdometry m_odometry;
 
     private double m_simYaw;
-    //TODO TUNE FOR AUTO
+    //TODO TUNE FOR GHOST
     public static final double kPXController = 10.18; //0.076301;
     public static final double kPYController = 7.596; //0.076301;
 
