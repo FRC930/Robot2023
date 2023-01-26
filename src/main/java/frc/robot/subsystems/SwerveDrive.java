@@ -46,8 +46,8 @@ public class SwerveDrive extends SubsystemBase {
 
     private double m_simYaw;
     //TODO TUNE FOR AUTO
-    public static final double kPXController = 1; //0.076301;
-    public static final double kPYController = 1; //0.076301;
+    public static final double kPXController = 10.18; //0.076301;
+    public static final double kPYController = 7.596; //0.076301;
 
     public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
     //TODO VALIDATE AND TURN
@@ -90,7 +90,7 @@ public class SwerveDrive extends SubsystemBase {
         autoXController = new PIDController(kPXController, 0, 0);
         autoYController = new PIDController(kPYController, 0, 0);
         autoThetaController = new PIDController(
-        0.33, 0, 0);
+        1.33, 0, 0);
     }
 
   public void drive(
