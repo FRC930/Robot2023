@@ -4,38 +4,26 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.CtreUtils;
 import frc.robot.utilities.RevUtils;
@@ -44,13 +32,13 @@ import frc.robot.utilities.SwerveModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
   private final int POS_SLOT = 0;
-  private final int VEL_SLOT = 1;
+  private final int VEL_SLOT = 0;// Auto/ closed loop requires this to be 0 and not 1
   private final int SIM_SLOT = 2;
+
+  //verified Values
   //https://www.swervedrivespecialties.com/products/mk4i-swerve-module?variant=39598777303153
   //MK4I L2
   public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
-  
-  //Verified Values
   public static final double kWheelDiameterMeters = Units.inchesToMeters(4.0);
   public static final double kMaxModuleAngularSpeedRadiansPerSecond = 180; //2 * Math.PI; last year 930 used 180
   public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 180; //2 * Math.PI; last year 930 used 180
@@ -66,22 +54,13 @@ public class SwerveModule extends SubsystemBase {
   public static final int kNeoCPR = 42;
   public static final int kNeoRPM = 5676;
   public static final double kDriveRevToMeters =
-            ((kWheelDiameterMeters * Math.PI) / (kNeoCPR * kDriveMotorGearRatio));
+            ((kWheelDiameterMeters * Math.PI) / kDriveMotorGearRatio);
   public static final double kDriveRpmToMetersPerSecond =
-            (kDriveRevToMeters * kNeoRPM)/ 60.0;
+            kDriveRevToMeters/ 60.0;
   public static final double kTurnRotationsToDegrees =
-            360.0 / (kTurningMotorGearRatio * 1);
+            360.0 / kTurningMotorGearRatio;
 
   // TODO use LoggedTunableNumber for PID values see advantagekit example
-
-  //TODO
-  public static final double kPModuleTurningController = 1;
-  public static final double kPModuleDriveController = 1;
-
-  public static final boolean invertGyro = false;
-
-  private final PIDController m_drivePIDController =
-      new PIDController(kPModuleDriveController, 0, 0);
 
   private CANSparkMax m_driveMotor;
   private CANSparkMax m_turningMotor;
@@ -90,19 +69,7 @@ public class SwerveModule extends SubsystemBase {
   public final RelativeEncoder m_driveEncoder;
   private final RelativeEncoder m_turnEncoder;
   
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ksDriveVoltSecondsPerMeter, kaDriveVoltSecondsSquaredPerMeter, kvDriveVoltSecondsSquaredPerMeter);
-private final ProfiledPIDController m_turningProfiledPIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(2 * Math.PI, 2 * Math.PI));
-
-  // Using a TrapezoidProfile PIDController to allow for smooth turning
-  private final ProfiledPIDController m_turningPIDController =
-      new ProfiledPIDController(
-          kPModuleTurningController,
-          0,
-          0,
-          new TrapezoidProfile.Constraints(
-              kMaxModuleAngularSpeedRadiansPerSecond,
-              kMaxModuleAngularAccelerationRadiansPerSecondSquared));
-  
+ 
   private double m_angleOffset;
 
   private final SparkMaxPIDController m_driveController;
@@ -141,7 +108,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_driveMotor.restoreFactoryDefaults();
     RevUtils.setDriveMotorConfig(m_driveMotor);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_driveMotor.setInverted(true);
+    m_driveMotor.setInverted(true);//MK4i drive motor is inverted
 
     m_turningMotor.restoreFactoryDefaults();
     RevUtils.setTurnMotorConfig(m_turningMotor);
@@ -159,6 +126,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
     m_driveEncoder = m_driveMotor.getEncoder();
     m_driveEncoder.setPositionConversionFactor(kDriveRevToMeters);
     m_driveEncoder.setVelocityConversionFactor(kDriveRpmToMetersPerSecond);
+    m_driveEncoder.setPosition(0);
 
     m_turnEncoder = m_turningMotor.getEncoder();
     RevUtils.checkNeoError(
@@ -179,11 +147,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
       m_driveController.setP(1, SIM_SLOT);
     }
 
-    //  /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
-    //   * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-    //   */
-    // Timer.delay(1.0);
-    // resetAngleToAbsolute();
+    //reset angle to Absolute is being called from swerve drive
   }
 
   // TODO DO we need? maybe for debugging in
@@ -327,7 +291,7 @@ private final ProfiledPIDController m_turningProfiledPIDController = new Profile
 
   public SwerveDriveKinematics getSwerveKinematics() {
     return SwerveDrive.kDriveKinematics;
-}
+  }
 
 
   // TODO NOT SURE WHAT FOR m_pose never gotten
