@@ -25,8 +25,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 
 import frc.robot.autos.TaxiOneBall;
+import frc.robot.commands.RotateCommand;
+import frc.robot.commands.RotateCommand;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.commands.Travel;
+import frc.robot.commands.TravelToTarget;
 import frc.robot.commands.TravelToTarget;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -63,8 +65,9 @@ public class RobotContainer {
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
-  private final Travel m_travel = new Travel( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
+  private final TravelToTarget m_travel = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
+  private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 16.4846, 8.1026, new Rotation2d(0.0)), m_robotDrive);
 
     public static final int kDriverControllerPort = 0;
     //TODO REMOVE
@@ -82,6 +85,7 @@ public class RobotContainer {
     configureButtonBindings();
     // m_driverController.x().whileTrue(m_travel);
     m_driverController.x().whileTrue(m_travelToTarget);
+    m_driverController.y().whileTrue(m_rotateCommand);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
 
