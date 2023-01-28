@@ -208,7 +208,8 @@ private AprilVisionUtility m_aprilCameraOne;
     if (moduleStates != null) {
       Logger.getInstance().recordOutput("SwerveModuleStates/Subsystem", moduleStates);
     }
-    m_aprilCameraOne.updateCameraPos();
+    m_aprilCameraOne.updateCameraPos(getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    //kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters()
   }
 
   @Override
