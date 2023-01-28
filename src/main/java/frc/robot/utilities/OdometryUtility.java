@@ -21,9 +21,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -32,7 +30,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
 import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.OpenCVHelp;
 import frc.robot.utilities.vision.estimation.PNPResults;
@@ -50,6 +47,11 @@ public class OdometryUtility {
     // The pipeline that you want to select
     private static final int PI_CAMERA_INDEX = 0;
 
+    // TODO robot to camera
+    private static final double CAMERA_POSITION_X = 10.0;
+    private static final double CAMERA_POSITION_Y = 10.0;
+    private static final double CAMERA_POSITION_Z = 25.0;
+
     // ----- VARIABLES ----- \\
     // This is the camera that is used for april tags
     private PhotonCamera m_PhotonCamera;
@@ -61,7 +63,6 @@ public class OdometryUtility {
     private SwerveDrivePoseEstimator m_PoseEstimator;
     private final Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(0));
     private final Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(0));
-    private final Transform2d m_CameraPosition = new Transform2d(new Translation2d(Units.inchesToMeters(6), 0.0), new Rotation2d(3.14159));
 
     private AprilTagFieldLayout tagLayout;
 
@@ -130,35 +131,6 @@ public class OdometryUtility {
     public void updateCameraPos(Rotation2d rotation2d, SwerveModulePosition[] swerveModulePositions, Pose2d pose2d) {
         m_PoseEstimator.update(rotation2d, swerveModulePositions);
         updateCameraPositions();
-        
-//         PhotonPipelineResult vResult = m_PhotonCamera.getLatestResult();
-// //TODO 2D Should we bw using Pose 2D Also?
-//         if(vResult.hasTargets()) {
-//             PhotonTrackedTarget vTarget = vResult.getBestTarget();
-//             int vTargetID = vTarget.getFiducialId();
-
-//             if(CameraTargetUtility.getInstance().targetExists(vTargetID)) {
-
-//                 Translation2d vTargetTranslation = vTarget.getBestCameraToTarget().getTranslation().toTranslation2d();
-//                 Rotation2d vTargetRotation = vTarget.getBestCameraToTarget().getRotation().toRotation2d();
-
-//                 Transform2d vTargetTransform = new Transform2d(vTargetTranslation, vTargetRotation);
-
-//                 Pose2d vInvertCamPose = CameraTargetUtility.getInstance().getTarget(vTargetID).getTargetPos().transformBy(vTargetTransform.inverse());
-//                 Pose2d vVisionMeasurment = vInvertCamPose.transformBy(m_CameraPosition);
-//                 double vImageCaptureTime = Timer.getFPGATimestamp() - (vResult.getLatencyMillis() / 1000d); 
-//                 m_PoseEstimator.addVisionMeasurement(vVisionMeasurment, vImageCaptureTime);
-
-//                 if (Robot.isReal()) {
-//                     try {
-//                         m_PoseEstimator.updateWithTime(Timer.getFPGATimestamp(), m_rotation, m_swerveModulePositions);
-//                     } catch (Exception e) {
-//                         // TODO: Handle exception
-//                     }
-//                 }
-
-//             }
-//         }
     }
     
    /**
@@ -213,10 +185,12 @@ public class OdometryUtility {
     public Pose2d getPose() {
         return m_PoseEstimator.getEstimatedPosition();
     }
-
-
+    /**
+     * <h3> updateCameraPositions </h3>
+     *  Updates the swerve estimated pose based on the position camera detections of April Tags
+     */
     public void updateCameraPositions() {
-        // TODO FIX - SmartDashboard.putNumberArray("RobotPose", LogFileUtil.toPoseArray2d(getPose()));
+        SmartDashboard.putNumberArray("RobotPose", LogUtil.toPoseArray2d(getPose()));
     
         final List<TargetCorner> corners = new ArrayList<TargetCorner>();
         final List<AprilTag> foundTags = new ArrayList<AprilTag>();
@@ -253,11 +227,10 @@ public class OdometryUtility {
                     e.printStackTrace();
                 } 
                 final Transform3d robotToCameraPose = new Transform3d(
-                     // TODO robot to camera
                 new Translation3d(
-                    Units.inchesToMeters(10),
-                    Units.inchesToMeters(10),
-                    Units.inchesToMeters(25)
+                    Units.inchesToMeters(CAMERA_POSITION_X),
+                    Units.inchesToMeters(CAMERA_POSITION_Y),
+                    Units.inchesToMeters(CAMERA_POSITION_Z)
                 ),
                 new Rotation3d(
                     0,
@@ -281,7 +254,13 @@ public class OdometryUtility {
         }
     }
 
-
+    /**
+     * <h3>addVisionMeasurement</h3>
+     * 
+     * Updates the swerve pose estimator based on the vision latency 
+     * @param measurement the estimated Pose2d
+     * @param latencySeconds time the camera lags
+     */
     private void addVisionMeasurement(Pose2d measurement, double latencySeconds) {
         m_PoseEstimator.addVisionMeasurement(
             measurement,
