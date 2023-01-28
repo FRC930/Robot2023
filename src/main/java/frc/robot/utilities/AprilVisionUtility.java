@@ -90,11 +90,15 @@ public class AprilVisionUtility {
      * <h3>updateCameraPos</h3>
      * 
      * Updates the position of the robot based on the april tag position
+     * @param pose2d
+     * @param swerveModulePositions
+     * @param rotation2d
      * 
      */
-    public void updateCameraPos() {
+    public void updateCameraPos(Rotation2d rotation2d, SwerveModulePosition[] swerveModulePositions, Pose2d pose2d) {
         PhotonPipelineResult vResult = m_PhotonCamera.getLatestResult();
-
+//TODO 2D Should we bw using Pose 2D Also?
+        m_PoseEstimator.update(rotation2d, swerveModulePositions);
         if(vResult.hasTargets()) {
             PhotonTrackedTarget vTarget = vResult.getBestTarget();
             int vTargetID = vTarget.getFiducialId();

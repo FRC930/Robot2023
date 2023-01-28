@@ -27,6 +27,7 @@ import java.util.List;
 import frc.robot.autos.TaxiOneBall;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.Travel;
+import frc.robot.commands.TravelToTarget;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -63,6 +64,7 @@ public class RobotContainer {
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
   private final Travel m_travel = new Travel( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
+  private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
 
     public static final int kDriverControllerPort = 0;
     //TODO REMOVE
@@ -78,7 +80,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    m_driverController.x().whileTrue(m_travel);
+    // m_driverController.x().whileTrue(m_travel);
+    m_driverController.x().whileTrue(m_travelToTarget);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
 
