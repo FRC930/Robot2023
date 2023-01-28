@@ -43,7 +43,11 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
 import frc.robot.autos.TaxiOneBall;
+import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.RotateCommand;
+import frc.robot.commands.RotateCommand;
 import frc.robot.commands.TeleopSwerve;
+
 import frc.robot.commands.TravelToTarget;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -80,7 +84,10 @@ public class RobotContainer {
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
+  
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
+  private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
+  private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
 
     public static final int kDriverControllerPort = 0;
     //TODO REMOVE
@@ -97,6 +104,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     m_driverController.x().whileTrue(m_travelToTarget);
+    m_driverController.y().whileTrue(m_rotateCommand);
+    m_driverController.b().whileTrue(m_autoBalanceCommand);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
