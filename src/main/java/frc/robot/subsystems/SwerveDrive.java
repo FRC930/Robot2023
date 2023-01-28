@@ -19,7 +19,7 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.AprilVisionUtility;
+import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
 
 
@@ -44,7 +44,8 @@ public class SwerveDrive extends SubsystemBase {
     private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); //TODO pass in id and canbus   CAN.pigeon);
 
     private SwerveDriveOdometry m_odometry;
-private AprilVisionUtility m_aprilCameraOne;
+    // private AprilVisionUtility m_aprilCameraOne;
+    private OdometryUtility m_aprilCameraOne;
 
     private double m_simYaw;
     //TODO TUNE FOR GHOST
@@ -94,7 +95,8 @@ private AprilVisionUtility m_aprilCameraOne;
         autoThetaController = new PIDController(
         1.33, 0, 0);
 
-    m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
   }
 
   public Pose2d getPose(){

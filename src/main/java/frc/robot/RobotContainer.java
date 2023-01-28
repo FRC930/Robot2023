@@ -4,17 +4,27 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.utilities.vision.estimation.CameraProperties;
+import frc.robot.utilities.vision.estimation.PNPResults;
 import frc.robot.simulation.FieldSim;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,11 +32,18 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import org.littletonrobotics.junction.LogFileUtil;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import frc.robot.autos.TaxiOneBall;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.commands.Travel;
 import frc.robot.commands.TravelToTarget;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -63,7 +80,6 @@ public class RobotContainer {
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
-  private final Travel m_travel = new Travel( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
 
     public static final int kDriverControllerPort = 0;
@@ -80,14 +96,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    // m_driverController.x().whileTrue(m_travel);
     m_driverController.x().whileTrue(m_travelToTarget);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
-
-
-      // TODO this forgot line for simulation
-      m_fieldSim.initSim();
+    m_fieldSim.initSim();
   }
 
   /**
@@ -106,50 +118,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     return new TaxiOneBall(m_robotDrive).andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
-    // Create config for trajectory
-    // TrajectoryConfig config =
-    //     new TrajectoryConfig(
-    //             SwerveDrive.kMaxSpeedMetersPerSecond,
-    //             kMaxAccelerationMetersPerSecondSquared) //TODO REMOVE? AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-    //         // Add kinematics to ensure max speed is actually obeyed
-    //         .setKinematics(SwerveDrive.getSwerveKinematics());
 
-    // // An example trajectory to follow.  All units in meters.
-    // Trajectory exampleTrajectory =
-    //     TrajectoryGenerator.generateTrajectory(
-    //         // Start at the origin facing the +X direction
-    //         new Pose2d(0, 0, new Rotation2d(0)),
-    //         // Pass through these two interior waypoints, making an 's' curve path
-    //         List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //         // End 3 meters straight ahead of where we started, facing forward
-    //         new Pose2d(3, 0, new Rotation2d(0)),
-    //         config);
-
-    // var thetaController =
-    //     new ProfiledPIDController(
-    //       kMaxAngularSpeedRadiansPerSecond, 0, 0, new TrapezoidProfile.Constraints(
-    //         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared));
-    //         //TODO REMOVE? AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    // SwerveControllerCommand swerveControllerCommand =
-    //     new SwerveControllerCommand(
-    //         exampleTrajectory,
-    //         m_robotDrive::getPoseMeters, // Functional interface to feed supplier
-    //         SwerveDrive.getSwerveKinematics(),
-
-    //         // Position controllers
-    //         new PIDController(kPXController, 0, 0),//TODO REMOVE? AutoConstants.kPXController, 0, 0),
-    //         new PIDController(kPYController, 0, 0),//TODO REMOVE? AutoConstants.kPYController, 0, 0),
-    //         thetaController,
-    //         m_robotDrive::setSwerveModuleStates,
-    //         m_robotDrive);
-
-    // // Reset odometry to the starting pose of the trajectory.
-    // m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // // Run path following command, then stop at the end.
-    // return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
   }
 
   public void periodic() {
@@ -160,5 +129,8 @@ public class RobotContainer {
     // THis appears to cause robot angle to shift each time enable
     //m_robotDrive.resetAngleToAbsolute();
   }
+    
+
+  
 
 }
