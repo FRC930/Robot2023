@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
@@ -14,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RotateCommand extends CommandBase{
 
-    private final double Aim_Deadband = 0.2;
+    private final double Aim_Deadband = 0.08;
 
     private SwerveDrive m_swerveDrive;
 
@@ -26,6 +27,8 @@ public class RotateCommand extends CommandBase{
     private double turningAngle;
     private boolean isFieldRelative;
     private boolean isOpenLoop;
+
+    private double turningSpeed;
 
     private double m_angleOffset;
 
@@ -42,6 +45,12 @@ public class RotateCommand extends CommandBase{
         addRequirements(m_swerveDrive);
         m_targetPose2d = targetPose;
         m_angleOffset = 0.0;
+        throttle = 0.0;
+        strafe = 0.0;
+        turningAngle = 0.0;
+        isFieldRelative = true;
+        isOpenLoop = true;
+        turningSpeed = 0.0;
     }
 
     @Override
@@ -59,23 +68,26 @@ public class RotateCommand extends CommandBase{
         double y = m_targetPose2d.getY();
 
         //Calculates the angle using atan2 and adjusting using the robots current position
-        turningAngle = -(Math.atan2(y - cy, x - cx) - m_angleOffset);
+        turningAngle = (Math.atan2(y - cy, x - cx) - m_angleOffset);
 
         //If turningAngle wants to turn to the right more than 180 degrees, it will turn that distance to the left
         if (turningAngle > Math.PI) {
             turningAngle = -Math.PI + (turningAngle - Math.PI);
         }
+        //TODO use PID
+        turningSpeed = MathUtil.clamp(turningAngle / Math.PI, -1, 1);
 
         //Logs information regarding the command
         Logger.getInstance().recordOutput("RotateCommand/Angle", turningAngle);
+        Logger.getInstance().recordOutput("RotateCommand/TurningSpeed", turningSpeed);
         Logger.getInstance().recordOutput("RotateCommand/cx", cx);
         Logger.getInstance().recordOutput("RotateCommand/cy", cy);
         Logger.getInstance().recordOutput("RotateCommand/x", x);
         Logger.getInstance().recordOutput("RotateCommand/y", y);
-        Logger.getInstance().recordOutput("RotateCommand/offset", m_angleOffset);
+        Logger.getInstance().recordOutput("RotateCommand/Offset", m_angleOffset);
         
         //Turns the robot
-        m_swerveDrive.drive(throttle, strafe, turningAngle, isFieldRelative, isOpenLoop);
+        m_swerveDrive.drive(throttle, strafe, turningSpeed, isFieldRelative, isOpenLoop);
     }
 
     @Override

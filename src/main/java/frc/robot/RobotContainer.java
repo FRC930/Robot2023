@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 
 import frc.robot.autos.TaxiOneBall;
+import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.commands.TeleopSwerve;
@@ -67,7 +68,8 @@ public class RobotContainer {
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
   private final TravelToTarget m_travel = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 16.4846, 8.1026, new Rotation2d(0.0)), m_robotDrive);
+  private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
+  private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
 
     public static final int kDriverControllerPort = 0;
     //TODO REMOVE
@@ -86,6 +88,7 @@ public class RobotContainer {
     // m_driverController.x().whileTrue(m_travel);
     m_driverController.x().whileTrue(m_travelToTarget);
     m_driverController.y().whileTrue(m_rotateCommand);
+    m_driverController.b().whileTrue(m_autoBalanceCommand);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
 
