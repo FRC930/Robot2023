@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RotateCommand extends CommandBase{
 
-    private final double Aim_Deadband = 0.08;
+    private final double Aim_Deadband = 0.05;
 
     private SwerveDrive m_swerveDrive;
 
@@ -74,8 +74,16 @@ public class RotateCommand extends CommandBase{
         if (turningAngle > Math.PI) {
             turningAngle = -Math.PI + (turningAngle - Math.PI);
         }
-        //TODO use PID
-        turningSpeed = MathUtil.clamp(turningAngle / Math.PI, -1, 1);
+        if (turningAngle < -Math.PI) {
+            turningAngle = Math.PI + (turningAngle + Math.PI);
+        }
+
+        if (turningAngle / Math.PI < 0) {
+            turningSpeed = MathUtil.clamp(turningAngle / Math.PI, -0.6, -0.3);
+        }
+        if (turningAngle / Math.PI > 0) {
+            turningSpeed = MathUtil.clamp(turningAngle / Math.PI, 0.3, 0.6);
+        }
 
         //Logs information regarding the command
         Logger.getInstance().recordOutput("RotateCommand/Angle", turningAngle);
@@ -89,12 +97,13 @@ public class RotateCommand extends CommandBase{
         //Turns the robot
         m_swerveDrive.drive(throttle, strafe, turningSpeed, isFieldRelative, isOpenLoop);
     }
+    
 
     @Override
     public boolean isFinished() {
         //Deadband for the robot aiming in radians
         //TODO adjust deadband to something more realistic
-        if (m_angleOffset > turningAngle + Aim_Deadband && m_angleOffset < turningAngle - Aim_Deadband) {
+        if (turningAngle < Aim_Deadband && turningAngle > - Aim_Deadband) {
             return true;
         } else {
             return false;
