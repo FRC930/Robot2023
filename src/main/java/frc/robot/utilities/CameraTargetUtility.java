@@ -27,7 +27,7 @@ public class CameraTargetUtility {
     // ----- VARIABLES ----- \\
     private Map<Integer, TargetInfo> m_Targets;
     private static JSONParser m_parser; 
-    private JSONArray m_Taglist ;
+    private JSONArray m_Taglist;
     private Iterator<JSONObject > m_Iterator;
 
     // ----- CONSTRUCTOR ----- \\
