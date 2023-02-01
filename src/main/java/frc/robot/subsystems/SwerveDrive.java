@@ -62,7 +62,7 @@ public class SwerveDrive extends SubsystemBase {
     private PIDController autoXController;
     private PIDController autoYController;
     private PIDController autoThetaController;
-
+    private PIDController autoPitchController;
 
     private SwerveModuleState[] moduleStates; 
 
@@ -94,8 +94,9 @@ public class SwerveDrive extends SubsystemBase {
         autoXController = new PIDController(kPXController, 0, 0);
         autoYController = new PIDController(kPYController, 0, 0);
         autoThetaController = new PIDController(
-        0.6, 0, 0);
-
+        1.33, 0, 0);
+        autoPitchController = new PIDController(1, 0, 0);
+        
     // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
     m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
   }
@@ -240,10 +241,15 @@ public class SwerveDrive extends SubsystemBase {
     public PIDController getAutoThetaController() {
         return autoThetaController;
     }
-
+    
+    public PIDController getAutoPitchController() {
+      return autoPitchController;
+    }
     public void resetOdometry(Pose2d initialPose) {
         m_odometry.resetPosition(getYaw(), getModulePositions(), initialPose);
     }
+     
+
 
     private Rotation2d getYaw() {
       double[] ypr = new double[3];

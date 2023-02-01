@@ -82,13 +82,6 @@ public class RotateCommand extends CommandBase{
 
         //Finds the turning speed
         turningSpeed = MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(turningAngle, 0)), -1, 1);
-        //TODO remove after PID is working
-        // if (turningAngle / Math.PI < 0) {
-        //     turningSpeed = MathUtil.clamp(turningAngle / Math.PI, -0.6, -0.3);
-        // }
-        // if (turningAngle / Math.PI > 0) {
-        //     turningSpeed = MathUtil.clamp(turningAngle / Math.PI, 0.3, 0.6);
-        // }
 
         //Logs information regarding the command
         Logger.getInstance().recordOutput("RotateCommand/Angle", turningAngle);

@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
@@ -15,7 +16,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class AutoBalanceCommand extends CommandBase {
     
     private final double pitchDeadbandInDegrees = 5.0;
-    private final double maxSpeed = 0.12;
+    private final double maxSpeed = 0.2;
 
     private SwerveDrive m_swerveDrive;
 
@@ -58,29 +59,24 @@ public class AutoBalanceCommand extends CommandBase {
         robotPitchInDegrees = robotPitch.getDegrees();
 
         double tempSpeed = 0.0;
-        if (robotPitchInDegrees/(15 * 2)<= -maxSpeed) {
-            tempSpeed = -maxSpeed;
-        } else if (robotPitchInDegrees/(15 * 2) >= maxSpeed) {
-            tempSpeed = maxSpeed;
-        } else {
-            tempSpeed = robotPitchInDegrees/(15 * 2);
-        }
+        tempSpeed = MathUtil.clamp(m_swerveDrive.getAutoPitchController().calculate(robotPitchInDegrees/15, 0), -1, 1);
 
         Logger.getInstance().recordOutput("AutoBalanceCommand/robotPitch", robotPitchInDegrees);
         Logger.getInstance().recordOutput("AutoBalanceCommand/speed", tempSpeed);
         
-        throttle = tempSpeed;
+        throttle = tempSpeed * maxSpeed;
 
         m_swerveDrive.drive(throttle, strafe, rotation, isFieldRelative, isOpenLoop);
     }
 
     @Override
     public boolean isFinished() {
-        if (robotPitchInDegrees < pitchDeadbandInDegrees && robotPitchInDegrees > - pitchDeadbandInDegrees) {
-            return true;
-        } else {
-            return false;
-        }
+        // if (robotPitchInDegrees < pitchDeadbandInDegrees && robotPitchInDegrees > - pitchDeadbandInDegrees) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        return false;
     }
 
     @Override
