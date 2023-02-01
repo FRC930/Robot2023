@@ -1,68 +1,71 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
 
-private CANSparkMax elbowMotor;
-private CANSparkMax shoulderMotor; 
+private CANSparkMax wristMotor;
+private CANSparkMax armMotor; 
+
+private RelativeEncoder wristEncoder;
+private RelativeEncoder armEncoder;
 
 //TODO: These are nonsensical (Fix once we get actual values)
-public static double highElbowPosition = -45.0;
-public static double highShoulderPosition = 150.0;
+public static double highWristPosition = 27.6; //at high elevator position
+public static double highArmPosition = 10; //at high elevator position
 
-public static double mediumElbowPosition = -45.0;
-public static double mediumShoulderPosition = 120.0;
+public static double mediumWristPosition = 23.9; //at medium elevator position
+public static double mediumArmPosition = 17.9; //at medium elevator position
 
-public static double groundElbowPosition = -50.0;
-public static double groundShoulderPosition = 90.0;
+public static double groundWristPosition = 5.2; //at ground elevator position
+public static double groundArmPosition = 46.8; //at ground elevator position
 
-public static double stowElbowPosition = 0.0;
-public static double stowShoulderPosition = 0.0;
+public static double stowWristPosition = 90.0; //at ground elevator position
+public static double stowArmPosition = -60.0; //at ground elevator position
 
-public static double intakeElbowPosition = -225.0;
-public static double intakeShoulderPosition = 90.0;
+public static double intakeWristPosition = -225.0;
+public static double intakeArmPosition = 90.0;
 
-    public ArmSubsystem (int ElbowID, int ShoulderID) {
-        elbowMotor = new CANSparkMax(ElbowID, MotorType.kBrushless);
-        shoulderMotor = new CANSparkMax(ShoulderID, MotorType.kBrushless);
+    public ArmSubsystem (int WristMotorID, int ShoulderMotorID) {
+        wristMotor = new CANSparkMax(WristMotorID, MotorType.kBrushless);
+        armMotor = new CANSparkMax(ShoulderMotorID, MotorType.kBrushless);
 
-        elbowMotor.restoreFactoryDefaults();
-        shoulderMotor.restoreFactoryDefaults(); 
+        wristMotor.restoreFactoryDefaults();
+        armMotor.restoreFactoryDefaults(); 
 
-        // TODO: Put in new API, Alternate Encoders through BORE Encoder
-        elbowMotor.getEncoder().setPositionConversionFactor(360);
-        shoulderMotor.getEncoder().setPositionConversionFactor(360);
+        wristEncoder = wristMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+        armEncoder = armMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
 
+        wristEncoder.setPositionConversionFactor(360);
+        armEncoder.setPositionConversionFactor(360);
     }
 
-    public void setElbowSpeed(double speed) {
-        elbowMotor.set(speed);
+    public void setWristSpeed(double speed) {
+        wristMotor.set(speed);
     }
 
-    public void setShoulderSpeed(double speed) {
-        shoulderMotor.set(speed);
+    public void setArmSpeed(double speed) {
+        armMotor.set(speed);
     }
 
-    public double getElbowPosition() {
-        return elbowMotor.getEncoder().getPosition();
+    public double getWristPosition() {
+        return wristEncoder.getPosition();
     }
 
-    public double getShoulderPosition() {
-        return shoulderMotor.getEncoder().getPosition();
+    public double getArmPosition() {
+        return armEncoder.getPosition();
     }
 
-    public void stopElbowMotor() {
-        elbowMotor.stopMotor();
+    public void stopWristMotor() {
+        wristMotor.stopMotor();
     }
 
-    public void stopShoulderMotor() {
-        shoulderMotor.stopMotor();
+    public void stopArmMotor() {
+        armMotor.stopMotor();
     }
 }

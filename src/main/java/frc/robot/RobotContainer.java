@@ -68,11 +68,11 @@ public class RobotContainer {
   private final ArmSubsystem m_arm = new ArmSubsystem(0, 1);
 
   // Commands \\
-  private final MoveArmCommand m_HighArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.highElbowPosition, ArmSubsystem.highShoulderPosition);
-  private final MoveArmCommand m_MediumArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.mediumElbowPosition, ArmSubsystem.mediumShoulderPosition);
-  private final MoveArmCommand m_GroundArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.groundElbowPosition, ArmSubsystem.groundShoulderPosition);
-  private final MoveArmCommand m_IntakeArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.intakeElbowPosition, ArmSubsystem.intakeShoulderPosition);
-  private final MoveArmCommand m_StowArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.stowElbowPosition, ArmSubsystem.stowShoulderPosition);
+  private final MoveArmCommand m_HighArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.highWristPosition, ArmSubsystem.highArmPosition);
+  private final MoveArmCommand m_MediumArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumArmPosition);
+  private final MoveArmCommand m_GroundArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.groundWristPosition, ArmSubsystem.groundArmPosition);
+  private final MoveArmCommand m_IntakeArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeArmPosition);
+  private final MoveArmCommand m_StowArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.stowWristPosition, ArmSubsystem.stowArmPosition);
 
   public static final int kDriverControllerPort = 0;
   //TODO REMOVE

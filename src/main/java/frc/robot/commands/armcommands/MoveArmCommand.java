@@ -9,40 +9,40 @@ public class MoveArmCommand extends CommandBase{
 
     private double speed;
     private ArmSubsystem arm;
-    private double elbowPos;
-    private double shoulderPos;
+    private double wristPos;
+    private double armPos;
 
-    public MoveArmCommand(ArmSubsystem armSubsystem, double speed, double elbowPosition, double shoulderPosition) {
+    public MoveArmCommand(ArmSubsystem armSubsystem, double speed, double wristPosition, double armPosition) {
         this.speed = speed;
         arm = armSubsystem;
-        elbowPos = elbowPosition;
-        shoulderPos = shoulderPosition;
+        wristPos = wristPosition;
+        armPos = armPosition;
     }
 
     @Override
     public void execute() {
-        if (arm.getElbowPosition() > elbowPos - allowedError) {
-            arm.setElbowSpeed(-speed);
-        } else if (arm.getElbowPosition() < elbowPos + allowedError) {
-            arm.setElbowSpeed(speed);
+        if (arm.getWristPosition() > wristPos - allowedError) {
+            arm.setWristSpeed(-speed);
+        } else if (arm.getWristPosition() < wristPos + allowedError) {
+            arm.setWristSpeed(speed);
         } else {
-            arm.stopElbowMotor();
+            arm.stopWristMotor();
         }
 
-        if (arm.getShoulderPosition() > shoulderPos - allowedError) {
-            arm.setShoulderSpeed(-speed);
-        } else if (arm.getShoulderPosition() < shoulderPos + allowedError) {
-            arm.setShoulderSpeed(speed);
+        if (arm.getArmPosition() > armPos - allowedError) {
+            arm.setArmSpeed(-speed);
+        } else if (arm.getArmPosition() < armPos + allowedError) {
+            arm.setArmSpeed(speed);
         } else {
-            arm.stopShoulderMotor();
+            arm.stopArmMotor();
         }
     }
 
     @Override
     public boolean isFinished() {
-        return (arm.getElbowPosition() < elbowPos - allowedError
-                && arm.getElbowPosition() > elbowPos + allowedError
-                && arm.getShoulderPosition() < shoulderPos - allowedError
-                && arm.getShoulderPosition() > shoulderPos + allowedError);
+        return (arm.getWristPosition() < wristPos - allowedError
+                && arm.getWristPosition() > wristPos + allowedError
+                && arm.getArmPosition() < armPos - allowedError
+                && arm.getArmPosition() > armPos + allowedError);
     }
 }
