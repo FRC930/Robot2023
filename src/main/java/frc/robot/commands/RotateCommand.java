@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
@@ -15,7 +16,8 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RotateCommand extends CommandBase{
 
-    private final double Aim_Deadband = 0.05;
+    private final double Aim_Deadband = 0.1;
+    private final double Speed_Reduction =  0.5;
 
     private SwerveDrive m_swerveDrive;
 
@@ -78,12 +80,15 @@ public class RotateCommand extends CommandBase{
             turningAngle = Math.PI + (turningAngle + Math.PI);
         }
 
-        if (turningAngle / Math.PI < 0) {
-            turningSpeed = MathUtil.clamp(turningAngle / Math.PI, -0.6, -0.3);
-        }
-        if (turningAngle / Math.PI > 0) {
-            turningSpeed = MathUtil.clamp(turningAngle / Math.PI, 0.3, 0.6);
-        }
+        //Finds the turning speed
+        turningSpeed = MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(turningAngle, 0)), -1, 1);
+        //TODO remove after PID is working
+        // if (turningAngle / Math.PI < 0) {
+        //     turningSpeed = MathUtil.clamp(turningAngle / Math.PI, -0.6, -0.3);
+        // }
+        // if (turningAngle / Math.PI > 0) {
+        //     turningSpeed = MathUtil.clamp(turningAngle / Math.PI, 0.3, 0.6);
+        // }
 
         //Logs information regarding the command
         Logger.getInstance().recordOutput("RotateCommand/Angle", turningAngle);
@@ -95,7 +100,7 @@ public class RotateCommand extends CommandBase{
         Logger.getInstance().recordOutput("RotateCommand/Offset", m_angleOffset);
         
         //Turns the robot
-        m_swerveDrive.drive(throttle, strafe, turningSpeed, isFieldRelative, isOpenLoop);
+        m_swerveDrive.drive(throttle, strafe, turningSpeed * Speed_Reduction, isFieldRelative, isOpenLoop);
     }
     
 

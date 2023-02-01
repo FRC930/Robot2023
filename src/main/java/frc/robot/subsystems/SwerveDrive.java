@@ -59,9 +59,9 @@ public class SwerveDrive extends SubsystemBase {
     private static final boolean invertGyro = false;
 
     //TODO they use ProfiledPIDController
-    public PIDController autoXController;
-    public PIDController autoYController;
-    public PIDController autoThetaController;
+    private PIDController autoXController;
+    private PIDController autoYController;
+    private PIDController autoThetaController;
 
 
     private SwerveModuleState[] moduleStates; 
@@ -112,9 +112,9 @@ public class SwerveDrive extends SubsystemBase {
           boolean isOpenLoop){
     
     //Applies a Deadband of 0.05 to the controllers input
-    throttle = (MathUtil.applyDeadband(throttle, 0.1))* kMaxSpeedMetersPerSecond;
-    strafe = (MathUtil.applyDeadband(strafe, 0.1)) * kMaxSpeedMetersPerSecond;
-    rotation = (MathUtil.applyDeadband(rotation, 0.1)) * kMaxRotationRadiansPerSecond;
+    throttle = throttle * kMaxSpeedMetersPerSecond;
+    strafe = strafe * kMaxSpeedMetersPerSecond;
+    rotation = rotation * kMaxRotationRadiansPerSecond;
 
     ChassisSpeeds chassisSpeeds =
             isFieldRelative
@@ -254,7 +254,7 @@ public class SwerveDrive extends SubsystemBase {
     public Rotation2d getPitch() {
       double[] ypr = new double[3];
       m_pigeon.getYawPitchRoll(ypr);
-      return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[2]) : Rotation2d.fromDegrees(ypr[2]);
+      return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[1]) : Rotation2d.fromDegrees(ypr[1]);
     }
 
     public void setSwerveModuleStates(SwerveModuleState[] states) {

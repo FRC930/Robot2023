@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
-import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,9 +12,10 @@ import frc.robot.subsystems.SwerveDrive;
      * Balances the robot on the Charging Station
      * 
      */
-public class AutoBalanceCommand extends CommandBase{
+public class AutoBalanceCommand extends CommandBase {
     
-    private final double Pitch_Deadband = 5.0;
+    private final double pitchDeadbandInDegrees = 5.0;
+    private final double maxSpeed = 0.12;
 
     private SwerveDrive m_swerveDrive;
 
@@ -56,27 +56,27 @@ public class AutoBalanceCommand extends CommandBase{
     public void execute() {
         robotPitch = m_swerveDrive.getPitch();
         robotPitchInDegrees = robotPitch.getDegrees();
-        Logger.getInstance().recordOutput("AutoBalanceCommand/robotPitch", robotPitchInDegrees);
 
         double tempSpeed = 0.0;
-        if (robotPitchInDegrees/100 <= -0.12) {
-            tempSpeed = -0.5;
-        } 
-        else if (robotPitchInDegrees/100 >= 0.12) {
-            tempSpeed = 0.5;
-        }
-        else {
-            tempSpeed = robotPitchInDegrees/100;
+        if (robotPitchInDegrees/(15 * 2)<= -maxSpeed) {
+            tempSpeed = -maxSpeed;
+        } else if (robotPitchInDegrees/(15 * 2) >= maxSpeed) {
+            tempSpeed = maxSpeed;
+        } else {
+            tempSpeed = robotPitchInDegrees/(15 * 2);
         }
 
-        throttle = -tempSpeed;
+        Logger.getInstance().recordOutput("AutoBalanceCommand/robotPitch", robotPitchInDegrees);
+        Logger.getInstance().recordOutput("AutoBalanceCommand/speed", tempSpeed);
         
+        throttle = tempSpeed;
+
         m_swerveDrive.drive(throttle, strafe, rotation, isFieldRelative, isOpenLoop);
     }
 
     @Override
     public boolean isFinished() {
-        if (robotPitchInDegrees < Pitch_Deadband && robotPitchInDegrees > - Pitch_Deadband) {
+        if (robotPitchInDegrees < pitchDeadbandInDegrees && robotPitchInDegrees > - pitchDeadbandInDegrees) {
             return true;
         } else {
             return false;
