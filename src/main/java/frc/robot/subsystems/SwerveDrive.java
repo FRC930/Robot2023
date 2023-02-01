@@ -94,7 +94,7 @@ public class SwerveDrive extends SubsystemBase {
         autoXController = new PIDController(kPXController, 0, 0);
         autoYController = new PIDController(kPYController, 0, 0);
         autoThetaController = new PIDController(
-        1.33, 0, 0);
+        0.6, 0, 0);
 
     // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
     m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());

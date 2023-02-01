@@ -16,8 +16,8 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RotateCommand extends CommandBase{
 
-    private final double Aim_Deadband = 0.1;
-    private final double Speed_Reduction =  0.5;
+    private final double Aim_Deadband = 2.5 * (Math.PI/180);
+    private final double Speed_Reduction =  1;
 
     private SwerveDrive m_swerveDrive;
 
@@ -70,7 +70,7 @@ public class RotateCommand extends CommandBase{
         double y = m_targetPose2d.getY();
 
         //Calculates the angle using atan2 and adjusting using the robots current position
-        turningAngle = (Math.atan2(y - cy, x - cx) - m_angleOffset);
+        turningAngle = (Math.atan2(y - cy, x - cx) + m_angleOffset);
 
         //If turningAngle wants to turn to the right more than 180 degrees, it will turn that distance to the left
         if (turningAngle > Math.PI) {
