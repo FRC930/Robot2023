@@ -21,14 +21,18 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.utilities.MechanismManager;
 import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.PNPResults;
 import frc.robot.simulation.FieldSim;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOSparks;
+import frc.robot.subsystems.arm.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -51,13 +55,7 @@ import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.commands.TravelToTarget;
-/*
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
- */
-import frc.robot.commands.armcommands.MoveArmCommand;
+
 public class RobotContainer {
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -89,18 +87,13 @@ public class RobotContainer {
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final ArmSubsystem m_arm = new ArmSubsystem(4, 5);
+  private final ArmSubsystem m_arm;
+  private final MechanismManager m_manager;
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
   private AutoCommandManager m_autoManager;
-
-  private final MoveArmCommand m_HighArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.highWristPosition, ArmSubsystem.highArmPosition);
-  private final MoveArmCommand m_MediumArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumArmPosition);
-  private final MoveArmCommand m_GroundArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.groundWristPosition, ArmSubsystem.groundArmPosition);
-  private final MoveArmCommand m_IntakeArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeArmPosition);
-  private final MoveArmCommand m_StowArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.stowWristPosition, ArmSubsystem.stowArmPosition);
 
   public static final int kDriverControllerPort = 0;
   //TODO REMOVE
@@ -111,7 +104,7 @@ public class RobotContainer {
   private static final double kPYController = 1;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  public RobotContainer(boolean isSimulation) {
     //TODO add port forwarding
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
@@ -122,8 +115,19 @@ public class RobotContainer {
     m_driverController.x().whileTrue(m_travelToTarget);
     m_driverController.y().whileTrue(m_rotateCommand);
     m_driverController.b().whileTrue(m_autoBalanceCommand);
+
+    this.m_arm = new ArmSubsystem(isSimulation ? new ArmIOSim() : new ArmIOSparks(2, 2));
+    this.m_manager = new MechanismManager(m_arm);
+
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
+    SmartDashboard.putData("Arm to 0", m_arm.setAngleDeg(0));
+    SmartDashboard.putData("Arm to 45", m_arm.setAngleDeg(45));
+    SmartDashboard.putData("Arm to 90", m_arm.setAngleDeg(90));
+    SmartDashboard.putData("Arm to 135", m_arm.setAngleDeg(135));
+    SmartDashboard.putData("Arm to 180", m_arm.setAngleDeg(180));
+    SmartDashboard.putData("Arm to 215", m_arm.setAngleDeg(215));
+    SmartDashboard.putData("Arm to All", m_arm.pointToPoint());
     m_fieldSim.initSim();
   }
 
@@ -151,6 +155,7 @@ public class RobotContainer {
 
   public void periodic() {
     m_fieldSim.periodic();
+    m_manager.periodic();
   }
 
   public void disabledInit() {

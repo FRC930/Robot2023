@@ -2,15 +2,72 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm to 0": "Command",
+      "/SmartDashboard/Arm to 135": "Command",
+      "/SmartDashboard/Arm to 180": "Command",
+      "/SmartDashboard/Arm to 215": "Command",
+      "/SmartDashboard/Arm to 270": "Command",
+      "/SmartDashboard/Arm to 45": "Command",
+      "/SmartDashboard/Arm to 90": "Command",
+      "/SmartDashboard/Arm to All": "Command",
+      "/SmartDashboard/Auto choices": "String Chooser",
       "/SmartDashboard/Field2d": "Field2d",
+      "/SmartDashboard/InstantCommand": "Command",
+      "/SmartDashboard/Mech2d": "Mechanism2d",
       "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d"
     },
     "windows": {
-      "/SmartDashboard/Field2d": {
-        "image": "C:\\Users\\JackL\\Downloads\\2023-field.png",
+      "/SmartDashboard/Arm to 0": {
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Arm to 135": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Arm to 180": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Arm to 215": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Arm to 45": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Arm to 90": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Arm to All": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field2d": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2d": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
       }
     }
   }
