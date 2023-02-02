@@ -23,7 +23,7 @@ public class MechanismManager {
     mech = new Mechanism2d(50, 50);
 
     // Root node
-    root = mech.getRoot("climber", 20, 20);
+    root = mech.getRoot("robot", 20, 20);
 
     // Subsystems
 
@@ -40,7 +40,7 @@ public class MechanismManager {
     m_four =
         m_elevator.append(
             new MechanismLigament2d(
-                "Four", 12.657, arm.getAngleDegrees(), 6, new Color8Bit(Color.kYellow)));
+                "Arm", 12.657, arm.getAngleDegrees(), 6, new Color8Bit(Color.kYellow)));
 
     // Log to SmartDashboard
     SmartDashboard.putData("Mech2d", mech);
