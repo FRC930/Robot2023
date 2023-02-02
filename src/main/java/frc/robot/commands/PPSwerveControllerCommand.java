@@ -20,8 +20,8 @@ import java.util.function.Supplier;
 /** Custom PathPlanner version of SwerveControllerCommand */
 public class PPSwerveControllerCommand extends CommandBase {
   private final Timer timer = new Timer();
-  private final PathPlannerTrajectory trajectory;
-  private final Supplier<Pose2d> poseSupplier;
+  protected  PathPlannerTrajectory trajectory;  // Need protected for can be call from extended object.
+  protected final Supplier<Pose2d> poseSupplier; // Need protected for can be call from extended object.
   private final SwerveDriveKinematics kinematics;
   private final PPHolonomicDriveController controller;
   private final Consumer<SwerveModuleState[]> outputModuleStates;
@@ -232,12 +232,12 @@ public class PPSwerveControllerCommand extends CommandBase {
     PathPlannerState desiredState = (PathPlannerState) transformedTrajectory.sample(currentTime);
 
     Pose2d currentPose = this.poseSupplier.get();
-    //this.field.setRobotPose(currentPose);
+    //this.field.setRobotPose(currentPose); // FRC930 commented out
     Pose2d desiredPose;
     PathPlannerServer.sendPathFollowingData(
         desiredPose = new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation),
         currentPose);
-    this.field.setRobotPose(desiredPose);
+    this.field.setRobotPose(desiredPose); // FRC930 set desiredpose not currentpos
     
     SmartDashboard.putNumber(
         "PPSwerveControllerCommand_xError", currentPose.getX() - desiredState.poseMeters.getX());

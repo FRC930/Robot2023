@@ -19,7 +19,7 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.AprilVisionUtility;
+import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
 
 
@@ -44,7 +44,9 @@ public class SwerveDrive extends SubsystemBase {
     private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); //TODO pass in id and canbus   CAN.pigeon);
 
     private SwerveDriveOdometry m_odometry;
-private AprilVisionUtility m_aprilCameraOne;
+    
+    // private AprilVisionUtility m_aprilCameraOne;
+    private OdometryUtility m_aprilCameraOne;
 
     private double m_simYaw;
     //TODO TUNE FOR GHOST
@@ -94,7 +96,8 @@ private AprilVisionUtility m_aprilCameraOne;
         autoThetaController = new PIDController(
         1.33, 0, 0);
 
-    m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
   }
 
   public Pose2d getPose(){
@@ -140,6 +143,8 @@ private AprilVisionUtility m_aprilCameraOne;
     return getYaw();
     // return Rotation2d.fromDegrees(getHeadingDegrees());
   }
+
+  
 
   public Pose2d getPoseMeters() {
     return m_odometry.getPoseMeters();
@@ -208,7 +213,8 @@ private AprilVisionUtility m_aprilCameraOne;
     if (moduleStates != null) {
       Logger.getInstance().recordOutput("SwerveModuleStates/Subsystem", moduleStates);
     }
-    m_aprilCameraOne.updateCameraPos();
+    m_aprilCameraOne.updateCameraPos(getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    //kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters()
   }
 
   @Override
@@ -244,6 +250,12 @@ private AprilVisionUtility m_aprilCameraOne;
       m_pigeon.getYawPitchRoll(ypr);
       return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
    }
+
+    public Rotation2d getPitch() {
+      double[] ypr = new double[3];
+      m_pigeon.getYawPitchRoll(ypr);
+      return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[2]) : Rotation2d.fromDegrees(ypr[2]);
+    }
 
     public void setSwerveModuleStates(SwerveModuleState[] states) {
         setSwerveModuleStates(states, false);

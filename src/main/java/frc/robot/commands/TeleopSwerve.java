@@ -11,7 +11,8 @@ public class TeleopSwerve extends CommandBase {
     // ----- CONSTANTS -----\\
 
     private double stickDeadband = 0.1;
-    public static final double percentSpeed = 0.5;
+    // TODO Increase priority on this process (trick from example robot)
+    public static final double percentSpeed = 0.5; // TODO increase for driver
 
     private double rotation;
     private Translation2d translation;
