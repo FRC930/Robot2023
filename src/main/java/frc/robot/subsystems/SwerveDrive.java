@@ -59,10 +59,10 @@ public class SwerveDrive extends SubsystemBase {
     private static final boolean invertGyro = false;
 
     //TODO they use ProfiledPIDController
-    public PIDController autoXController;
-    public PIDController autoYController;
-    public PIDController autoThetaController;
-
+    private PIDController autoXController;
+    private PIDController autoYController;
+    private PIDController autoThetaController;
+    private PIDController autoPitchController;
 
     private SwerveModuleState[] moduleStates; 
 
@@ -95,7 +95,8 @@ public class SwerveDrive extends SubsystemBase {
         autoYController = new PIDController(kPYController, 0, 0);
         autoThetaController = new PIDController(
         1.33, 0, 0);
-
+        autoPitchController = new PIDController(1, 0, 0);
+        
     // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
     m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
   }
@@ -112,9 +113,9 @@ public class SwerveDrive extends SubsystemBase {
           boolean isOpenLoop){
     
     //Applies a Deadband of 0.05 to the controllers input
-    throttle = (MathUtil.applyDeadband(throttle, 0.1))* kMaxSpeedMetersPerSecond;
-    strafe = (MathUtil.applyDeadband(strafe, 0.1)) * kMaxSpeedMetersPerSecond;
-    rotation = (MathUtil.applyDeadband(rotation, 0.1)) * kMaxRotationRadiansPerSecond;
+    throttle = throttle * kMaxSpeedMetersPerSecond;
+    strafe = strafe * kMaxSpeedMetersPerSecond;
+    rotation = rotation * kMaxRotationRadiansPerSecond;
 
     ChassisSpeeds chassisSpeeds =
             isFieldRelative
@@ -240,10 +241,15 @@ public class SwerveDrive extends SubsystemBase {
     public PIDController getAutoThetaController() {
         return autoThetaController;
     }
-
+    
+    public PIDController getAutoPitchController() {
+      return autoPitchController;
+    }
     public void resetOdometry(Pose2d initialPose) {
         m_odometry.resetPosition(getYaw(), getModulePositions(), initialPose);
     }
+     
+
 
     private Rotation2d getYaw() {
       double[] ypr = new double[3];
@@ -254,7 +260,7 @@ public class SwerveDrive extends SubsystemBase {
     public Rotation2d getPitch() {
       double[] ypr = new double[3];
       m_pigeon.getYawPitchRoll(ypr);
-      return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[2]) : Rotation2d.fromDegrees(ypr[2]);
+      return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[1]) : Rotation2d.fromDegrees(ypr[1]);
     }
 
     public void setSwerveModuleStates(SwerveModuleState[] states) {
