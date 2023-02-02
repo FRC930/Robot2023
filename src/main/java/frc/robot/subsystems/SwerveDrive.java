@@ -44,6 +44,7 @@ public class SwerveDrive extends SubsystemBase {
     private Pigeon2 m_pigeon = new Pigeon2(13, "rio"); //TODO pass in id and canbus   CAN.pigeon);
 
     private SwerveDriveOdometry m_odometry;
+    
     // private AprilVisionUtility m_aprilCameraOne;
     private OdometryUtility m_aprilCameraOne;
 
@@ -142,6 +143,8 @@ public class SwerveDrive extends SubsystemBase {
     return getYaw();
     // return Rotation2d.fromDegrees(getHeadingDegrees());
   }
+
+  
 
   public Pose2d getPoseMeters() {
     return m_odometry.getPoseMeters();
@@ -247,6 +250,12 @@ public class SwerveDrive extends SubsystemBase {
       m_pigeon.getYawPitchRoll(ypr);
       return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
    }
+
+    public Rotation2d getPitch() {
+      double[] ypr = new double[3];
+      m_pigeon.getYawPitchRoll(ypr);
+      return (invertGyro) ? Rotation2d.fromDegrees(360 - ypr[2]) : Rotation2d.fromDegrees(ypr[2]);
+    }
 
     public void setSwerveModuleStates(SwerveModuleState[] states) {
         setSwerveModuleStates(states, false);
