@@ -89,7 +89,7 @@ public class RobotContainer {
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final ArmSubsystem m_arm = new ArmSubsystem(0, 1);
+  private final ArmSubsystem m_arm = new ArmSubsystem(4, 5);
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
