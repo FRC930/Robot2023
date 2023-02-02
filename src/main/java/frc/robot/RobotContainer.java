@@ -42,10 +42,11 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
+import frc.robot.autos.AutoCommandManager;
 import frc.robot.autos.TaxiOneBall;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.RotateCommand;
-import frc.robot.commands.RotateCommand;
+import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.commands.TravelToTarget;
@@ -88,6 +89,7 @@ public class RobotContainer {
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
+  private AutoCommandManager m_autoManager;
 
     public static final int kDriverControllerPort = 0;
     //TODO REMOVE
@@ -101,6 +103,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    //TODO add port forwarding
+    m_autoManager = new AutoCommandManager();
+    m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
+    m_autoManager.initCommands();
+
     // Configure the button bindings
     configureButtonBindings();
     m_driverController.x().whileTrue(m_travelToTarget);
@@ -126,7 +133,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    return new TaxiOneBall(m_robotDrive).andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
+    return m_autoManager.getAutonomousCommand();
+    //TODO determine if autoManager needs to have andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
+
+    //return new TaxiOneBall(m_robotDrive).andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
 
   }
 
