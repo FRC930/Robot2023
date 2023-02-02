@@ -46,6 +46,7 @@ import frc.robot.autos.TaxiOneBall;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.commands.RotateCommand;
+
 import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.commands.TravelToTarget;
@@ -101,6 +102,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_robotDrive.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     // Configure the button bindings
     configureButtonBindings();
     m_driverController.x().whileTrue(m_travelToTarget);

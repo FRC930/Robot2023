@@ -57,7 +57,7 @@ public class RotateCommand extends CommandBase{
 
     @Override
     public void initialize() {
-    }
+    } 
 
     @Override
     public void execute() {
@@ -70,28 +70,27 @@ public class RotateCommand extends CommandBase{
         double y = m_targetPose2d.getY();
 
         //Calculates the angle using atan2 and adjusting using the robots current position
-        turningAngle = (Math.atan2(y - cy, x - cx) + m_angleOffset);
+        double calculatedheading = Math.atan2(y - cy, x - cx);
+        turningAngle = (calculatedheading - m_angleOffset);
 
+        Logger.getInstance().recordOutput("RotateCommand/Angle1", turningAngle);
         //If turningAngle wants to turn to the right more than 180 degrees, it will turn that distance to the left
         if (turningAngle > Math.PI) {
-            turningAngle = -Math.PI + (turningAngle - Math.PI);
+            turningAngle = -1.0 * (Math.PI - (turningAngle - Math.PI));
         }
-        if (turningAngle < -Math.PI) {
-            turningAngle = Math.PI + (turningAngle + Math.PI);
-        }
-
+        Logger.getInstance().recordOutput("RotateCommand/Angle2", turningAngle);
         //Finds the turning speed
-        turningSpeed = MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(turningAngle, 0)), -1, 1);
+        turningSpeed = -1.0 * MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(turningAngle, 0)), -1, 1);
 
         //Logs information regarding the command
-        Logger.getInstance().recordOutput("RotateCommand/Angle", turningAngle);
+        Logger.getInstance().recordOutput("RotateCommand/Angle3", turningAngle);
         Logger.getInstance().recordOutput("RotateCommand/TurningSpeed", turningSpeed);
         Logger.getInstance().recordOutput("RotateCommand/cx", cx);
         Logger.getInstance().recordOutput("RotateCommand/cy", cy);
         Logger.getInstance().recordOutput("RotateCommand/x", x);
         Logger.getInstance().recordOutput("RotateCommand/y", y);
         Logger.getInstance().recordOutput("RotateCommand/Offset", m_angleOffset);
-        
+        Logger.getInstance().recordOutput("RotateCommand/calculatedheading", calculatedheading);
         //Turns the robot
         m_swerveDrive.drive(throttle, strafe, turningSpeed * Speed_Reduction, isFieldRelative, isOpenLoop);
     }
@@ -101,12 +100,13 @@ public class RotateCommand extends CommandBase{
     public boolean isFinished() {
         //Deadband for the robot aiming in radians
         //TODO adjust deadband to something more realistic
+        /*
         if (turningAngle < Aim_Deadband && turningAngle > - Aim_Deadband) {
             return true;
         } else {
             return false;
-        }
-        
+        }*/
+        return false;
     }
 
     @Override
