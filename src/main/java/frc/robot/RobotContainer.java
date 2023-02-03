@@ -53,13 +53,15 @@ import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.commands.TravelToTarget;
+
+import frc.robot.commands.armcommands.SetArmDegreesCommand;
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-import frc.robot.commands.armcommands.MoveArmCommand;
 public class RobotContainer {
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -83,6 +85,7 @@ public class RobotContainer {
   
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
+  CommandXboxController m_codriverController = new CommandXboxController(kCodriverControllerPort);
 
 
   // Subsystems \\
@@ -99,16 +102,18 @@ public class RobotContainer {
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
   private AutoCommandManager m_autoManager;
 
-  private final MoveArmCommand m_HighArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.highWristPosition, ArmSubsystem.highArmPosition);
-  private final MoveArmCommand m_MediumArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumArmPosition);
-  private final MoveArmCommand m_GroundArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.groundWristPosition, ArmSubsystem.groundArmPosition);
-  private final MoveArmCommand m_IntakeArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeArmPosition);
-  private final MoveArmCommand m_StowArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.stowWristPosition, ArmSubsystem.stowArmPosition);
+  private final SetArmDegreesCommand m_HighArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.highWristPosition, ArmSubsystem.highShoulderPosition);
+  private final SetArmDegreesCommand m_MediumArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumShoulderPosition);
+  private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.groundWristPosition, ArmSubsystem.groundShoulderPosition);
+  private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeShoulderPosition);
+  private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.stowWristPosition, ArmSubsystem.stowShoulderPosition);
 
   private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 1);
   private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, .5);
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 0);
   public static final int kDriverControllerPort = 0;
+  public static final int kCodriverControllerPort = 1;
+
   //TODO REMOVE
   private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
   private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -132,6 +137,11 @@ public class RobotContainer {
     m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
     m_driverController.a().whileTrue(m_LowElevatorPosition);
 
+    m_codriverController.x().whileTrue(m_HighArmPosition);
+    m_codriverController.y().whileTrue(m_MediumArmPosition);
+    m_codriverController.a().whileTrue(m_GroundArmPosition);
+    m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
