@@ -27,6 +27,7 @@ import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.PNPResults;
 import frc.robot.simulation.FieldSim;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -46,6 +47,7 @@ import org.photonvision.targeting.TargetCorner;
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.autos.TaxiOneBall;
 import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
@@ -90,6 +92,7 @@ public class RobotContainer {
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmSubsystem m_arm = new ArmSubsystem(4, 5);
+  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(6);
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
@@ -102,6 +105,9 @@ public class RobotContainer {
   private final MoveArmCommand m_IntakeArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeArmPosition);
   private final MoveArmCommand m_StowArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.stowWristPosition, ArmSubsystem.stowArmPosition);
 
+  private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 1);
+  private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, .5);
+  private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 0);
   public static final int kDriverControllerPort = 0;
   //TODO REMOVE
   private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -122,6 +128,10 @@ public class RobotContainer {
     m_driverController.x().whileTrue(m_travelToTarget);
     m_driverController.y().whileTrue(m_rotateCommand);
     m_driverController.b().whileTrue(m_autoBalanceCommand);
+    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    m_driverController.a().whileTrue(m_LowElevatorPosition);
+
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
