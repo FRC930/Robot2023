@@ -26,6 +26,7 @@ import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.PNPResults;
 import frc.robot.simulation.FieldSim;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -56,50 +57,58 @@ import frc.robot.commands.TravelToTarget;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
+import frc.robot.commands.armcommands.MoveArmCommand;
 public class RobotContainer {
-    /* Drive Controls */
-    private final int translationAxis = XboxController.Axis.kLeftY.value;
-    private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    private final int rotationAxis = XboxController.Axis.kRightX.value;
+  /* Drive Controls */
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-    /* Modules */
-    //Cannot use an ID of 0
-    //Changed the turningMotorID and cancoderID from 0 to 3
-    public static final SwerveModuleConstants frontLeftModule = 
-      new SwerveModuleConstants(8, 9, 9, 114.69);
-    public static final SwerveModuleConstants frontRightModule = 
-      new SwerveModuleConstants(11, 10, 10, 235.1);
-    public static final SwerveModuleConstants backLeftModule = 
-      new SwerveModuleConstants(1, 3, 3, 84.28);
-    public static final SwerveModuleConstants backRightModule = 
-      new SwerveModuleConstants(18, 19, 19, 9.75);
-    //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
-    //page 100
+  /* Modules */
+  //Cannot use an ID of 0
+  //Changed the turningMotorID and cancoderID from 0 to 3
+  public static final SwerveModuleConstants frontLeftModule = 
+    new SwerveModuleConstants(8, 9, 9, 114.69);
+  public static final SwerveModuleConstants frontRightModule = 
+    new SwerveModuleConstants(11, 10, 10, 235.1);
+  public static final SwerveModuleConstants backLeftModule = 
+    new SwerveModuleConstants(1, 3, 3, 84.28);
+  public static final SwerveModuleConstants backRightModule = 
+    new SwerveModuleConstants(18, 19, 19, 9.75);
+  //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
+  //page 100
 
-    
+  
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
 
 
-  // The robot's subsystems
+  // Subsystems \\
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
+  private final ArmSubsystem m_arm = new ArmSubsystem(4, 5);
+
+  // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
   private AutoCommandManager m_autoManager;
 
-    public static final int kDriverControllerPort = 0;
-    //TODO REMOVE
-    private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-    private static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    private static final double kPXController = 1;
-    private static final double kPYController = 1;
-  
-    
+  private final MoveArmCommand m_HighArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.highWristPosition, ArmSubsystem.highArmPosition);
+  private final MoveArmCommand m_MediumArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumArmPosition);
+  private final MoveArmCommand m_GroundArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.groundWristPosition, ArmSubsystem.groundArmPosition);
+  private final MoveArmCommand m_IntakeArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeArmPosition);
+  private final MoveArmCommand m_StowArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.stowWristPosition, ArmSubsystem.stowArmPosition);
+
+  public static final int kDriverControllerPort = 0;
+  //TODO REMOVE
+  private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+  private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+  private static final double kMaxAccelerationMetersPerSecondSquared = 3;
+  private static final double kPXController = 1;
+  private static final double kPYController = 1;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

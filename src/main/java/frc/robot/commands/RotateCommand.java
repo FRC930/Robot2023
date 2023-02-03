@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
@@ -15,7 +16,8 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RotateCommand extends CommandBase{
 
-    private final double Aim_Deadband = 0.08;
+    private final double Aim_Deadband = 2.5 * (Math.PI/180);
+    private final double Speed_Reduction =  1;
 
     private SwerveDrive m_swerveDrive;
 
@@ -68,14 +70,18 @@ public class RotateCommand extends CommandBase{
         double y = m_targetPose2d.getY();
 
         //Calculates the angle using atan2 and adjusting using the robots current position
-        turningAngle = (Math.atan2(y - cy, x - cx) - m_angleOffset);
+        turningAngle = (Math.atan2(y - cy, x - cx) + m_angleOffset);
 
         //If turningAngle wants to turn to the right more than 180 degrees, it will turn that distance to the left
         if (turningAngle > Math.PI) {
             turningAngle = -Math.PI + (turningAngle - Math.PI);
         }
-        //TODO use PID
-        turningSpeed = MathUtil.clamp(turningAngle / Math.PI, -1, 1);
+        if (turningAngle < -Math.PI) {
+            turningAngle = Math.PI + (turningAngle + Math.PI);
+        }
+
+        //Finds the turning speed
+        turningSpeed = MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(turningAngle, 0)), -1, 1);
 
         //Logs information regarding the command
         Logger.getInstance().recordOutput("RotateCommand/Angle", turningAngle);
@@ -87,14 +93,15 @@ public class RotateCommand extends CommandBase{
         Logger.getInstance().recordOutput("RotateCommand/Offset", m_angleOffset);
         
         //Turns the robot
-        m_swerveDrive.drive(throttle, strafe, turningSpeed, isFieldRelative, isOpenLoop);
+        m_swerveDrive.drive(throttle, strafe, turningSpeed * Speed_Reduction, isFieldRelative, isOpenLoop);
     }
+    
 
     @Override
     public boolean isFinished() {
         //Deadband for the robot aiming in radians
         //TODO adjust deadband to something more realistic
-        if (m_angleOffset > turningAngle + Aim_Deadband && m_angleOffset < turningAngle - Aim_Deadband) {
+        if (turningAngle < Aim_Deadband && turningAngle > - Aim_Deadband) {
             return true;
         } else {
             return false;
