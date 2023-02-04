@@ -40,14 +40,26 @@ public class AutoCommandManager {
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
     
     /**
+     * <h3>initCommands</h3>
+     * 
      * Creates instances of each autonomous path command
+     * 
+     * @param eventCommandMap a command that uses strings to returna command that we want to execute at a marker
      */
-    public void initCommands() {
-        TaxiOneBall taxiOneBall = new TaxiOneBall(
-            (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString()));
+    public void initCommands(Map<String, Command> eventCommandMap) {
+        //Subsystems used by auto commands
+        SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
+        
+        //Autonomous Commands
+        TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
+        Command taxiOneBallAutoBuild = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
 
+        //Adding options to the chooser
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
+        m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuild);
+
+        //adding chooser to dashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }
     /**
