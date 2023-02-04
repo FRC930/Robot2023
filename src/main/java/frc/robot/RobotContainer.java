@@ -30,6 +30,7 @@ import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.ExtendIntakeCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -46,8 +47,8 @@ import frc.robot.autos.TaxiOneBall;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.commands.RotateCommand;
-
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
 
 import frc.robot.commands.TravelToTarget;
 /*
@@ -76,9 +77,13 @@ public class RobotContainer {
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
 
+    //Intake Motors
+    private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
+
     
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
+  CommandXboxController m_coDriverController = new CommandXboxController(kCoDriverControllerPort);
 
 
   // The robot's subsystems
@@ -89,8 +94,10 @@ public class RobotContainer {
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(4);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(-4);
     public static final int kDriverControllerPort = 0;
+    public static final int kCoDriverControllerPort = 1;
     //TODO REMOVE
     private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -102,7 +109,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_robotDrive.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     // Configure the button bindings
     configureButtonBindings();
     m_driverController.x().whileTrue(m_travelToTarget);
@@ -111,6 +117,7 @@ public class RobotContainer {
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
+    m_RetractIntakeCommand.setDefaltCommand(m_RetractIntakeCommand);
   }
 
   /**
@@ -119,7 +126,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_coDriverController.rightBumper().whileTrue(m_ExtendIntakeCommand);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
