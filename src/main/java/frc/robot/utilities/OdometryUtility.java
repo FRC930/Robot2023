@@ -357,4 +357,17 @@ public class OdometryUtility {
             Timer.getFPGATimestamp() - latencySeconds
         );
     }
+
+    /**
+     * <h3>resetPosition</h3>
+     * 
+     * resets the position in the pose estimator
+     * 
+     * @param yaw a rotation of the robot
+     * @param modulePositions the positions of the swerve modules
+     * @param initialPose the initial pse2d of the robot
+     */
+    public void resetPosition(Rotation2d yaw, SwerveModulePosition[] modulePositions, Pose2d initialPose) {
+        m_PoseEstimator.resetPosition(yaw, modulePositions, initialPose);
+    }
 }

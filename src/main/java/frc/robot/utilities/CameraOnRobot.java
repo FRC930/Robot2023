@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.Robot;
 import frc.robot.utilities.vision.estimation.CameraProperties;
 
 public class CameraOnRobot {
@@ -52,7 +53,10 @@ public class CameraOnRobot {
         PortForwarder.add(portToForward, cameraIpName, 5800);
         m_PhotonCamera = new PhotonCamera(cameraIpName);
         m_PhotonCamera.setPipelineIndex(pipelineIndex);
-        // PhotonCamera.setVersionCheckEnabled(false);// TODO REMOVE so does check version
+        if (Robot.isSimulation()) { 
+            //disable version check when running simulation 
+            PhotonCamera.setVersionCheckEnabled(false); 
+        }
 
         try {
             m_CameraProp = new CameraProperties(Filesystem.getDeployDirectory()+"/"+configFile, cameraResolutionWidth, cameraResolutionHeight);

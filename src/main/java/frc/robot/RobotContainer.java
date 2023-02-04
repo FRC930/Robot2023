@@ -4,47 +4,24 @@
 
 package frc.robot;
 
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
+
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
-import frc.robot.utilities.vision.estimation.CameraProperties;
-import frc.robot.utilities.vision.estimation.PNPResults;
 import frc.robot.simulation.FieldSim;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.littletonrobotics.junction.LogFileUtil;
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 
 import frc.robot.autos.AutoCommandManager;
-import frc.robot.autos.TaxiOneBall;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
@@ -95,6 +72,7 @@ public class RobotContainer {
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
   private AutoCommandManager m_autoManager;
+  private Map<String, Command> eventCommandMap = new HashMap<>();
 
   private final MoveArmCommand m_HighArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.highWristPosition, ArmSubsystem.highArmPosition);
   private final MoveArmCommand m_MediumArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumArmPosition);
@@ -112,10 +90,14 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    //TODO add port forwarding
+    // Auto Commands
+
+    // TODO Add markers for real commands/paths
+    eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
+    eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
-    m_autoManager.initCommands();
+    m_autoManager.initCommands(eventCommandMap);
 
     // Configure the button bindings
     configureButtonBindings();
