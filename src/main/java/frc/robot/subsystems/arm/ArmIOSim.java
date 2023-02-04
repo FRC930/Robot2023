@@ -6,51 +6,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public class ArmIOSim implements ArmIO {
-    private final SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getNEO(1), 75, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(27.12), Units.lbsToKilograms(11)), Units.inchesToMeters(27.12), 0, 2 * Math.PI, Units.lbsToKilograms(11), true);
-    private final SingleJointedArmSim wristSim = new SingleJointedArmSim(DCMotor.getNEO(1), 75, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(27.12), Units.lbsToKilograms(11)), Units.inchesToMeters(27.12), 0, 2 * Math.PI, Units.lbsToKilograms(11), true);
+    private final SingleJointedArmSim sim = new SingleJointedArmSim(DCMotor.getNEO(1), 75, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(27.12), Units.lbsToKilograms(11)), Units.inchesToMeters(27.12), 0, 2 * Math.PI, Units.lbsToKilograms(11), true);
 
     /**
      * updates the inputs for the motor sim
      */
     @Override
     public void updateInputs() {
-        armSim.update(0.02);
-        wristSim.update(0.02);
-    }
-
-    /**
-     * Gets wrist motor outputs.
-     * @return Clamped current Voltage of the wrist.
-     */
-    @Override
-    public double getWristOutputVoltage() {
-        return MathUtil.clamp(wristSim.getOutput(0), -12, 12);
-    }
-    /**
-     * Gets the wrist motor position in degrees.
-     * @return the wrist motor position.
-     */
-    @Override
-    public double getWristCurrentAngleDegrees() {
-        return Units.radiansToDegrees(wristSim.getAngleRads());
-    }
-
-    /**
-     * Gets wrist motor velocity in degrees per second.
-     * @return The wrist motor velocity 
-     */
-    @Override
-    public double getWristVelocityDegreesPerSecond() {
-        return Units.radiansToDegrees(wristSim.getVelocityRadPerSec());
-    }
-
-    /**
-     * Sets the wrist motor voltage
-     * @param volts
-     */
-    @Override
-    public void setWristVoltage(double volts) {
-        wristSim.setInputVoltage(volts);
+        sim.update(0.02);
     }
 
     /**
@@ -58,8 +21,8 @@ public class ArmIOSim implements ArmIO {
      * @return the sholder motor outputs 
      */
     @Override
-    public double getShoulderOutputVoltage() {
-        return MathUtil.clamp(armSim.getOutput(0), -12, 12);
+    public double getOutputVoltage() {
+        return MathUtil.clamp(sim.getOutput(0), -12, 12);
     }
 
     /**
@@ -67,8 +30,8 @@ public class ArmIOSim implements ArmIO {
      * @return the shoulder motor position
      */
     @Override
-    public double getShoulderCurrentAngleDegrees() {
-        return Units.radiansToDegrees(armSim.getAngleRads());
+    public double getCurrentAngleDegrees() {
+        return Units.radiansToDegrees(sim.getAngleRads());
     }
 
     /**
@@ -76,8 +39,8 @@ public class ArmIOSim implements ArmIO {
      * @return
      */
     @Override
-    public double getShoulderVelocityDegreesPerSecond() {
-        return Units.radiansToDegrees(armSim.getVelocityRadPerSec());
+    public double getVelocityDegreesPerSecond() {
+        return Units.radiansToDegrees(sim.getVelocityRadPerSec());
     }
 
     /**
@@ -85,7 +48,7 @@ public class ArmIOSim implements ArmIO {
      * @param volts
      */
     @Override
-    public void setShoulderVoltage(double volts) {
-        armSim.setInputVoltage(volts);
+    public void setVoltage(double volts) {
+        sim.setInputVoltage(volts);
     }
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class MechanismSimulator {
     private final Mechanism2d mech;
@@ -17,6 +18,7 @@ public class MechanismSimulator {
     private final MechanismLigament2d m_hand;
 
     private final ArmSubsystem arm;
+    private final ManipulatorSubsystem manipulator;
     private final ElevatorSubsystem elevator;
 
     /**
@@ -25,9 +27,10 @@ public class MechanismSimulator {
      * @param arm Subsystem for the arm.
      * @param elevator Subsystem for the elevator.
      */
-    public MechanismSimulator(ArmSubsystem arm, ElevatorSubsystem elevator){
+    public MechanismSimulator(ArmSubsystem arm, ElevatorSubsystem elevator, ManipulatorSubsystem manipulator){
         this.arm = arm;
         this.elevator = elevator;
+        this.manipulator = manipulator;
 
         mech = new Mechanism2d(50, 50);
         root = mech.getRoot("robot", 20, 20);
@@ -50,7 +53,7 @@ public class MechanismSimulator {
               new MechanismLigament2d(
                 "Arm",
                 10,
-                arm.getShoulderPosition(),
+                arm.getPosition(),
                 6,
                 new Color8Bit(Color.kYellow)
                 )  
@@ -62,7 +65,7 @@ public class MechanismSimulator {
                 new MechanismLigament2d(
                     "Hand",
                     5,
-                    arm.getWristPosition(),
+                    manipulator.getPosition(),
                     6,
                     new Color8Bit(Color.kRed)
                     )
@@ -77,7 +80,7 @@ public class MechanismSimulator {
      */
     public void periodic(){
         m_elevator.setLength(elevator.getElevatorPosition());
-        m_arm.setAngle(arm.getShoulderPosition());
-        m_hand.setAngle(arm.getWristPosition()-arm.getShoulderPosition());
+        m_arm.setAngle(arm.getPosition());
+        m_hand.setAngle(manipulator.getPosition()-arm.getPosition());
     }
 }

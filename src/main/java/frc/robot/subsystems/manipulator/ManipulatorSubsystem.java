@@ -67,7 +67,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
      * 
      * @param target Desired manipulator position in degrees
      */
-    public void setWristPosition(double target) {
+    public void setPosition(double target) {
         targetPosition = target;
     }
     

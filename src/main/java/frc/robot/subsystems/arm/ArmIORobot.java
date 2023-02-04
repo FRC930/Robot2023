@@ -9,71 +9,43 @@ import edu.wpi.first.math.MathUtil;
 
 public class ArmIORobot implements ArmIO {
 
-    private CANSparkMax wristMotor;
-    private CANSparkMax shoulderMotor; 
+    private CANSparkMax arm;
+    
+    private RelativeEncoder armEncoder;
 
-    private RelativeEncoder wristEncoder;
-    private RelativeEncoder shoulderEncoder;
+    public ArmIORobot(int armMotorID) {
+        arm = new CANSparkMax(armMotorID, MotorType.kBrushless);
 
-    public ArmIORobot(int WristMotorID, int ShoulderMotorID) {
-        wristMotor = new CANSparkMax(WristMotorID, MotorType.kBrushless);
-        shoulderMotor = new CANSparkMax(ShoulderMotorID, MotorType.kBrushless);
-
-        wristMotor.restoreFactoryDefaults();
-        shoulderMotor.restoreFactoryDefaults(); 
+        arm.restoreFactoryDefaults(); 
 
         // Initializes AlternateEncoders from motors
-        wristEncoder = wristMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
-        shoulderEncoder = shoulderMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+        armEncoder = arm.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
 
         // Sets position and velocity conversion factors so units are in degrees and degrees/second
-        wristEncoder.setPositionConversionFactor(360);
-        wristEncoder.setVelocityConversionFactor(60);
-        shoulderEncoder.setPositionConversionFactor(360);
-        shoulderEncoder.setVelocityConversionFactor(60);
+        armEncoder.setPositionConversionFactor(360);
+        armEncoder.setVelocityConversionFactor(60);
     }
 
     @Override
     public void updateInputs() {}
 
     @Override
-    public double getWristOutputVoltage() {
-        return MathUtil.clamp(wristMotor.getOutputCurrent(), -12, 12);
+    public double getOutputVoltage() {
+        return MathUtil.clamp(arm.getOutputCurrent(), -12, 12);
     }
 
     @Override
-    public double getWristCurrentAngleDegrees() {
-        return wristEncoder.getPosition();
+    public double getCurrentAngleDegrees() {
+        return armEncoder.getPosition();
     }
 
     @Override
-    public double getWristVelocityDegreesPerSecond() {
-        return wristEncoder.getVelocity();
+    public double getVelocityDegreesPerSecond() {
+        return armEncoder.getVelocity();
     }
 
     @Override
-    public void setWristVoltage(double volts) {
-        wristMotor.setVoltage(volts);
-        
-    }
-
-    @Override
-    public double getShoulderOutputVoltage() {
-        return shoulderMotor.getOutputCurrent();
-    }
-
-    @Override
-    public double getShoulderCurrentAngleDegrees() {
-        return shoulderEncoder.getPosition();
-    }
-
-    @Override
-    public double getShoulderVelocityDegreesPerSecond() {
-        return shoulderEncoder.getVelocity();
-    }
-
-    @Override
-    public void setShoulderVoltage(double volts) {
-        shoulderMotor.setVoltage(volts);
+    public void setVoltage(double volts) {
+        arm.setVoltage(volts);
     }
 }
