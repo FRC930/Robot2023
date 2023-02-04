@@ -130,13 +130,6 @@ public class RobotContainer {
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
 
-  //TODO REMOVE
-  private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-  private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-  private static final double kMaxAccelerationMetersPerSecondSquared = 3;
-  private static final double kPXController = 1;
-  private static final double kPYController = 1;
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Auto Commands
@@ -180,7 +173,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_coDriverController.rightBumper().whileTrue(m_ExtendIntakeCommand);
+    m_codriverController.rightBumper().whileTrue(m_ExtendIntakeCommand);
   }
 
   /**
