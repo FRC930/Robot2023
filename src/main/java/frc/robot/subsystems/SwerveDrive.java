@@ -10,7 +10,6 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.unmanaged.Unmanaged;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -246,6 +245,8 @@ public class SwerveDrive extends SubsystemBase {
       return autoPitchController;
     }
     public void resetOdometry(Pose2d initialPose) {
+        //resets the position of swerveEstimatorPoses
+        m_aprilCameraOne.resetPosition(getYaw(), getModulePositions(), initialPose);
         m_odometry.resetPosition(getYaw(), getModulePositions(), initialPose);
     }
      

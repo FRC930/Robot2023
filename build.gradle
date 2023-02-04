@@ -99,7 +99,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     //Advantage Kit
-     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:2.1.0"
+     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:2.1.1"
 }
 
 test {
