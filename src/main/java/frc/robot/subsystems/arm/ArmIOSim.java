@@ -12,6 +12,7 @@ public class ArmIOSim implements ArmIO {
     @Override
     public void updateInputs() {
         armSim.update(0.02);
+        wristSim.update(0.02);
     }
 
     @Override

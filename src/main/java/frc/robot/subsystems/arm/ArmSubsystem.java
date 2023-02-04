@@ -35,7 +35,7 @@ public class ArmSubsystem extends SubsystemBase {
     /**
      * Controls the motors and encoders, shoulder and wrist, on the arm.
      * 
-     * @param io The ArmIO
+     * @param io The ArmIO, use IORobot if robot is real, otherwise use IOSim.
      */
     public ArmSubsystem (ArmIO io) {
 
@@ -52,10 +52,14 @@ public class ArmSubsystem extends SubsystemBase {
         targetShoulderPosition = stowShoulderPosition;
     }
 
+    /**
+    * Gets the inputs from the IO, and uses the feed forward and the PID controller to calculate the effort, in volts, to set to the io,
+    * for both the shoulder and wrist motors.
+     */
     @Override
     public void periodic() {
         this.io.updateInputs();
-
+        // caculate PID and Feet forward angles 
         double wristEffort = controller.calculate(io.getWristCurrentAngleDegrees(), targetWristPosition);
         double wristFeedforward = ff.calculate(io.getWristCurrentAngleDegrees(), io.getWristVelocityDegreesPerSecond());
 
@@ -82,6 +86,11 @@ public class ArmSubsystem extends SubsystemBase {
     public void setWristPosition(double targetPosition) {
         targetWristPosition = targetPosition;
     }
+    
+    
+    public double getWristPosition(){
+        return io.getWristCurrentAngleDegrees();
+    }
 
     /**
      * Moves the shoulder to the desired position, using voltage.
@@ -90,6 +99,10 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void setShoulderPosition(double targetPosition) {
         targetShoulderPosition = targetPosition;
+    }
+
+    public double getShoulderPosition(){
+        return io.getShoulderCurrentAngleDegrees();
     }
 
 }
