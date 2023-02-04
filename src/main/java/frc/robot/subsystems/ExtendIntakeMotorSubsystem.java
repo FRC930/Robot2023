@@ -96,8 +96,8 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
      */
     public void extendIntake() {
          // Converts degrees into encoder ticks
-         intakeMotor.setVoltage(ControlMode.Position, EXTENDED_POSITION,
-         DemandType.ArbitraryFeedForward, 0.7);
+        // intakeMotor.setVoltage(ControlMode.Position, EXTENDED_POSITION,
+         //DemandType.ArbitraryFeedForward, 0.7);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
      */
     public void retractIntake() {
          // Converts degrees into encoder ticks
-         intakeMotor.set(ControlMode.Position, RETRACTED_POSITION,
-         DemandType.ArbitraryFeedForward, 0.8);
+         //intakeMotor.set(ControlMode.Position, RETRACTED_POSITION,
+         //DemandType.ArbitraryFeedForward, 0.8);
     }
 }
