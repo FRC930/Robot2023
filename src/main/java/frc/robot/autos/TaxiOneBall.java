@@ -2,7 +2,6 @@ package frc.robot.autos;
 
 import frc.robot.commands.PPSwerveControllerCommand;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.SwerveDrive;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -14,11 +13,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class TaxiOneBall extends SequentialCommandGroup {
     public TaxiOneBall(SwerveDrive s_Swerve) {
+        addRequirements(s_Swerve);
 
         // An example trajectory to follow.  All units in meters.
         PathPlannerTrajectory pathPlannerExample = PathPlanner.loadPath("TaxiOneBall", 
         1, 2.5, false);
-        Trajectory exampleTrajectory = pathPlannerExample;
         
         var thetaController = s_Swerve.getAutoThetaController();
         thetaController.enableContinuousInput(-180.0, 180.0); //-Math.PI, Math.PI);
@@ -26,7 +25,7 @@ public class TaxiOneBall extends SequentialCommandGroup {
         PPSwerveControllerCommand swerveControllerCommand = 
             new PPSwerveControllerCommand(
                 pathPlannerExample,
-                s_Swerve::getPoseMeters,
+                s_Swerve::getPose, //use Swere Estimator Pose
                 SwerveDrive.getSwerveKinematics(),
                 s_Swerve.getAutoXController(),
                 s_Swerve.getAutoYController(),

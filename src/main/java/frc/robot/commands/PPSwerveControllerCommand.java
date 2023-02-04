@@ -17,7 +17,11 @@ import edu.wpi.first.wpilibj2.command.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-/** Custom PathPlanner version of SwerveControllerCommand */
+/**
+ * <h3>PPSwerveControllerCommand</h3>
+ * 
+ * Custom PathPlanner version of SwerveControllerCommand to log desired pose and expose trajectory and pose
+ */
 public class PPSwerveControllerCommand extends CommandBase {
   private final Timer timer = new Timer();
   protected  PathPlannerTrajectory trajectory;  // Need protected for can be call from extended object.
