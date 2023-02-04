@@ -10,8 +10,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.simulation.FieldSim;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIORobot;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIORobot;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,22 +31,26 @@ import java.util.Map;
 
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.commands.TravelToTarget;
+
+import frc.robot.commands.armcommands.SetArmDegreesCommand;
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-import frc.robot.commands.armcommands.MoveArmCommand;
 public class RobotContainer {
+
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;   
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Modules */
@@ -58,6 +70,7 @@ public class RobotContainer {
   
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
+  CommandXboxController m_codriverController = new CommandXboxController(kCodriverControllerPort);
 
 
   // Subsystems \\
@@ -66,7 +79,10 @@ public class RobotContainer {
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final ArmSubsystem m_arm = new ArmSubsystem(4, 5);
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4, 5) : new ArmIOSim());
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
+
+  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem);
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
@@ -74,13 +90,18 @@ public class RobotContainer {
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
 
-  private final MoveArmCommand m_HighArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.highWristPosition, ArmSubsystem.highArmPosition);
-  private final MoveArmCommand m_MediumArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumArmPosition);
-  private final MoveArmCommand m_GroundArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.groundWristPosition, ArmSubsystem.groundArmPosition);
-  private final MoveArmCommand m_IntakeArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeArmPosition);
-  private final MoveArmCommand m_StowArmPosition = new MoveArmCommand(m_arm, 0.5, ArmSubsystem.stowWristPosition, ArmSubsystem.stowArmPosition);
+  private final SetArmDegreesCommand m_HighArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.highWristPosition, ArmSubsystem.highShoulderPosition);
+  private final SetArmDegreesCommand m_MediumArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumShoulderPosition);
+  private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.groundWristPosition, ArmSubsystem.groundShoulderPosition);
+  private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeShoulderPosition);
+  private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.stowWristPosition, ArmSubsystem.stowShoulderPosition);
 
+  private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 22.64);
+  private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 11.32);
+  private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
   public static final int kDriverControllerPort = 0;
+  public static final int kCodriverControllerPort = 1;
+
   //TODO REMOVE
   private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
   private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -104,6 +125,15 @@ public class RobotContainer {
     m_driverController.x().whileTrue(m_travelToTarget);
     m_driverController.y().whileTrue(m_rotateCommand);
     m_driverController.b().whileTrue(m_autoBalanceCommand);
+    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    m_driverController.a().whileTrue(m_LowElevatorPosition);
+
+    m_codriverController.x().whileTrue(m_HighArmPosition);
+    m_codriverController.y().whileTrue(m_MediumArmPosition);
+    m_codriverController.a().whileTrue(m_GroundArmPosition);
+    m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
@@ -133,6 +163,7 @@ public class RobotContainer {
 
   public void periodic() {
     m_fieldSim.periodic();
+    m_mechanismSimulator.periodic();
   }
 
   public void disabledInit() {
