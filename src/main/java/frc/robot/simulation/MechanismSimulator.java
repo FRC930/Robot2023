@@ -19,6 +19,12 @@ public class MechanismSimulator {
     private final ArmSubsystem arm;
     private final ElevatorSubsystem elevator;
 
+    /**
+     * Simulates the arm and elevator systems in simulation, in a 2d window.
+     * 
+     * @param arm Subsystem for the arm.
+     * @param elevator Subsystem for the elevator.
+     */
     public MechanismSimulator(ArmSubsystem arm, ElevatorSubsystem elevator){
         this.arm = arm;
         this.elevator = elevator;
@@ -26,6 +32,7 @@ public class MechanismSimulator {
         mech = new Mechanism2d(50, 50);
         root = mech.getRoot("robot", 20, 20);
 
+        // Adds elevator to the robot in simulation
         m_elevator =
             root.append(
                 new MechanismLigament2d(
@@ -37,6 +44,7 @@ public class MechanismSimulator {
                 )
             );
         
+        // Adds arm to the elevator in simulation
         m_arm =
             m_elevator.append(
               new MechanismLigament2d(
@@ -48,6 +56,7 @@ public class MechanismSimulator {
                 )  
             );
         
+        // Adds manipulator to the arm in simulation
         m_hand =
             m_arm.append(
                 new MechanismLigament2d(
@@ -59,13 +68,16 @@ public class MechanismSimulator {
                     )
             );
         
+        // Sends system simulations to the smart dashboard
         SmartDashboard.putData("Mech2d", mech);
     }
     
+    /**
+     * Constantly updates current simulation angle to the display
+     */
     public void periodic(){
         m_elevator.setLength(elevator.getElevatorPosition());
         m_arm.setAngle(arm.getShoulderPosition());
-        m_hand.setAngle(30-arm.getShoulderPosition());
-        System.out.println(arm.getShoulderPosition() + " " + arm.getWristPosition());
+        m_hand.setAngle(arm.getWristPosition()-arm.getShoulderPosition());
     }
 }

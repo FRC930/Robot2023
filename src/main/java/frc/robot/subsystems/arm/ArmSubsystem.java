@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
 
-    private final ProfiledPIDController controller;
-    private final ArmFeedforward ff;
+    private final ProfiledPIDController wristController;
+    private final ArmFeedforward wristff;
+    private final ProfiledPIDController armController;
+    private final ArmFeedforward armff;
 
     private double targetWristPosition;
     private double targetShoulderPosition;
@@ -40,11 +42,14 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO io) {
 
         // Sets up PID controller TODO: Change these values
-        controller = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
-        controller.setTolerance(1, 1);
+        wristController = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
+        wristController.setTolerance(1, 1);
+        armController = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
+        armController.setTolerance(1, 1);
 
         // Sets up Feetforward TODO: Change these values
-        ff = new ArmFeedforward(0, 0.1, 0);
+        wristff = new ArmFeedforward(0, 0.1, 0);
+        armff = new ArmFeedforward(0, 0.1, 0);
 
         this.io = io;
 
@@ -60,8 +65,8 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         this.io.updateInputs();
         // caculate PID and Feet forward angles 
-        double wristEffort = controller.calculate(io.getWristCurrentAngleDegrees(), targetWristPosition);
-        double wristFeedforward = ff.calculate(io.getWristCurrentAngleDegrees(), io.getWristVelocityDegreesPerSecond());
+        double wristEffort = wristController.calculate(io.getWristCurrentAngleDegrees(), targetWristPosition);
+        double wristFeedforward = wristff.calculate(io.getWristCurrentAngleDegrees(), io.getWristVelocityDegreesPerSecond());
 
         wristEffort += wristFeedforward;
         wristEffort = MathUtil.clamp(wristEffort, -12, 12);
@@ -69,8 +74,8 @@ public class ArmSubsystem extends SubsystemBase {
         io.setWristVoltage(wristEffort);
 
 
-        double shoulderEffort = controller.calculate(io.getShoulderCurrentAngleDegrees(), targetShoulderPosition);
-        double shoulderFeedforward = ff.calculate(io.getShoulderCurrentAngleDegrees(), io.getShoulderVelocityDegreesPerSecond());
+        double shoulderEffort = armController.calculate(io.getShoulderCurrentAngleDegrees(), targetShoulderPosition);
+        double shoulderFeedforward = armff.calculate(io.getShoulderCurrentAngleDegrees(), io.getShoulderVelocityDegreesPerSecond());
 
         shoulderEffort += shoulderFeedforward;
         shoulderEffort = MathUtil.clamp(shoulderEffort, -12, 12);
