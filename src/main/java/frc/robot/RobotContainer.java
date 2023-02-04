@@ -26,9 +26,12 @@ import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.PNPResults;
 import frc.robot.simulation.FieldSim;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIORobot;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -94,7 +97,7 @@ public class RobotContainer {
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final ArmSubsystem m_arm = new ArmSubsystem(4, 5);
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4, 5) : new ArmIOSim());
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(6);
 
   // Commands \\
@@ -102,11 +105,11 @@ public class RobotContainer {
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
   private AutoCommandManager m_autoManager;
 
-  private final SetArmDegreesCommand m_HighArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.highWristPosition, ArmSubsystem.highShoulderPosition);
-  private final SetArmDegreesCommand m_MediumArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumShoulderPosition);
-  private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.groundWristPosition, ArmSubsystem.groundShoulderPosition);
-  private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeShoulderPosition);
-  private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_arm, ArmSubsystem.stowWristPosition, ArmSubsystem.stowShoulderPosition);
+  private final SetArmDegreesCommand m_HighArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.highWristPosition, ArmSubsystem.highShoulderPosition);
+  private final SetArmDegreesCommand m_MediumArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumShoulderPosition);
+  private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.groundWristPosition, ArmSubsystem.groundShoulderPosition);
+  private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeShoulderPosition);
+  private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.stowWristPosition, ArmSubsystem.stowShoulderPosition);
 
   private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 1);
   private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, .5);

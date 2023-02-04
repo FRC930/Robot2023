@@ -1,7 +1,7 @@
 package frc.robot.commands.armcommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.arm.ArmSubsystem;
 
 public class SetArmDegreesCommand extends CommandBase{
 
@@ -30,7 +30,6 @@ public class SetArmDegreesCommand extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return (arm.getShoulderPosition() == shoulderPos
-                && arm.getWristPosition() == wristPos);
+        return true;
     }
 }
