@@ -92,7 +92,9 @@ public class ArmSubsystem extends SubsystemBase {
         targetWristPosition = targetPosition;
     }
     
-    
+    /**
+     * Gets the Wrist motor position in degrees
+     */
     public double getWristPosition(){
         return io.getWristCurrentAngleDegrees();
     }
@@ -106,6 +108,9 @@ public class ArmSubsystem extends SubsystemBase {
         targetShoulderPosition = targetPosition;
     }
 
+      /**
+     * Gets the Shoulder motor position in degrees
+     */
     public double getShoulderPosition(){
         return io.getShoulderCurrentAngleDegrees();
     }
