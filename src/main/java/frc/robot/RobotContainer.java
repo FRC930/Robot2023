@@ -26,8 +26,11 @@ import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.PNPResults;
 import frc.robot.simulation.FieldSim;
-import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIORobot;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIORobot;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -66,9 +69,10 @@ import frc.robot.commands.armcommands.SetArmDegreesCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;   
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Modules */
@@ -98,7 +102,7 @@ public class RobotContainer {
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4, 5) : new ArmIOSim());
-  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(6);
+  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
@@ -111,8 +115,8 @@ public class RobotContainer {
   private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeShoulderPosition);
   private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.stowWristPosition, ArmSubsystem.stowShoulderPosition);
 
-  private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 1);
-  private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, .5);
+  private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 22.64);
+  private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 11.32);
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_ElevatorSubsystem, 0);
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
