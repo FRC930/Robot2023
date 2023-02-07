@@ -10,13 +10,16 @@ import edu.wpi.first.math.MathUtil;
 public class ManipulatorIORobot implements ManipulatorIO { 
 
     private CANSparkMax manipulator;
+    private CANSparkMax roller;
 
     private RelativeEncoder manipulatorEncoder;
 
-    public ManipulatorIORobot(int manipulatorMotorID) {
+    public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
+        roller = new CANSparkMax(manipulatorRollerMotorID, MotorType.kBrushless);
 
         manipulator.restoreFactoryDefaults();
+        roller.restoreFactoryDefaults();
 
         // Initializes AlternateEncoders from motors
         manipulatorEncoder = manipulator.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
@@ -31,7 +34,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
 
     @Override
     public double getOutputVoltage() {
-        return MathUtil.clamp(manipulator.getOutputCurrent(), -12, 12);
+        return MathUtil.clamp(manipulator.getBusVoltage(), -12, 12);
     }
 
     @Override
@@ -47,6 +50,15 @@ public class ManipulatorIORobot implements ManipulatorIO {
     @Override
     public void setVoltage(double volts) {
         manipulator.setVoltage(volts);
-        
+    }
+
+    @Override
+    public double getRollerVoltage() {
+        return roller.getBusVoltage();
+    }
+
+    @Override
+    public void setRollerSpeed(double speed) {
+        roller.set(speed);
     }
 }
