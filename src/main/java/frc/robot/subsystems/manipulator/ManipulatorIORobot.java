@@ -9,10 +9,14 @@ import edu.wpi.first.math.MathUtil;
 
 public class ManipulatorIORobot implements ManipulatorIO { 
 
-    private CANSparkMax manipulator;
-    private CANSparkMax roller;
+    private final CANSparkMax manipulator;
+    private final CANSparkMax roller;
 
-    private RelativeEncoder manipulatorEncoder;
+    private final RelativeEncoder manipulatorEncoder;
+
+    // Constant, in amps
+    private final int STALL_LIMIT = 10;
+    private final int FREE_LIMIT = 20;
 
     public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
@@ -20,6 +24,8 @@ public class ManipulatorIORobot implements ManipulatorIO {
 
         manipulator.restoreFactoryDefaults();
         roller.restoreFactoryDefaults();
+
+        roller.setSmartCurrentLimit(STALL_LIMIT, FREE_LIMIT);
 
         // Initializes AlternateEncoders from motors
         manipulatorEncoder = manipulator.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
