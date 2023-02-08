@@ -1,5 +1,8 @@
 package frc.robot.subsystems.manipulator;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -8,13 +11,13 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 public class ManipulatorIOSim implements ManipulatorIO{
     
     private final SingleJointedArmSim sim = new SingleJointedArmSim(DCMotor.getNEO(1), 75, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(27.12), Units.lbsToKilograms(11)), Units.inchesToMeters(27.12), 0, 2 * Math.PI, Units.lbsToKilograms(11), true);
+    private final CANSparkMax roller = new CANSparkMax(15, MotorType.kBrushless);
 
     /**
      * updates the inputs for the motor sim
      */
     @Override
     public void updateInputs() {
-        sim.update(0.02);
         sim.update(0.02);
     }
 
@@ -51,5 +54,15 @@ public class ManipulatorIOSim implements ManipulatorIO{
     @Override
     public void setVoltage(double volts) {
         sim.setInputVoltage(volts);
+    }
+
+    @Override
+    public double getRollerVoltage() {
+        return roller.getBusVoltage();
+    }
+
+    @Override
+    public void setRollerSpeed(double speed) {
+        roller.set(speed);
     }
 }

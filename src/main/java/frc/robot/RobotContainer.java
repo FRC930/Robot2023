@@ -41,7 +41,7 @@ import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
 
 import frc.robot.commands.TravelToTarget;
-
+import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
 import frc.robot.commands.armcommands.SetArmDegreesCommand;
 
 /*
@@ -84,7 +84,7 @@ public class RobotContainer {
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim());
-  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4) : new ManipulatorIOSim());
+  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15) : new ManipulatorIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
 
   private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem);
@@ -105,6 +105,9 @@ public class RobotContainer {
   private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22.64));
   private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(11.32));
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
+
+  private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem);
+
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
 
@@ -141,6 +144,7 @@ public class RobotContainer {
     m_codriverController.a().whileTrue(m_GroundArmPosition);
     m_codriverController.b().whileTrue(m_IntakeArmPosition);
     m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();

@@ -78,4 +78,12 @@ public class ManipulatorSubsystem extends SubsystemBase {
         return io.getCurrentAngleDegrees();
     }
 
+    public double getRollerVoltage() {
+        return io.getRollerVoltage();
+    }
+
+    public void setRollerSpeed(double speed) {
+        io.setRollerSpeed(speed);
+    }
+
 }
