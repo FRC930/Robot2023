@@ -1,7 +1,9 @@
 package frc.robot.subsystems.arm;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -11,19 +13,22 @@ public class ArmIORobot implements ArmIO {
 
     private CANSparkMax arm;
     
-    private RelativeEncoder armEncoder;
+    private AbsoluteEncoder armEncoder;
 
     public ArmIORobot(int armMotorID) {
         arm = new CANSparkMax(armMotorID, MotorType.kBrushless);
 
         arm.restoreFactoryDefaults(); 
 
-        // Initializes AlternateEncoders from motors
-        armEncoder = arm.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+        // Initializes Absolute Encoders from motors
+        armEncoder = arm.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
         // Sets position and velocity conversion factors so units are in degrees and degrees/second
         armEncoder.setPositionConversionFactor(360);
         armEncoder.setVelocityConversionFactor(60);
+
+        armEncoder.setInverted(true);
+        arm.setInverted(true);
     }
 
     @Override

@@ -34,11 +34,11 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public ManipulatorSubsystem (ManipulatorIO io) {
 
         // Sets up PID controller TODO: Change these values
-        controller = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
+        controller = new ProfiledPIDController(0, 0, 0, new Constraints(360, 360));
         controller.setTolerance(1, 1);
 
         // Sets up Feetforward TODO: Change these values
-        ff = new ArmFeedforward(0, 0.1, 0);
+        ff = new ArmFeedforward(0, 0, 0);
 
         this.io = io;
 
