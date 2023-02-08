@@ -4,6 +4,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase{
@@ -21,8 +23,9 @@ public class ElevatorSubsystem extends SubsystemBase{
      */
     public ElevatorSubsystem(ElevatorIO io){
         this.io = io;
-        this.controller = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
-        this.ff = new ElevatorFeedforward(0, 0, 0, 0);
+        this.controller = new ProfiledPIDController(72, 0, 0, 
+                          new Constraints(1.0, 2.0)); //This is in meters
+        this.ff = new ElevatorFeedforward(0, 0.8, 0, 0);
     }
     
     /**
@@ -52,5 +55,10 @@ public class ElevatorSubsystem extends SubsystemBase{
         MathUtil.clamp(voltage, -12, 12);
 
         io.setVoltage(voltage + feedforward);
+
+        SmartDashboard.putNumber("ELEVATOR TARGET POSITION", targetElevatorPosition);
+        SmartDashboard.putNumber("Elevator Encoder Value: ", getElevatorPosition());
+        SmartDashboard.putNumber("Elevator Encoder Value (Inches): ", Units.metersToInches(getElevatorPosition()));
+        SmartDashboard.putNumber("ELEVATOR VOLTAGE", voltage + feedforward);
     }
 }

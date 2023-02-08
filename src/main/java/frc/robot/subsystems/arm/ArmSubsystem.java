@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -34,11 +35,11 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO io) {
 
         // Sets up PID controller TODO: Change these values
-        controller = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
+        controller = new ProfiledPIDController(0, 0, 0, new Constraints(360, 360));
         controller.setTolerance(1, 1);
 
         // Sets up Feetforward TODO: Change these values
-        ff = new ArmFeedforward(0, 0.1, 0);
+        ff = new ArmFeedforward(0, 0, 0);
 
         this.io = io;
 
@@ -61,6 +62,8 @@ public class ArmSubsystem extends SubsystemBase {
         effort = MathUtil.clamp(effort, -12, 12);
 
         io.setVoltage(effort);
+
+        SmartDashboard.putNumber("Elevator Encoder Value: ", getPosition());
     }
 
     /**
