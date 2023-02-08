@@ -96,16 +96,16 @@ public class RobotContainer {
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4, 5) : new ArmIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
 
-  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem);
+  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_PitchIntakeSubsystem);
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
   private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(4);
   private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(-4);
-  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(1.0);
+  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(10.0);
   private final PitchIntakeCommand m_MediumPitchIntakeCommand = new PitchIntakeCommand(0.0);
-  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-1.0);
+  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-10.0);
 
     //TODO REMOVE
     private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
