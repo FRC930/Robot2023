@@ -28,6 +28,8 @@ public class ArmSubsystem extends SubsystemBase {
     public static double intakePosition = 90.0;
 
     /**
+     * <h3>ArmSubsystem</h3>
+     * 
      * Controls the motors and encoders, shoulder and wrist, on the arm.
      * 
      * @param io The ArmIO, use IORobot if robot is real, otherwise use IOSim.
@@ -47,8 +49,10 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /**
-    * Gets the inputs from the IO, and uses the feed forward and the PID controller to calculate the effort, in volts, to set to the io,
-    * for both the shoulder and wrist motors.
+     * <h3>periodic</h3>
+     * 
+     * Gets the inputs from the IO, and uses the feed forward and the PID controller to calculate the effort, in volts, to set to the io,
+     * for both the shoulder and wrist motors.
      */
     @Override
     public void periodic() {
@@ -67,6 +71,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /**
+     * <h3>setPosition</h3>
+     * 
      * Moves the shoulder to the desired position, using voltage.
      * 
      * @param target Desired shoulder position in degrees
@@ -75,7 +81,9 @@ public class ArmSubsystem extends SubsystemBase {
         targetPosition = target;
     }
 
-      /**
+    /**
+     * <h3>getPosition</h3>
+     * 
      * Gets the Shoulder motor position in degrees
      */
     public double getPosition(){
