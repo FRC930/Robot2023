@@ -5,8 +5,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAlternateEncoder;
 
-import edu.wpi.first.math.MathUtil;
-
 public class ManipulatorIORobot implements ManipulatorIO { 
 
     private final CANSparkMax manipulator;
@@ -37,11 +35,6 @@ public class ManipulatorIORobot implements ManipulatorIO {
 
     @Override
     public void updateInputs() {}
-
-    @Override
-    public double getOutputVoltage() {
-        return MathUtil.clamp(manipulator.getBusVoltage(), -12, 12);
-    }
 
     @Override
     public double getCurrentAngleDegrees() {

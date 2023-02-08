@@ -2,12 +2,8 @@ package frc.robot.subsystems.arm;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.math.MathUtil;
 
 public class ArmIORobot implements ArmIO {
 
@@ -33,11 +29,6 @@ public class ArmIORobot implements ArmIO {
 
     @Override
     public void updateInputs() {}
-
-    @Override
-    public double getOutputVoltage() {
-        return MathUtil.clamp(arm.getOutputCurrent(), -12, 12);
-    }
 
     @Override
     public double getCurrentAngleDegrees() {

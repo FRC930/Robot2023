@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -14,15 +13,6 @@ public class ArmIOSim implements ArmIO {
     @Override
     public void updateInputs() {
         sim.update(0.02);
-    }
-
-    /**
-     * Gets the shoulder motor outputs in volts
-     * @return the sholder motor outputs 
-     */
-    @Override
-    public double getOutputVoltage() {
-        return MathUtil.clamp(sim.getOutput(0), -12, 12);
     }
 
     /**

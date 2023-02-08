@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 
 public class ElevatorIORobot implements ElevatorIO {
@@ -29,11 +28,6 @@ public class ElevatorIORobot implements ElevatorIO {
 
     @Override
     public void updateInputs() {}
-
-    @Override
-    public double getOutputVoltage() {
-        return MathUtil.clamp(rightElevatorMaster.getOutputCurrent(), -12, 12);
-    }
 
     @Override
     public double getCurrentHeight() {

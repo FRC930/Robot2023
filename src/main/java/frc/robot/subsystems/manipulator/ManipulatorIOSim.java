@@ -2,7 +2,6 @@ package frc.robot.subsystems.manipulator;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -20,15 +19,7 @@ public class ManipulatorIOSim implements ManipulatorIO{
     public void updateInputs() {
         sim.update(0.02);
     }
-
-    /**
-     * Gets wrist motor outputs.
-     * @return Clamped current Voltage of the wrist.
-     */
-    @Override
-    public double getOutputVoltage() {
-        return MathUtil.clamp(sim.getOutput(0), -12, 12);
-    }
+    
     /**
      * Gets the wrist motor position in degrees.
      * @return the wrist motor position.

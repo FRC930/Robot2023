@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
@@ -21,11 +20,6 @@ public class ElevatorIOSim implements ElevatorIO {
     @Override
     public void updateInputs() {
         sim.update(0.02);
-    }
-
-    @Override
-    public double getOutputVoltage() {
-        return MathUtil.clamp(sim.getOutput(0), -12, 12);
     }
 
     @Override
