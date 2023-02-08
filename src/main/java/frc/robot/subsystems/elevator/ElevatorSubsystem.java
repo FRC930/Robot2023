@@ -17,6 +17,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     private final ElevatorFeedforward ff;
    
     /**
+     * <h3>ElevatorSubsystem</h3>
+     * 
      * Controls the motors and encoders, shoulder and wrist, on the arm.
      * 
      * @param io The ElevatorIO, use IORobot if robot is real, otherwise use IOSim.
@@ -29,14 +31,18 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
     
     /**
-    * Sets the Target Elevator Position in inches.
+     * <h3>setTargetElevatorPosition</h3>
+     * 
+     * Sets the Target Elevator Position in inches.
      */
     public void setTargetElevatorPosition(double inches){
         targetElevatorPosition = inches;
     }
 
     /**
-    * Gets where the elevator is in inches.
+     * <h3>getElevatorPosition</h3>
+     * 
+     * Gets where the elevator is in inches.
      */
     public double getElevatorPosition(){
         return io.getCurrentHeight();
@@ -56,6 +62,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
         io.setVoltage(voltage + feedforward);
 
+        //Updates shuffleboard values for elevator
         SmartDashboard.putNumber("ELEVATOR TARGET POSITION", targetElevatorPosition);
         SmartDashboard.putNumber("Elevator Encoder Value: ", getElevatorPosition());
         SmartDashboard.putNumber("Elevator Encoder Value (Inches): ", Units.metersToInches(getElevatorPosition()));
