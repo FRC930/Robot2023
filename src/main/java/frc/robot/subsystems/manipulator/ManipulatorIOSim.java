@@ -1,17 +1,17 @@
 package frc.robot.subsystems.manipulator;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.utilities.SparkMaxWrapper;
 
 public class ManipulatorIOSim implements ManipulatorIO{
     
     private final SingleJointedArmSim sim = new SingleJointedArmSim(DCMotor.getNEO(1), 75, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(27.12), Units.lbsToKilograms(11)), Units.inchesToMeters(27.12), 0, 2 * Math.PI, Units.lbsToKilograms(11), true);
-    private final CANSparkMax roller = new CANSparkMax(15, MotorType.kBrushless);
+    private final SparkMaxWrapper roller = new SparkMaxWrapper(15, MotorType.kBrushless);
 
     /**
      * updates the inputs for the motor sim
