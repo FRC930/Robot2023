@@ -26,19 +26,42 @@ public class ElevatorIORobot implements ElevatorIO {
         //LeftElevatorFollower.follow(RightElevatorMaster, true);
     }
 
+    /**
+     * <h3>updateInputs</h3>
+     * 
+     * Left blank because it's only used in simulation
+     */
     @Override
     public void updateInputs() {}
 
+    /**
+     * <h3>getCurrentHeight</h3>
+     * 
+     * Gets the elevator motor position in meters
+     * @return the elevator motor position
+     */
     @Override
     public double getCurrentHeight() {
         return rightElevatorEncoder.getPosition();
     }
 
+    /**
+     * <h3>getCurrentVelocity</h3>
+     * 
+     * Gets the elevator motor's velocity
+     * @return velocity of motor
+     */
     @Override
     public double getCurrentVelocity() {
         return rightElevatorEncoder.getVelocity();
     }
 
+    /**
+     * <h3>setVoltage</h3>
+     * 
+     * Set the elevator motor voltage 
+     * @param volts
+     */
     @Override
     public void setVoltage(double volts) {
         rightElevatorMaster.setVoltage(volts);
