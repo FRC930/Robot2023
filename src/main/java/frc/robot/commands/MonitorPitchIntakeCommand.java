@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
@@ -15,11 +14,8 @@ import frc.robot.utilities.DesiredPitchUtility;
  * 
  */
 public class MonitorPitchIntakeCommand extends CommandBase{
-
     private final double deadBand = 0.0;
-
     private PIDController pitchController;
-    
     private PitchIntakeSubsystem m_PitchIntakeSubsystem;
 
     /**
@@ -56,5 +52,6 @@ public class MonitorPitchIntakeCommand extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
+
     }
 }

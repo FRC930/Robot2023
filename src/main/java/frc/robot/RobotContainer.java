@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.ExtendIntakeCommand;
+import frc.robot.commands.IntakeRollerCommand;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
@@ -45,7 +46,7 @@ import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
-
+import frc.robot.subsystems.IntakeRollerMotorSubsystem;
 import frc.robot.commands.TravelToTarget;
 
 import frc.robot.commands.armcommands.SetArmDegreesCommand;
@@ -65,6 +66,7 @@ public class RobotContainer {
 
     //Intake Motors
     private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
+    private final IntakeRollerMotorSubsystem  m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
 
   /* Modules */
   //Cannot use an ID of 0
@@ -101,9 +103,11 @@ public class RobotContainer {
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(4);
-  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(-4);
-  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(10.0);
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-6, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(6, m_ExtendIntakeMotorSubsystem);
+  private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
+  private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
+  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(1.0);
   private final PitchIntakeCommand m_MediumPitchIntakeCommand = new PitchIntakeCommand(0.0);
   private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-10.0);
 
@@ -161,7 +165,7 @@ public class RobotContainer {
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
-    m_RetractIntakeCommand.setDefaltCommand(m_RetractIntakeCommand);
+    m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
     m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
 
   }
@@ -173,7 +177,10 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_codriverController.rightBumper().whileTrue(m_ExtendIntakeCommand);
+    m_codriverController.rightTrigger().whileTrue(m_ExtendIntakeCommand);
+    m_codriverController.povLeft().whileTrue(m_EjectRoller);
+    m_codriverController.povDown().whileTrue(m_IntakeRoller);
+
   }
 
   /**
@@ -200,7 +207,4 @@ public class RobotContainer {
     //m_robotDrive.resetAngleToAbsolute();
   }
     
-
-  
-
 }

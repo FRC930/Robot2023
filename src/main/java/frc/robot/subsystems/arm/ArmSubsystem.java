@@ -42,14 +42,14 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO io) {
 
         // Sets up PID controller TODO: Change these values
-        wristController = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
-        wristController.setTolerance(1, 1);
-        armController = new ProfiledPIDController(1, 0, 0, new Constraints(360, 360));
+        wristController = new ProfiledPIDController(0, 0, 0, new Constraints(360, 360));
+        wristController.setTolerance(0, 1);
+        armController = new ProfiledPIDController(0, 0, 0, new Constraints(360, 360));
         armController.setTolerance(1, 1);
 
         // Sets up Feetforward TODO: Change these values
-        wristff = new ArmFeedforward(0, 0.1, 0);
-        armff = new ArmFeedforward(0, 0.1, 0);
+        wristff = new ArmFeedforward(0, 0.0, 0);
+        armff = new ArmFeedforward(0, 0.0, 0);
 
         this.io = io;
 

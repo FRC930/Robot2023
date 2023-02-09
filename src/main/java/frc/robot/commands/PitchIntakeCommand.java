@@ -10,7 +10,6 @@ import frc.robot.utilities.DesiredPitchUtility;
  * 
  */
 public class PitchIntakeCommand extends CommandBase{
-    
     private double desiredPosition;
 
     /**
@@ -33,9 +32,7 @@ public class PitchIntakeCommand extends CommandBase{
 
 
     @Override
-    public void execute() {
-        
-    }
+    public void execute() {}
 
     @Override
     public boolean isFinished() {
@@ -43,6 +40,5 @@ public class PitchIntakeCommand extends CommandBase{
     }
 
     @Override
-    public void end(boolean interrupted) {
-    }
+    public void end(boolean interrupted) {}
 }
