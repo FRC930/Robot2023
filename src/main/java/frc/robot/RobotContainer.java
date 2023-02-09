@@ -12,10 +12,17 @@ import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.simulation.FieldSim;
 import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.SwerveDrive;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.rotateintake.PitchIntakeIORobot;
+import frc.robot.subsystems.rotateintake.PitchIntakeIOSim;
+import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIORobot;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -31,10 +38,13 @@ import java.util.Map;
 
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.MonitorPitchIntakeCommand;
+import frc.robot.commands.PitchIntakeCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
 
 import frc.robot.commands.TravelToTarget;
 
@@ -52,6 +62,9 @@ public class RobotContainer {
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;   
   private final int rotationAxis = XboxController.Axis.kRightX.value;
+
+    //Intake Motors
+    private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
 
   /* Modules */
   //Cannot use an ID of 0
@@ -77,16 +90,31 @@ public class RobotContainer {
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
+  private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(0, 0): new PitchIntakeIOSim());
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4, 5) : new ArmIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
 
-  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem);
+  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_PitchIntakeSubsystem);
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(4);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(-4);
+  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(10.0);
+  private final PitchIntakeCommand m_MediumPitchIntakeCommand = new PitchIntakeCommand(0.0);
+  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-10.0);
+
+    //TODO REMOVE
+    private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+    private static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    private static final double kPXController = 1;
+    private static final double kPYController = 1;
+  
+    
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
 
@@ -101,13 +129,6 @@ public class RobotContainer {
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
-
-  //TODO REMOVE
-  private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-  private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-  private static final double kMaxAccelerationMetersPerSecondSquared = 3;
-  private static final double kPXController = 1;
-  private static final double kPYController = 1;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -125,6 +146,9 @@ public class RobotContainer {
     m_driverController.x().whileTrue(m_travelToTarget);
     m_driverController.y().whileTrue(m_rotateCommand);
     m_driverController.b().whileTrue(m_autoBalanceCommand);
+    m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
+    m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
+    m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
     m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
     m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
     m_driverController.a().whileTrue(m_LowElevatorPosition);
@@ -137,6 +161,9 @@ public class RobotContainer {
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
+    m_RetractIntakeCommand.setDefaltCommand(m_RetractIntakeCommand);
+    m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
+
   }
 
   /**
@@ -145,7 +172,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_codriverController.rightBumper().whileTrue(m_ExtendIntakeCommand);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
