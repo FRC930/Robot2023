@@ -196,6 +196,7 @@ public class SwerveModule extends SubsystemBase {
     else
       return m_simDriveEncoderPosition;
   }
+  
   public double getDriveMetersPerSecond() {
     if(RobotBase.isReal())
       return m_driveEncoder.getVelocity();
