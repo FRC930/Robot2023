@@ -1,4 +1,4 @@
-package frc.robot.subsystems.RotateIntakeRollerMotor;
+package frc.robot.subsystems.rotateintake;
 
 public interface IntakeMotorIO {
     public void updateInputs();

@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.IntakeRollerMotorSubsystem;
-import frc.robot.subsystems.RotateIntakeRollerMotor.PitchIntakeSubsystem;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
 
 public class MechanismSimulator {
     private final Mechanism2d mech;

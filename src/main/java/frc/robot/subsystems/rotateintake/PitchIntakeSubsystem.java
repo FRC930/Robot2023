@@ -1,4 +1,4 @@
-package frc.robot.subsystems.RotateIntakeRollerMotor;
+package frc.robot.subsystems.rotateintake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -47,8 +47,16 @@ public class PitchIntakeSubsystem extends SubsystemBase{
      */
     public double getEncoderPosition() {
         return m_RotateIntakerollerMotorIO.getCurrentAngleDegrees();
+        // TODO should we be using set current limit
     }
 
+    /**
+     * 
+     * <h3>periodic</h3>
+     * 
+     * Periodically updates the input in the rotate intake roller motor
+     * 
+     */
     @Override
     public void periodic() {
         this.m_RotateIntakerollerMotorIO.updateInputs();
