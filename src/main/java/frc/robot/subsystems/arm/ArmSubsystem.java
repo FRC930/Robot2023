@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -16,16 +17,17 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final ArmIO io;
 
+    //TODO use offsets for positions
     public static double highPosition = 10; //at high elevator position
 
     public static double mediumPosition = 17.9; //at medium elevator position
 
     public static double groundPosition = 46.8; //at ground elevator position
 
-    public static double stowPosition = -60.0; //at ground elevator position
+    public static double stowPosition = 120.0;//-60.0; //at ground elevator position
 
     //TODO: These are nonsensical (Fix once we get actual values)
-    public static double intakePosition = 90.0;
+    public static double intakePosition = 50.0;
 
     /**
      * <h3>ArmSubsystem</h3>
@@ -36,11 +38,11 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public ArmSubsystem (ArmIO io) {
 
-        // Sets up PID controller TODO: Change these values
-        controller = new ProfiledPIDController(0, 0, 0, new Constraints(360, 360));
+        // Sets up PID controller
+        controller = new ProfiledPIDController(0.16, 0, 0, new Constraints(10, 10));
         controller.setTolerance(1, 1);
 
-        // Sets up Feetforward TODO: Change these values
+        // TODO Change values when manipulator is added
         ff = new ArmFeedforward(0, 0, 0);
 
         this.io = io;
@@ -60,14 +62,17 @@ public class ArmSubsystem extends SubsystemBase {
         // caculate PID and Feet forward angles 
 
         double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
-        double feedforward = ff.calculate(io.getCurrentAngleDegrees(), io.getVelocityDegreesPerSecond());
+        double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
 
         effort += feedforward;
-        effort = MathUtil.clamp(effort, -12, 12);
+        effort = MathUtil.clamp(effort, -6, 6);
 
         io.setVoltage(effort);
 
-        SmartDashboard.putNumber("Elevator Encoder Value: ", getPosition());
+        SmartDashboard.putNumber("ARM FEED FORWARD", feedforward);
+        SmartDashboard.putNumber("ARM TARGET POSITION", targetPosition);
+        SmartDashboard.putNumber("ARM EFFORT", effort);
+        SmartDashboard.putNumber("Arm Encoder Value", getPosition());
     }
 
     /**

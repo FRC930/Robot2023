@@ -18,7 +18,7 @@ public class SetArmDegreesCommand extends CommandBase{
      * @param wristPosition The desired wrist position in degrees
      * @param shoulderPosition The desired shoulder position in degrees
      */
-    public SetArmDegreesCommand(ArmSubsystem armSubsystem, ManipulatorSubsystem manipulatorSubsystem, double manipulatorPosition, double armPosition) {
+    public SetArmDegreesCommand(ArmSubsystem armSubsystem, ManipulatorSubsystem manipulatorSubsystem, double armPosition, double manipulatorPosition) {
         arm = armSubsystem;
         manipulator = manipulatorSubsystem;
         manipulatorPos = manipulatorPosition;
