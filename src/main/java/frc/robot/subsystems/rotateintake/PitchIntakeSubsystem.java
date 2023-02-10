@@ -1,5 +1,7 @@
 package frc.robot.subsystems.rotateintake;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -46,6 +48,7 @@ public class PitchIntakeSubsystem extends SubsystemBase{
      * 
      */
     public double getEncoderPosition() {
+        Logger.getInstance().recordOutput("EncoderPosition", m_RotateIntakerollerMotorIO.getCurrentAngleDegrees());
         return m_RotateIntakerollerMotorIO.getCurrentAngleDegrees();
         // TODO should we be using set current limit
     }

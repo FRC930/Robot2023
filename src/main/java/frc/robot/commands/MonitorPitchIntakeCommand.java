@@ -35,14 +35,18 @@ public class MonitorPitchIntakeCommand extends CommandBase{
 
     @Override
     public void initialize() {
+        
     }
 
     @Override
     public void execute() {
         double requiredAngle = pitchController.calculate(m_PitchIntakeSubsystem.getEncoderPosition(), DesiredPitchUtility.getInstance().getDesiredPosition());
+        Logger.getInstance().recordOutput("RequiredAngle", requiredAngle);
         double requiredVoltage = requiredAngle/32;
+        Logger.getInstance().recordOutput("RequiredVoltage", requiredVoltage);
         m_PitchIntakeSubsystem.setMotorVoltage(requiredVoltage);        
         Logger.getInstance().recordOutput("AutoBalanceCommand/currentPosition", m_PitchIntakeSubsystem.getEncoderPosition());
+        Logger.getInstance().recordOutput("DesiredPosistion", DesiredPitchUtility.getInstance().getDesiredPosition());
     }
 
     @Override
