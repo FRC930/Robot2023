@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
  */
 public class PitchIntakeIOSim implements IntakeMotorIO{
     
-    //
+    // TODO get gearing, jKgMetersSquared, weight,
     private final SingleJointedArmSim sim = 
-        new SingleJointedArmSim(DCMotor.getNeo550(1), 6, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(3), Units.lbsToKilograms(3)), Units.inchesToMeters(3), 0, Math.PI/2, 0, false);
+        new SingleJointedArmSim(DCMotor.getNeo550(1), 67, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(5.125), Units.lbsToKilograms(3)), Units.inchesToMeters(5.125), -180, 180, 0, false);
 
-    @Override
+        @Override
     public void updateInputs() {
         sim.update(0.02);
     }

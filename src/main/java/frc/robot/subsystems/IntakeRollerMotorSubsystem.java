@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.SparkMaxWrapper;
 
 /**
  * 
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class IntakeRollerMotorSubsystem extends SubsystemBase{
     
-    private CANSparkMax m_IntakerollerMotor;
+    private SparkMaxWrapper m_IntakerollerMotor;
 
     /**
      * 
@@ -25,7 +26,7 @@ public class IntakeRollerMotorSubsystem extends SubsystemBase{
      */
     public IntakeRollerMotorSubsystem(int rollerID) {
         //Creates the motor
-        m_IntakerollerMotor = new CANSparkMax(rollerID, MotorType.kBrushless);
+        m_IntakerollerMotor = new SparkMaxWrapper(rollerID, MotorType.kBrushless);
         m_IntakerollerMotor.restoreFactoryDefaults();
     }
 
@@ -50,5 +51,9 @@ public class IntakeRollerMotorSubsystem extends SubsystemBase{
      */
     public void stopRollerMotor() {
         m_IntakerollerMotor.set(0.0);
+    }
+
+    public void getSerialNumber() {
+        // return m_IntakerollerMotor.getSerialNumber();
     }
 }
