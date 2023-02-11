@@ -20,12 +20,14 @@ public class CameraOnRobot {
     private CameraProperties m_CameraProp;
     private final Transform3d m_RobotToCameraPose;
     private String m_CameraIpName;
+    private String m_CameraName;
 
     // ----- CONSTRUCTOR ----- \\
     /**
      * <h3>CameraOnRobot</h3>
      * 
      * @param cameraIpName ip adresse of the camera
+     * @param backCameraIpName
      * @param pipelineIndex photon pipeline number
      * @param portToForward 
      * @param configFile config file of the camera
@@ -36,8 +38,8 @@ public class CameraOnRobot {
      * @param cameraRotationPitch difference in pitch rotation between the camera and the center of the robot
      * @param cameraRotationYaw difference in yaw rotation between the camera and the center of the robot
      */
-    public CameraOnRobot(String cameraIpName, 
-        int pipelineIndex,
+    public CameraOnRobot(String cameraName, 
+        String cameraIpName, int pipelineIndex,
         int portToForward,
         String configFile, 
         int cameraResolutionWidth,
@@ -49,9 +51,10 @@ public class CameraOnRobot {
         double cameraRotationPitch,
         double cameraRotationYaw) {
 
+        m_CameraName = cameraName;
+        m_PhotonCamera = new PhotonCamera(cameraName);
         m_CameraIpName = cameraIpName;
         PortForwarder.add(portToForward, cameraIpName, 5800);
-        m_PhotonCamera = new PhotonCamera(cameraIpName);
         m_PhotonCamera.setPipelineIndex(pipelineIndex);
         if (Robot.isSimulation()) { 
             //disable version check when running simulation 
