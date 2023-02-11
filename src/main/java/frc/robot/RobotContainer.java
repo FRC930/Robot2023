@@ -70,19 +70,19 @@ public class RobotContainer {
 
     //Intake Motors
     private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
-    private final IntakeRollerMotorSubsystem  m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
-
+    private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
+    private final static boolean isCompetitionRobot = false; //(m_IntakeRollerMotorSubsystem.getSerialNumber() == 20)? true : false; TODO how to determine competition robot
   /* Modules */
   //Cannot use an ID of 0
   //Changed the turningMotorID and cancoderID from 0 to 3
   public static final SwerveModuleConstants frontLeftModule = 
-    new SwerveModuleConstants(8, 9, 9, 114.69);
+    new SwerveModuleConstants(8, 9, 9, isCompetitionRobot? 289.600: 114.69);
   public static final SwerveModuleConstants frontRightModule = 
-    new SwerveModuleConstants(11, 10, 10, 235.1);
+    new SwerveModuleConstants(11, 10, 10, isCompetitionRobot? 99.668: 235.1);
   public static final SwerveModuleConstants backLeftModule = 
-    new SwerveModuleConstants(1, 3, 3, 84.28);
+    new SwerveModuleConstants(1, 3, 3, isCompetitionRobot? 193.799: 84.28);
   public static final SwerveModuleConstants backRightModule = 
-    new SwerveModuleConstants(18, 19, 19, 9.75);
+    new SwerveModuleConstants(18, 19, 19, isCompetitionRobot? 208.125: 9.75);
   //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
   //page 100
 
@@ -96,7 +96,7 @@ public class RobotContainer {
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
-  private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(0, 0): new PitchIntakeIOSim());
+  private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4) : new ArmIOSim());
@@ -112,9 +112,9 @@ public class RobotContainer {
   private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(6, m_ExtendIntakeMotorSubsystem);
   private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
-  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(1.0);
+  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(90.0);
   private final PitchIntakeCommand m_MediumPitchIntakeCommand = new PitchIntakeCommand(0.0);
-  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-10.0);
+  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-90.0);
 
     //TODO REMOVE
     private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -152,6 +152,10 @@ public class RobotContainer {
     // TODO Add markers for real commands/paths
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
+    eventCommandMap.put("PreloadConeScore", new PrintCommand("NeedCommandForPreloadedConeScore"));
+    eventCommandMap.put("Picks up an new cone or cube", new PrintCommand("NeedCommandforPickingupGamepiece"));
+    eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
+    eventCommandMap.put("AutoBalance here", new PrintCommand("Need command to AutoBalance"));
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);

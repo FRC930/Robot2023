@@ -13,17 +13,18 @@ import com.revrobotics.REVPhysicsSim;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.SparkMaxWrapper;
 
 public class ExtendIntakeMotorSubsystem extends SubsystemBase{
-    
-    private CANSparkMax m_ExtendIntakeMotor;
+
      // -------- CONSTANTS --------\\
     private final int m_freeLimit = 65;
     private final int m_stallLimit = 10;
 
     // -------- DECLARATIONS --------\\
-    private final CANSparkMax m_intakeMotor;
+    private final SparkMaxWrapper m_intakeMotor;
     
 
     // -------- CONSTRUCTOR --------\\
@@ -36,11 +37,11 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
     public ExtendIntakeMotorSubsystem(int intakeMotorID) {
 
         
-        m_intakeMotor =  new CANSparkMax(intakeMotorID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        m_intakeMotor =  new SparkMaxWrapper(intakeMotorID, CANSparkMaxLowLevel.MotorType.kBrushless);
         m_intakeMotor.setSmartCurrentLimit(m_stallLimit, m_freeLimit);
 
         if (RobotBase.isSimulation()) {
-            REVPhysicsSim.getInstance().addSparkMax(m_ExtendIntakeMotor, DCMotor.getNEO(12));
+            REVPhysicsSim.getInstance().addSparkMax(m_intakeMotor, DCMotor.getNEO(12));
             
           }
 
@@ -60,11 +61,6 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
          m_intakeMotor.setVoltage(MathUtil.clamp(voltage, -12, 12));
     }
 
-    @Override
-    public void periodic() {
-        Logger.getInstance().recordOutput("IntakeMotorSubsystem/current", m_intakeMotor.getOutputCurrent());
-    }
-    
     @Override
     public void simulationPeriodic() {
       REVPhysicsSim.getInstance().run();
