@@ -44,6 +44,10 @@ import frc.robot.utilities.vision.estimation.TargetModel;
 public class OdometryUtility {
 
     // ----- CONSTANTS ----- \\
+    // Used for simulation Must have photovision camera running network server (enable it)
+    // IMPORTANT can not have turned on when on robot
+    public static final boolean CONNECTED_PHOTOVISION_CAMERA = false;
+    public static final String PHOTOVISION_NETWORK_SERVER = "10.9.30.31";
 
     //TODO Configure postitions of cameras
     /*
@@ -55,52 +59,55 @@ public class OdometryUtility {
      * 
      */
     // Back camera constants
+    private static final String BACK_CAMERA_NAME = "Camera1"; 
     private static final String BACK_CAMERA_IP_NAME = "10.9.30.31";
     private static final int BACK_CAMERA_PIPELINE = 0;
     private static final int BACK_CAMERA_PORT_TO_FORWARD = 5801;
     private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
     private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
-    private static final double BACK_CAMERA_POSITION_X = 10.0;
-    private static final double BACK_CAMERA_POSITION_Y = 10.0;
-    private static final double BACK_CAMERA_POSITION_Z = 25.0;
-    private static final double BACK_CAMERA_ROTATION_ROLL = 0;
-    private static final double BACK_CAMERA_ROTATION_PITCH = -Math.toRadians(18);
-    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(30);
+    private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(13.0);
+    private static final double BACK_CAMERA_POSITION_Y = Units.inchesToMeters(19.0);
+    private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(12.0);
+    private static final double BACK_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);
+    private static final double BACK_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);
+    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(0.0);
 
-    // Left camera constants
+    //Left camera constants
+    private static final String LEFT_CAMERA_NAME = "Camera2"; 
     private static final String LEFT_CAMERA_IP_NAME = "10.9.30.32";
     private static final int LEFT_CAMERA_PIPELINE = 0;
     private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5802;
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
     private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 480;
-    private static final double LEFT_CAMERA_POSITION_X = 10.0;
-    private static final double LEFT_CAMERA_POSITION_Y = 10.0;
-    private static final double LEFT_CAMERA_POSITION_Z = 25.0;
-    private static final double LEFT_CAMERA_ROTATION_ROLL = 0;
-    private static final double LEFT_CAMERA_ROTATION_PITCH = -Math.toRadians(18);
-    private static final double LEFT_CAMERA_ROTATION_YAW = Math.toRadians(30);
+    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(10.0);
+    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(10.0);
+    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(25.0);
+    private static final double LEFT_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
+    private static final double LEFT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
+    private static final double LEFT_CAMERA_ROTATION_YAW = Math.toRadians(0.0);;
 
     // Right camera constants
+    private static final String RIGHT_CAMERA_NAME = "Camera3"; 
     private static final String RIGHT_CAMERA_IP_NAME = "10.9.30.33";
     private static final int RIGHT_CAMERA_PIPELINE = 0;
     private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5803;
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera3/config.json";
     private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 480;
-    private static final double RIGHT_CAMERA_POSITION_X = 10.0;
-    private static final double RIGHT_CAMERA_POSITION_Y = 10.0;
-    private static final double RIGHT_CAMERA_POSITION_Z = 25.0;
-    private static final double RIGHT_CAMERA_ROTATION_ROLL = 0;
-    private static final double RIGHT_CAMERA_ROTATION_PITCH = -Math.toRadians(18);
-    private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(30);
+    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(10.0);
+    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(10.0);
+    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(25.0);
+    private static final double RIGHT_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
+    private static final double RIGHT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
+    private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(0.0);
 
     // ----- VARIABLES ----- \\
     // Three cameras on the robot, 2 in the front, 1 on the back
     private final CameraOnRobot m_backCamera;
-    private final CameraOnRobot m_rightCamera;
-    private final CameraOnRobot m_leftCamera;
+    // private final CameraOnRobot m_rightCamera;
+    // private final CameraOnRobot m_leftCamera;
 
     private SwerveDriveKinematics m_swerveDriveKinematics;
     private Rotation2d m_rotation;
@@ -148,7 +155,8 @@ public class OdometryUtility {
         );
 
         // Creates the cameras
-        m_backCamera = new CameraOnRobot(BACK_CAMERA_IP_NAME, 
+        m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
+                                        BACK_CAMERA_IP_NAME, 
                                         BACK_CAMERA_PIPELINE, 
                                         BACK_CAMERA_PORT_TO_FORWARD,
                                         BACK_CAMERA_CONFIG_FILE,
@@ -161,34 +169,36 @@ public class OdometryUtility {
                                         BACK_CAMERA_ROTATION_PITCH,
                                         BACK_CAMERA_ROTATION_YAW
                                         );
-        m_leftCamera = new CameraOnRobot(LEFT_CAMERA_IP_NAME, 
-                                        LEFT_CAMERA_PIPELINE, 
-                                        LEFT_CAMERA_PORT_TO_FORWARD,
-                                        LEFT_CAMERA_CONFIG_FILE,
-                                        LEFT_CAMERA_RESOLUTION_WIDTH,
-                                        LEFT_CAMERA_RESOLUTION_HEIGHT,
-                                        LEFT_CAMERA_POSITION_X,
-                                        LEFT_CAMERA_POSITION_Y,
-                                        LEFT_CAMERA_POSITION_Z,
-                                        LEFT_CAMERA_ROTATION_ROLL,
-                                        LEFT_CAMERA_ROTATION_PITCH,
-                                        LEFT_CAMERA_ROTATION_YAW
-                                        );
-        m_rightCamera = new CameraOnRobot(RIGHT_CAMERA_IP_NAME, 
-                                        RIGHT_CAMERA_PIPELINE, 
-                                        RIGHT_CAMERA_PORT_TO_FORWARD,
-                                        RIGHT_CAMERA_CONFIG_FILE,
-                                        RIGHT_CAMERA_RESOLUTION_WIDTH,
-                                        RIGHT_CAMERA_RESOLUTION_HEIGHT,
-                                        RIGHT_CAMERA_POSITION_X,
-                                        RIGHT_CAMERA_POSITION_Y,
-                                        RIGHT_CAMERA_POSITION_Z,
-                                        RIGHT_CAMERA_ROTATION_ROLL,
-                                        RIGHT_CAMERA_ROTATION_PITCH,
-                                        RIGHT_CAMERA_ROTATION_YAW
-                                        );
+        // m_leftCamera = new CameraOnRobot(LEFT_CAMERA_NAME, 
+        //                                 LEFT_CAMERA_IP_NAME, 
+        //                                 LEFT_CAMERA_PIPELINE, 
+        //                                 LEFT_CAMERA_PORT_TO_FORWARD,
+        //                                 LEFT_CAMERA_CONFIG_FILE,
+        //                                 LEFT_CAMERA_RESOLUTION_WIDTH,
+        //                                 LEFT_CAMERA_RESOLUTION_HEIGHT,
+        //                                 LEFT_CAMERA_POSITION_X,
+        //                                 LEFT_CAMERA_POSITION_Y,
+        //                                 LEFT_CAMERA_POSITION_Z,
+        //                                 LEFT_CAMERA_ROTATION_ROLL,
+        //                                 LEFT_CAMERA_ROTATION_PITCH,
+        //                                 LEFT_CAMERA_ROTATION_YAW
+        //                                 );
+        // m_rightCamera = new CameraOnRobot(RIGHT_CAMERA_NAME, 
+        //                                 RIGHT_CAMERA_IP_NAME, 
+        //                                 RIGHT_CAMERA_PIPELINE, 
+        //                                 RIGHT_CAMERA_PORT_TO_FORWARD,
+        //                                 RIGHT_CAMERA_CONFIG_FILE,
+        //                                 RIGHT_CAMERA_RESOLUTION_WIDTH,
+        //                                 RIGHT_CAMERA_RESOLUTION_HEIGHT,
+        //                                 RIGHT_CAMERA_POSITION_X,
+        //                                 RIGHT_CAMERA_POSITION_Y,
+        //                                 RIGHT_CAMERA_POSITION_Z,
+        //                                 RIGHT_CAMERA_ROTATION_ROLL,
+        //                                 RIGHT_CAMERA_ROTATION_PITCH,
+        //                                 RIGHT_CAMERA_ROTATION_YAW
+        //                                 );
 
-        cameras = List.of(m_backCamera, m_leftCamera, m_rightCamera);
+        cameras = List.of(m_backCamera);//, m_leftCamera, m_rightCamera);
     }
     
 
@@ -212,9 +222,9 @@ public class OdometryUtility {
      * 
      * @return a reference to the left camera
      */
-    public PhotonCamera getLeftCamera() { 
-        return m_leftCamera.getPhotonCamera();
-    }
+    // public PhotonCamera getLeftCamera() { 
+    //     return m_leftCamera.getPhotonCamera();
+    // }
 
     /**
      * <h3>getRightCamera</h3>
@@ -223,9 +233,9 @@ public class OdometryUtility {
      * 
      * @return a reference to the right camera
      */
-    public PhotonCamera getRightCamera() { 
-        return m_rightCamera.getPhotonCamera();
-    }
+    // public PhotonCamera getRightCamera() { 
+    //     return m_rightCamera.getPhotonCamera();
+    // }
 
     /**
      * <h3>updateCameraPos</h3>
@@ -323,6 +333,7 @@ public class OdometryUtility {
                 ));
             });
     
+            // TODO nver gets in here. DO you mean if foundTags.size()>=1????
             if (targets.size() > 1) {
     
                 CameraProperties cameraProp = cameras.get(i).getCameraProp();

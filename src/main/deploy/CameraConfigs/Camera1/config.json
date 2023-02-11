@@ -1,7 +1,7 @@
 {
   "baseName" : "unicam",
   "uniqueName" : "unicam",
-  "nickname" : "OV9281",
+  "nickname" : "Camera1",
   "FOV" : 70.0,
   "path" : "/dev/video0",
   "cameraType" : "ZeroCopyPicam",
