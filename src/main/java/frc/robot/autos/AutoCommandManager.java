@@ -53,14 +53,13 @@ public class AutoCommandManager {
         //Autonomous Commands
         TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
         Command taxiOneBallAutoBuild = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
-        Command blueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
-
+        Command BlueLeftBalanceCommand = new PathPlannerCommand(s_SwerveDrive, "BlueLeftConeBalance", eventCommandMap);
+        
         //Adding options to the chooser
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
         m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuild);
-        m_chooser.addOption("BlueRight", blueRightCommand);
-
+        m_chooser.addOption("score cone grab cone balance", BlueLeftBalanceCommand);
         //adding chooser to dashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }

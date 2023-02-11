@@ -141,6 +141,10 @@ public class RobotContainer {
     // TODO Add markers for real commands/paths
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
+    eventCommandMap.put("PreloadConeScore", new PrintCommand("NeedCommandForPreloadedConeScore"));
+    eventCommandMap.put("Picks up an new cone or cube", new PrintCommand("NeedCommandforPickingupGamepiece"));
+    eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
+    eventCommandMap.put("AutoBalance here", new PrintCommand("Need command to AutoBalance"));
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
