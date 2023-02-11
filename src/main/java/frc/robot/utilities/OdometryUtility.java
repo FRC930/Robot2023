@@ -115,12 +115,14 @@ public class OdometryUtility {
     private SwerveModulePosition[] m_swerveModulePositions;
     private Pose2d m_position;
     private SwerveDrivePoseEstimator m_PoseEstimator;
-    private final Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(0));
-    private final Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(45));
+    // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
+    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(0.1));
+    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(45));
 
     private AprilTagFieldLayout tagLayout;
 
     private List<CameraOnRobot> cameras;
+    private Pose3d m_lastCameraPosition = null;
 
     // ----- CONSTRUCTOR ----- \\
     /**
@@ -356,6 +358,9 @@ public class OdometryUtility {
                         .plus(robotToCameraPose.inverse());
                     
                     addVisionMeasurement(pose.toPose2d(), result.getLatencyMillis() / 1000.0);
+
+                    m_lastCameraPosition = pose;
+                    SmartDashboard.putNumberArray("AfterRobotPose", LogUtil.toPoseArray2d(getPose()));
                     SmartDashboard.putNumberArray("AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
                 }
             }
