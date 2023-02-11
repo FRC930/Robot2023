@@ -2,6 +2,7 @@ package frc.robot.utilities;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
+// TODO REMOVE?
 public class AutoUtility {
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 3;

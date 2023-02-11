@@ -3,10 +3,20 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import org.littletonrobotics.junction.LogFileUtil;
+// Advantage Kit
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utilities.OdometryUtility;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -14,7 +24,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
+
+  private static final int REAL = 0;
+
+  private static final int SIM = 1;
+
+  private static final int REPLAY = 2;
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -25,6 +42,68 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    // Allow pyshical Photonvison cammera to be used while simulating on PC
+    // https://docs.photonvision.org/en/latest/docs/programming/photonlib/hardware-in-the-loop-sim.html
+    // NOTE Requires Photolib camera to run network server!!!! But this will break on setting is on when used on robot
+    if(RobotBase.isSimulation() && OdometryUtility.CONNECTED_PHOTOVISION_CAMERA) {
+      NetworkTableInstance inst = NetworkTableInstance.getDefault();
+      inst.stopServer();
+      // Change the IP address in the below function to the IP address you use to connect to the PhotonVision UI.
+      inst.setServer(OdometryUtility.PHOTOVISION_NETWORK_SERVER); // photonvision.local
+      inst.startClient4("Robot Simulation");
+   }
+
+
+    //Advantage Kit
+    Logger logger = Logger.getInstance();
+    //TODO setUseTiming(Constants.getMode() != Mode.REPLAY);
+    logger.recordMetadata("Robot", "FRCRobot");
+    logger.recordMetadata("TuningMode", Boolean.toString(false));
+    logger.recordMetadata("RuntimeType", getRuntimeType().toString());
+    logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
+    int mode = SIM;
+    mode = Robot.isReal()?REAL:SIM;
+    switch (mode) {
+      case REAL:
+        String folder = "/media/sda1/";
+        folder = "/home/lvuser";
+        if (folder != null) {
+          logger.addDataReceiver(new WPILOGWriter(folder));
+        } else {
+          //TODO logNoFileAlert.set(true);
+        }
+        logger.addDataReceiver(new NT4Publisher());
+        LoggedPowerDistribution.getInstance();
+        break;
+      case SIM:
+        logger.addDataReceiver(new NT4Publisher());
+        break;
+      case REPLAY:
+        String path = LogFileUtil.findReplayLog();
+        logger.setReplaySource(new WPILOGReader(path));
+        logger.addDataReceiver(
+            new WPILOGWriter(LogFileUtil.addPathSuffix(path, "_sim")));
+        break;
+    }
+    logger.start();
+
+    
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -44,11 +123,15 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    //Needed for simulation
+    m_robotContainer.periodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.disabledInit();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -56,14 +139,9 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
+     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    
+    
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -96,7 +174,20 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
   }
 
+  @Override
+  public void testExit(){
+      // TODO m_robotContaner.testExit();
+  }
+
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  /** This function is called once when the robot is first started up. */
+  @Override
+  public void simulationInit() {}
+
+  /** This function is called periodically whilst in simulation. */
+  @Override
+  public void simulationPeriodic() {}
 }

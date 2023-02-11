@@ -1,0 +1,58 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "SparkMax[12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SparkMax[7]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto choices": "String Chooser",
+      "/SmartDashboard/Field2d": "Field2d",
+      "/SmartDashboard/Mech2d": "Mechanism2d",
+      "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Auto choices": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field2d": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2d": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "photonvision": {
+        "CV5647": {
+          "open": true
+        },
+        "Camera5": {
+          "open": true
+        },
+        "OV5647": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  }
+}

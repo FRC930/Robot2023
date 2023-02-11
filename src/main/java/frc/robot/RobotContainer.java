@@ -4,24 +4,56 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.simulation.FieldSim;
+import frc.robot.simulation.MechanismSimulator;
+import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.ExtendIntakeCommand;
+import frc.robot.commands.IntakeRollerCommand;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIORobot;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.manipulator.ManipulatorIORobot;
+import frc.robot.subsystems.manipulator.ManipulatorIOSim;
+import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
+import frc.robot.subsystems.rotateintake.PitchIntakeIORobot;
+import frc.robot.subsystems.rotateintake.PitchIntakeIOSim;
+import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIORobot;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+import frc.robot.autos.AutoCommandManager;
+import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.MonitorPitchIntakeCommand;
+import frc.robot.commands.PitchIntakeCommand;
+import frc.robot.commands.ElevatorMoveCommand;
+import frc.robot.commands.RotateCommand;
+import frc.robot.autos.AutoCommandManager.subNames;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
+import frc.robot.subsystems.IntakeRollerMotorSubsystem;
+import frc.robot.commands.TravelToTarget;
+import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
+import frc.robot.commands.armcommands.SetArmDegreesCommand;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -30,29 +62,127 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
+  /* Drive Controls */
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;   
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+
+    //Intake Motors
+    private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
+    private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
+    private final static boolean isCompetitionRobot = false; //(m_IntakeRollerMotorSubsystem.getSerialNumber() == 20)? true : false; TODO how to determine competition robot
+  /* Modules */
+  //Cannot use an ID of 0
+  //Changed the turningMotorID and cancoderID from 0 to 3
+  public static final SwerveModuleConstants frontLeftModule = 
+    new SwerveModuleConstants(8, 9, 9, isCompetitionRobot? 289.600: 114.69);
+  public static final SwerveModuleConstants frontRightModule = 
+    new SwerveModuleConstants(11, 10, 10, isCompetitionRobot? 99.668: 235.1);
+  public static final SwerveModuleConstants backLeftModule = 
+    new SwerveModuleConstants(1, 3, 3, isCompetitionRobot? 193.799: 84.28);
+  public static final SwerveModuleConstants backRightModule = 
+    new SwerveModuleConstants(18, 19, 19, isCompetitionRobot? 208.125: 9.75);
+  //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
+  //page 100
+
+  
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
+  CommandXboxController m_codriverController = new CommandXboxController(kCodriverControllerPort);
+
+
+  // Subsystems \\
+  //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
+  private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
+  private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
+  private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
+  
+  private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4) : new ArmIOSim());
+  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(5, 15) : new ManipulatorIOSim());
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
+
+  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
+
+  // Commands \\
+  private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
+  private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-6, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(6, m_ExtendIntakeMotorSubsystem);
+  private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
+  private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
+  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(90.0);
+  private final PitchIntakeCommand m_MediumPitchIntakeCommand = new PitchIntakeCommand(0.0);
+  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-90.0);
+
+    //TODO REMOVE
+    private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    private static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+    private static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    private static final double kPXController = 1;
+    private static final double kPYController = 1;
+  
+    
+  private AutoCommandManager m_autoManager;
+  private Map<String, Command> eventCommandMap = new HashMap<>();
+
+  private final SetArmDegreesCommand m_HighArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.highPosition, ManipulatorSubsystem.highPosition);
+  private final SetArmDegreesCommand m_MediumArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.mediumPosition, ManipulatorSubsystem.mediumPosition);
+  private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.groundPosition, ManipulatorSubsystem.groundPosition);
+  private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.intakePosition, ManipulatorSubsystem.intakePosition);
+  private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition);
+
+  private final ElevatorMoveCommand m_HighestElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(36.0));
+  private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22.64));
+  private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(11.32));
+  private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
+
+  private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem);
+
+  public static final int kDriverControllerPort = 0;
+  public static final int kCodriverControllerPort = 1;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Auto Commands
+
+    // TODO Add markers for real commands/paths
+    eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
+    eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
+    eventCommandMap.put("PreloadConeScore", new PrintCommand("NeedCommandForPreloadedConeScore"));
+    eventCommandMap.put("Picks up an new cone or cube", new PrintCommand("NeedCommandforPickingupGamepiece"));
+    eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
+    eventCommandMap.put("AutoBalance here", new PrintCommand("Need command to AutoBalance"));
+    m_autoManager = new AutoCommandManager();
+    m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
+    m_autoManager.initCommands(eventCommandMap);
+
     // Configure the button bindings
     configureButtonBindings();
+    m_driverController.x().whileTrue(m_travelToTarget);
+    m_driverController.y().whileTrue(m_rotateCommand);
+    m_driverController.b().whileTrue(m_autoBalanceCommand);
+    m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
+    m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
+    m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
+    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    m_driverController.a().whileTrue(m_LowElevatorPosition);
+    m_driverController.back().whileTrue(m_HighestElevatorPosition);
 
+    m_codriverController.x().whileTrue(m_HighArmPosition);
+    m_codriverController.y().whileTrue(m_MediumArmPosition);
+    m_codriverController.a().whileTrue(m_GroundArmPosition);
+    m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
     // Configure default commands
-    m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () ->
-                m_robotDrive.drive(
-                    m_driverController.getLeftY(),
-                    m_driverController.getLeftX(),
-                    m_driverController.getRightX(),
-                    false),
-            m_robotDrive));
+    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
+    m_fieldSim.initSim();
+    m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
+    m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
+
   }
 
   /**
@@ -61,7 +191,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_codriverController.rightTrigger().whileTrue(m_ExtendIntakeCommand);
+    m_codriverController.povLeft().whileTrue(m_EjectRoller);
+    m_codriverController.povDown().whileTrue(m_IntakeRoller);
+
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -69,47 +204,22 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
 
-    // An example trajectory to follow.  All units in meters.
-    Trajectory exampleTrajectory =
-        TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
-            config);
+    return m_autoManager.getAutonomousCommand();
+    //TODO determine if autoManager needs to have andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
 
-    var thetaController =
-        new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    //return new TaxiOneBall(m_robotDrive).andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
 
-    SwerveControllerCommand swerveControllerCommand =
-        new SwerveControllerCommand(
-            exampleTrajectory,
-            m_robotDrive::getPose, // Functional interface to feed supplier
-            DriveConstants.kDriveKinematics,
-
-            // Position controllers
-            new PIDController(AutoConstants.kPXController, 0, 0),
-            new PIDController(AutoConstants.kPYController, 0, 0),
-            thetaController,
-            m_robotDrive::setModuleStates,
-            m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
   }
+
+  public void periodic() {
+    m_fieldSim.periodic();
+    m_mechanismSimulator.periodic();
+  }
+
+  public void disabledInit() {
+    // THis appears to cause robot angle to shift each time enable
+    //m_robotDrive.resetAngleToAbsolute();
+  }
+    
 }
