@@ -1,79 +1,72 @@
 package frc.robot.subsystems.arm;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.math.MathUtil;
 
 public class ArmIORobot implements ArmIO {
 
-    private CANSparkMax wristMotor;
-    private CANSparkMax shoulderMotor; 
+    private CANSparkMax arm;
+    
+    private AbsoluteEncoder armEncoder;
 
-    private RelativeEncoder wristEncoder;
-    private RelativeEncoder shoulderEncoder;
+    private static double armOffset = -14.0;
 
-    public ArmIORobot(int WristMotorID, int ShoulderMotorID) {
-        wristMotor = new CANSparkMax(WristMotorID, MotorType.kBrushless);
-        shoulderMotor = new CANSparkMax(ShoulderMotorID, MotorType.kBrushless);
+    public ArmIORobot(int armMotorID) {
+        arm = new CANSparkMax(armMotorID, MotorType.kBrushless);
 
-        wristMotor.restoreFactoryDefaults();
-        shoulderMotor.restoreFactoryDefaults(); 
+        arm.restoreFactoryDefaults(); 
 
-        // Initializes AlternateEncoders from motors
-        wristEncoder = wristMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
-        shoulderEncoder = shoulderMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+        // Initializes Absolute Encoders from motors
+        armEncoder = arm.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
         // Sets position and velocity conversion factors so units are in degrees and degrees/second
-        wristEncoder.setPositionConversionFactor(360);
-        wristEncoder.setVelocityConversionFactor(60);
-        shoulderEncoder.setPositionConversionFactor(360);
-        shoulderEncoder.setVelocityConversionFactor(60);
+        armEncoder.setPositionConversionFactor(360);
+        armEncoder.setVelocityConversionFactor(60);
+
+        //armEncoder.setInverted(true);
+        arm.setInverted(true);
     }
 
+    /**
+     * <h3>updateInputs</h3>
+     * 
+     * Left blank because it's only used in simulation
+     */
     @Override
     public void updateInputs() {}
 
+    /**
+     * <h3>getOutputVoltage</h3>
+     * 
+     * Gets the shoulder motor outputs in volts
+     * @return the sholder motor output voltage
+     */
     @Override
-    public double getWristOutputVoltage() {
-        return MathUtil.clamp(wristMotor.getOutputCurrent(), -12, 12);
+    public double getCurrentAngleDegrees() {
+        return armEncoder.getPosition() + armOffset;
     }
 
+    /**
+     * <h3>getVelocityDegreesPerSecond</h3>
+     * 
+     * Gets the shoulder motor's velocity
+     * @return velocity of arm motor
+     */
     @Override
-    public double getWristCurrentAngleDegrees() {
-        return wristEncoder.getPosition();
+    public double getVelocityDegreesPerSecond() {
+        return armEncoder.getVelocity();
     }
 
+    /**
+     * <h3>setVoltage</h3>
+     * 
+     * Set the shoulder motor voltage 
+     * @param volts
+     */
     @Override
-    public double getWristVelocityDegreesPerSecond() {
-        return wristEncoder.getVelocity();
-    }
-
-    @Override
-    public void setWristVoltage(double volts) {
-        wristMotor.setVoltage(volts);
-        
-    }
-
-    @Override
-    public double getShoulderOutputVoltage() {
-        return shoulderMotor.getOutputCurrent();
-    }
-
-    @Override
-    public double getShoulderCurrentAngleDegrees() {
-        return shoulderEncoder.getPosition();
-    }
-
-    @Override
-    public double getShoulderVelocityDegreesPerSecond() {
-        return shoulderEncoder.getVelocity();
-    }
-
-    @Override
-    public void setShoulderVoltage(double volts) {
-        shoulderMotor.setVoltage(volts);
+    public void setVoltage(double volts) {
+        arm.setVoltage(volts);
     }
 }

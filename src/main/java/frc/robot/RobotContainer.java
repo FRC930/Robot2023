@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.simulation.FieldSim;
@@ -21,6 +22,9 @@ import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.manipulator.ManipulatorIORobot;
+import frc.robot.subsystems.manipulator.ManipulatorIOSim;
+import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 import frc.robot.subsystems.rotateintake.PitchIntakeIORobot;
 import frc.robot.subsystems.rotateintake.PitchIntakeIOSim;
 import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
@@ -48,7 +52,7 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
 import frc.robot.subsystems.IntakeRollerMotorSubsystem;
 import frc.robot.commands.TravelToTarget;
-
+import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
 import frc.robot.commands.armcommands.SetArmDegreesCommand;
 
 /*
@@ -95,10 +99,11 @@ public class RobotContainer {
   private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(0, 0): new PitchIntakeIOSim());
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4, 5) : new ArmIOSim());
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4) : new ArmIOSim());
+  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(5, 15) : new ManipulatorIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
 
-  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_PitchIntakeSubsystem);
+  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
 
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
@@ -122,15 +127,19 @@ public class RobotContainer {
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
 
-  private final SetArmDegreesCommand m_HighArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.highWristPosition, ArmSubsystem.highShoulderPosition);
-  private final SetArmDegreesCommand m_MediumArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.mediumWristPosition, ArmSubsystem.mediumShoulderPosition);
-  private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.groundWristPosition, ArmSubsystem.groundShoulderPosition);
-  private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.intakeWristPosition, ArmSubsystem.intakeShoulderPosition);
-  private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, ArmSubsystem.stowWristPosition, ArmSubsystem.stowShoulderPosition);
+  private final SetArmDegreesCommand m_HighArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.highPosition, ManipulatorSubsystem.highPosition);
+  private final SetArmDegreesCommand m_MediumArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.mediumPosition, ManipulatorSubsystem.mediumPosition);
+  private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.groundPosition, ManipulatorSubsystem.groundPosition);
+  private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.intakePosition, ManipulatorSubsystem.intakePosition);
+  private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition);
 
-  private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 22.64);
-  private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 11.32);
+  private final ElevatorMoveCommand m_HighestElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(36.0));
+  private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22.64));
+  private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(11.32));
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
+
+  private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem);
+
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
 
@@ -156,12 +165,14 @@ public class RobotContainer {
     m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
     m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
     m_driverController.a().whileTrue(m_LowElevatorPosition);
+    m_driverController.back().whileTrue(m_HighestElevatorPosition);
 
     m_codriverController.x().whileTrue(m_HighArmPosition);
     m_codriverController.y().whileTrue(m_MediumArmPosition);
     m_codriverController.a().whileTrue(m_GroundArmPosition);
     m_codriverController.b().whileTrue(m_IntakeArmPosition);
     m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
