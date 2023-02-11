@@ -18,6 +18,10 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
 
     private CANSparkMax m_RotateIntakeRollerMotor;
     private RelativeEncoder m_RotateIntakeRollerEncoder;
+
+    // TODO find actual values
+    private final int m_freeLimit = 20;
+    private final int m_stallLimit = 10;
     
     /**
      * 
@@ -28,7 +32,7 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
      * @param motorID ID of the motor
      * @param encoderID ID of the encoder
      */
-    public PitchIntakeIORobot(int motorID, int encoderID) {
+    public PitchIntakeIORobot(int motorID) {
         //Creates the motor
         m_RotateIntakeRollerMotor = new CANSparkMax(motorID, MotorType.kBrushless);
         m_RotateIntakeRollerMotor.restoreFactoryDefaults();
@@ -38,6 +42,8 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
         m_RotateIntakeRollerEncoder.setPositionConversionFactor(360);
         // TODO Figure out what number the factor has to be
         m_RotateIntakeRollerEncoder.setVelocityConversionFactor(60);
+        
+        m_RotateIntakeRollerMotor.setSmartCurrentLimit(m_stallLimit, m_freeLimit);
     }
 
     /**

@@ -103,7 +103,7 @@ public class MechanismSimulator {
                 new MechanismLigament2d(
                     "Intake",
                     10,
-                    0,
+                    this.intake.getEncoderPosition(),
                     6,
                     new Color8Bit(Color.kBlueViolet)
                 )
