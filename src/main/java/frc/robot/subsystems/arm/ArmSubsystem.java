@@ -29,6 +29,8 @@ public class ArmSubsystem extends SubsystemBase {
     //TODO: These are nonsensical (Fix once we get actual values)
     public static double intakePosition = 50.0;
 
+    public static double armLength = 27.12;
+
     /**
      * <h3>ArmSubsystem</h3>
      * 

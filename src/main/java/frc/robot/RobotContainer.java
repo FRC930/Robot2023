@@ -132,6 +132,8 @@ public class RobotContainer {
   private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.groundPosition, ManipulatorSubsystem.groundPosition);
   private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.intakePosition, ManipulatorSubsystem.intakePosition);
   private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition);
+  private final SetArmDegreesCommand m_ArmMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 45, 0);
+  private final SetArmDegreesCommand m_ManipulatorMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 0, 45);
 
   private final ElevatorMoveCommand m_HighestElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(36.0));
   private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22.64));
@@ -169,8 +171,10 @@ public class RobotContainer {
 
     m_codriverController.x().whileTrue(m_HighArmPosition);
     m_codriverController.y().whileTrue(m_MediumArmPosition);
-    m_codriverController.a().whileTrue(m_GroundArmPosition);
-    m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    //m_codriverController.a().whileTrue(m_GroundArmPosition);
+    //m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.a().whileTrue(m_ArmMoveTest);
+    m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
     m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
     m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
     // Configure default commands
