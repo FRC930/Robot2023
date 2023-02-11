@@ -43,7 +43,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         this.io = io;
 
-        targetPosition = stowPosition;
+        //targetPosition = stowPosition;
     }
 
     /**
