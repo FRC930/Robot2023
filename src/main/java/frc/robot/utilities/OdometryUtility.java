@@ -122,7 +122,6 @@ public class OdometryUtility {
     private AprilTagFieldLayout tagLayout;
 
     private List<CameraOnRobot> cameras;
-    private Pose3d m_lastCameraPosition = null;
 
     // ----- CONSTRUCTOR ----- \\
     /**
@@ -340,8 +339,7 @@ public class OdometryUtility {
             }
         });
     
-            // TODO nver gets in here. DO you mean if foundTags.size()>=1????
-            if (targets.size() >= 1) {
+            if (targets.size() > 0) {
     
                 CameraProperties cameraProp = cameras.get(i).getCameraProp();
                 PNPResults pnpResults = OdometryUtility.estimateCamPosePNP(cameraProp, corners, foundTags);;
@@ -358,9 +356,6 @@ public class OdometryUtility {
                         .plus(robotToCameraPose.inverse());
                     
                     addVisionMeasurement(pose.toPose2d(), result.getLatencyMillis() / 1000.0);
-
-                    m_lastCameraPosition = pose;
-                    SmartDashboard.putNumberArray("AfterRobotPose", LogUtil.toPoseArray2d(getPose()));
                     SmartDashboard.putNumberArray("AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
                 }
             }
