@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ManipulatorSubsystem extends SubsystemBase {
@@ -52,9 +53,13 @@ public class ManipulatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         this.io.updateInputs();
-        // caculate PID and Feet forward angles 
+        // Set up PID controller
         double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
-        double feedforward = ff.calculate(io.getCurrentAngleDegrees(), io.getVelocityDegreesPerSecond());
+        controller.setTolerance(1, 1);
+        controller.enableContinuousInput(-180, 180);
+        
+        //Set up Feed Forward
+        double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
 
         effort += feedforward;
         effort = MathUtil.clamp(effort, -12, 12);

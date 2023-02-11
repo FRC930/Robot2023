@@ -1,16 +1,16 @@
 package frc.robot.subsystems.manipulator;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 
 public class ManipulatorIORobot implements ManipulatorIO { 
 
     private final CANSparkMax manipulator;
     private final CANSparkMax roller;
 
-    private final RelativeEncoder manipulatorEncoder;
+    private final AbsoluteEncoder manipulatorEncoder;
 
     // Constant, in amps
     private final int STALL_LIMIT = 10;
@@ -25,12 +25,14 @@ public class ManipulatorIORobot implements ManipulatorIO {
 
         roller.setSmartCurrentLimit(STALL_LIMIT, FREE_LIMIT);
 
-        // Initializes AlternateEncoders from motors
-        manipulatorEncoder = manipulator.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+        // Initializes Absolute Encoder from motors
+        manipulatorEncoder = manipulator.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
         // Sets position and velocity conversion factors so units are in degrees and degrees/second
         manipulatorEncoder.setPositionConversionFactor(360);
         manipulatorEncoder.setVelocityConversionFactor(60);
+
+        
     }
 
     @Override
