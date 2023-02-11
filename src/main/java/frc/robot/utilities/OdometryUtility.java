@@ -48,7 +48,7 @@ public class OdometryUtility {
     // Used for simulation Must have photovision camera running network server (enable it)
     // IMPORTANT can not have turned on when on robot
     public static final boolean CONNECTED_PHOTOVISION_CAMERA = false;
-    public static final String PHOTOVISION_NETWORK_SERVER = "10.9.30.30";
+    public static final String PHOTOVISION_NETWORK_SERVER = "10.9.30.35";
 
     //TODO Configure postitions of cameras
     /*
@@ -60,11 +60,11 @@ public class OdometryUtility {
      * 
      */
     // Back camera constants
-    private static final String BACK_CAMERA_NAME = "Camera2"; 
-    private static final String BACK_CAMERA_IP_NAME = "10.9.30.32";
+    private static final String BACK_CAMERA_NAME = "Camera5"; 
+    private static final String BACK_CAMERA_IP_NAME = "10.9.30.35";
     private static final int BACK_CAMERA_PIPELINE = 0;
-    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5802;
-    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
+    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5805;
+    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera5/config.json";
     private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
     private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(13.0);
