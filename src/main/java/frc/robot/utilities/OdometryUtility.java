@@ -60,11 +60,11 @@ public class OdometryUtility {
      * 
      */
     // Back camera constants
-    private static final String BACK_CAMERA_NAME = "Camera1"; 
-    private static final String BACK_CAMERA_IP_NAME = "10.9.30.31";
+    private static final String BACK_CAMERA_NAME = "Camera2"; 
+    private static final String BACK_CAMERA_IP_NAME = "10.9.30.32";
     private static final int BACK_CAMERA_PIPELINE = 0;
-    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5801;
-    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
+    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5802;
+    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
     private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
     private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(13.0);
