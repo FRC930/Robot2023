@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.simulation.FieldSim;
 import frc.robot.simulation.MechanismSimulator;
+import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -46,12 +47,14 @@ import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.MonitorPitchIntakeCommand;
 import frc.robot.commands.PitchIntakeCommand;
 import frc.robot.commands.ElevatorMoveCommand;
+import frc.robot.commands.LEDCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
 import frc.robot.subsystems.IntakeRollerMotorSubsystem;
 import frc.robot.commands.TravelToTarget;
+import frc.robot.commands.LEDCommand.LedPatterns;
 import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
 import frc.robot.commands.armcommands.SetArmDegreesCommand;
 
@@ -105,6 +108,7 @@ public class RobotContainer {
 
   private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
 
+  private final LEDsubsystem m_LEDsubsystem = new LEDsubsystem(0, 1,2,3 );
   // Commands \\
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
@@ -132,6 +136,8 @@ public class RobotContainer {
   private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.groundPosition, ManipulatorSubsystem.groundPosition);
   private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.intakePosition, ManipulatorSubsystem.intakePosition);
   private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition);
+  private final SetArmDegreesCommand m_ArmMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 45, 0);
+  private final SetArmDegreesCommand m_ManipulatorMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 0, 45);
 
   private final ElevatorMoveCommand m_HighestElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(36.0));
   private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22.64));
@@ -139,6 +145,17 @@ public class RobotContainer {
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
 
   private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem);
+
+  private final LEDCommand m_RunDisabledLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
+  private final LEDCommand m_RunConeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CONEREQUEST);
+  private final LEDCommand m_RunCubeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CUBEREQUEST);
+  private final LEDCommand m_RunConeAquiredLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CONEAQUIRED);
+  private final LEDCommand m_RunCubeAquiredLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CUBEAQUIRED);
+  private final LEDCommand m_RunBlueAllianceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.BLUEALLIANCE);
+  private final LEDCommand m_RunRedAllianceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.REDALLIANCE);
+  private final LEDCommand m_RunTeamColorsLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.TEAMCOLORS);
+  private final LEDCommand m_RunRandomLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.RANDOMLED);
+  private final LEDCommand m_RunAutoBalanceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.AUTOBALANCE);
 
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
@@ -173,8 +190,10 @@ public class RobotContainer {
 
     m_codriverController.x().whileTrue(m_HighArmPosition);
     m_codriverController.y().whileTrue(m_MediumArmPosition);
-    m_codriverController.a().whileTrue(m_GroundArmPosition);
-    m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    //m_codriverController.a().whileTrue(m_GroundArmPosition);
+    //m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.a().whileTrue(m_ArmMoveTest);
+    m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
     m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
     m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
     // Configure default commands

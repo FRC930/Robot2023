@@ -54,8 +54,8 @@ public class AutoCommandManager {
         TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
         Command taxiOneBallAutoBuildCommand = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
         Command BlueLeftBalanceCommand = new PathPlannerCommand(s_SwerveDrive, "BlueLeftConeBalance", eventCommandMap);
-        Command ChargeStationcommand = new PathPlannerCommand(s_SwerveDrive, "EngageChargingStation", eventCommandMap);
-        Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "EngageChargingStation", eventCommandMap);
+        Command ChargeStationcommand = new PathPlannerCommand(s_SwerveDrive, "ChargingStation", eventCommandMap);
+        Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap);
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         //Adding options to the chooser
         m_chooser.setDefaultOption("None", null);
