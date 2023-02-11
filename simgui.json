@@ -1,8 +1,24 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "SparkMax[12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SparkMax[7]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto choices": "String Chooser",
       "/SmartDashboard/Field2d": "Field2d",
+      "/SmartDashboard/Mech2d": "Mechanism2d",
       "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d"
     },
     "windows": {
@@ -12,7 +28,11 @@
         }
       },
       "/SmartDashboard/Field2d": {
-        "image": "C:\\Users\\JackL\\Downloads\\2023-field.png",
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2d": {
         "window": {
           "visible": true
         }
