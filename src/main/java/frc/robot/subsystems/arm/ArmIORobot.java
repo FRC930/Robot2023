@@ -11,7 +11,7 @@ public class ArmIORobot implements ArmIO {
     
     private AbsoluteEncoder armEncoder;
 
-    private static double armOffset = -14.0;
+    private static double armOffset = -179.47;
 
     public ArmIORobot(int armMotorID) {
         arm = new CANSparkMax(armMotorID, MotorType.kBrushless);
@@ -45,7 +45,7 @@ public class ArmIORobot implements ArmIO {
      */
     @Override
     public double getCurrentAngleDegrees() {
-        return armEncoder.getPosition() + armOffset;
+        return (armEncoder.getPosition() + armOffset) * -1;
     }
 
     /**
