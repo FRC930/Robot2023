@@ -116,8 +116,8 @@ public class RobotContainer {
   private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(4) : new ArmIOSim());
-  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(5, 15) : new ManipulatorIOSim());
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim());
+  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15) : new ManipulatorIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
 
   private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
@@ -150,15 +150,18 @@ public class RobotContainer {
   private final SetArmDegreesCommand m_GroundArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.groundPosition, ManipulatorSubsystem.groundPosition);
   private final SetArmDegreesCommand m_IntakeArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.intakePosition, ManipulatorSubsystem.intakePosition);
   private final SetArmDegreesCommand m_StowArmPosition = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition);
-  private final SetArmDegreesCommand m_ArmMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 45, 0);
-  private final SetArmDegreesCommand m_ManipulatorMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 0, 45);
+  private final SetArmDegreesCommand m_ArmMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, -15, 0); // A
+  private final SetArmDegreesCommand m_ManipulatorMoveTest = new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 45, 0); // B
 
   private final ElevatorMoveCommand m_HighestElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(36.0));
   private final ElevatorMoveCommand m_HighElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22.64));
   private final ElevatorMoveCommand m_MedElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(11.32));
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
 
-  private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem);
+  private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.5);
+  private final RunManipulatorRollerCommand m_ManipulatorRollerStopCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15);
+  private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, -0.3);
+  private final RunManipulatorRollerCommand m_ManipulatorRollerShootCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, -1);
 
   private final LEDCommand m_RunDisabledLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
   private final LEDCommand m_RunConeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CONEREQUEST);
@@ -208,8 +211,11 @@ public class RobotContainer {
     //m_codriverController.b().whileTrue(m_IntakeArmPosition);
     m_codriverController.a().whileTrue(m_ArmMoveTest);
     m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
-    m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
     m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+    m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
+    m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
+    m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
