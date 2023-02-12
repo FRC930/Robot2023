@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.simulation.FieldSim;
 import frc.robot.simulation.MechanismSimulator;
@@ -74,21 +75,34 @@ public class RobotContainer {
     //Intake Motors
     private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
     private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
-    private final static boolean isCompetitionRobot = false; //(m_IntakeRollerMotorSubsystem.getSerialNumber() == 20)? true : false; TODO how to determine competition robot
-  /* Modules */
-  //Cannot use an ID of 0
-  //Changed the turningMotorID and cancoderID from 0 to 3
-  public static final SwerveModuleConstants frontLeftModule = 
-    new SwerveModuleConstants(8, 9, 9, isCompetitionRobot? 289.600: 114.69);
-  public static final SwerveModuleConstants frontRightModule = 
-    new SwerveModuleConstants(11, 10, 10, isCompetitionRobot? 99.668: 235.1);
-  public static final SwerveModuleConstants backLeftModule = 
-    new SwerveModuleConstants(1, 3, 3, isCompetitionRobot? 193.799: 84.28);
-  public static final SwerveModuleConstants backRightModule = 
-    new SwerveModuleConstants(18, 19, 19, isCompetitionRobot? 208.125: 9.75);
-  //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
-  //page 100
+    private final boolean isCompetitionRobot = RobotInformation.queryIfCompetitionRobot(false);
 
+    // Which Robot code should we use? competition or not
+    //Cannot use an ID of 0
+    //Changed the turningMotorID and cancoderID from 0 to 3
+    //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
+    //page 100
+    RobotInformation robotInfo = 
+      (RobotInformation.queryIfCompetitionRobot(false) ?
+        // Competition robot attributes
+        new RobotInformation(true,
+          new SwerveModuleConstants(8, 9, 9, 200.479),
+          new SwerveModuleConstants(11, 10, 10, 11.338),
+          new SwerveModuleConstants(1, 3, 3, 108.193  ),
+          new SwerveModuleConstants(18, 19, 19, 117.158  ))
+        :
+        // Non-Competition robot attributes
+        new RobotInformation(false,
+          new SwerveModuleConstants(8, 9, 9, 114.69),
+          new SwerveModuleConstants(11, 10, 10, 235.1),
+          new SwerveModuleConstants(1, 3, 3, 84.28),
+          new SwerveModuleConstants(18, 19, 19, 9.75)));
+   
+ /* Modules */
+  public final SwerveModuleConstants frontLeftModule = robotInfo.getFrontLeft();
+  public final SwerveModuleConstants frontRightModule =  robotInfo.getFrontRight();
+  public final SwerveModuleConstants backLeftModule = robotInfo.getBackLeft();
+  public final SwerveModuleConstants backRightModule = robotInfo.getBackRight();
   
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
