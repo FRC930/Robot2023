@@ -66,11 +66,16 @@ public class RobotInformation {
           localHost = InetAddress.getLocalHost();
           ni = NetworkInterface.getByInetAddress(localHost);
           byte[] hardwareAddress = ni.getHardwareAddress();
-          String[] hexadecimal = new String[hardwareAddress.length];
-          for (int i = 0; i < hardwareAddress.length; i++) {
-              hexadecimal[i] = String.format("%02X", hardwareAddress[i]);
+          if(hardwareAddress != null){
+            String[] hexadecimal = new String[hardwareAddress.length];
+            for (int i = 0; i < hardwareAddress.length; i++) {
+                hexadecimal[i] = String.format("%02X", hardwareAddress[i]);
+            }
+            macAddress = String.join("-", hexadecimal);
+          }else{
+            DriverStation.reportWarning("Unable to get MAC address (hardwareAdress is null)", Thread.currentThread().getStackTrace());
           }
-          macAddress = String.join("-", hexadecimal);
+
         } catch (SocketException e) {
           DriverStation.reportWarning("Unable to get MAC address", e.getStackTrace());
         }catch (UnknownHostException e) {
