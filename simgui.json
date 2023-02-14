@@ -1,6 +1,11 @@
 {
   "HALProvider": {
     "Other Devices": {
+      "SPARK MAX [18]": {
+        "header": {
+          "open": true
+        }
+      },
       "SparkMax[12]": {
         "header": {
           "open": true
@@ -23,6 +28,11 @@
     },
     "windows": {
       "/SmartDashboard/Auto choices": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field2d": {
         "window": {
           "visible": true
         }
