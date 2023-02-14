@@ -3,6 +3,7 @@ package frc.robot.utilities;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // ----- IMPORTS ----- \\
 
@@ -47,7 +48,7 @@ public class OdometryUtility {
     // Used for simulation Must have photovision camera running network server (enable it)
     // IMPORTANT can not have turned on when on robot
     public static final boolean CONNECTED_PHOTOVISION_CAMERA = false;
-    public static final String PHOTOVISION_NETWORK_SERVER = "10.9.30.31";
+    public static final String PHOTOVISION_NETWORK_SERVER = "10.9.30.35";
 
     //TODO Configure postitions of cameras
     /*
@@ -59,11 +60,11 @@ public class OdometryUtility {
      * 
      */
     // Back camera constants
-    private static final String BACK_CAMERA_NAME = "Camera1"; 
-    private static final String BACK_CAMERA_IP_NAME = "10.9.30.31";
+    private static final String BACK_CAMERA_NAME = "Camera5"; 
+    private static final String BACK_CAMERA_IP_NAME = "10.9.30.35";
     private static final int BACK_CAMERA_PIPELINE = 0;
-    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5801;
-    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
+    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5805;
+    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera5/config.json";
     private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
     private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(13.0);
@@ -114,8 +115,9 @@ public class OdometryUtility {
     private SwerveModulePosition[] m_swerveModulePositions;
     private Pose2d m_position;
     private SwerveDrivePoseEstimator m_PoseEstimator;
-    private final Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(0));
-    private final Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(0));
+    // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
+    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(0.1));
+    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(45));
 
     private AprilTagFieldLayout tagLayout;
 
@@ -325,16 +327,19 @@ public class OdometryUtility {
     
             targets.stream().forEach( target -> {
                 final int fiducialId = target.getFiducialId();
-    
+                System.out.println("this ID =" + fiducialId);
+                Optional<Pose3d> unknownTag = this.tagLayout.getTagPose(fiducialId); 
+
+            if(!unknownTag.isEmpty()){
                 corners.addAll(target.getDetectedCorners());
                 foundTags.add(new AprilTag(
                     fiducialId,
-                    this.tagLayout.getTagPose(fiducialId).get()
+                    unknownTag.get()
                 ));
-            });
+            }
+        });
     
-            // TODO nver gets in here. DO you mean if foundTags.size()>=1????
-            if (targets.size() > 1) {
+            if (targets.size() > 0) {
     
                 CameraProperties cameraProp = cameras.get(i).getCameraProp();
                 PNPResults pnpResults = OdometryUtility.estimateCamPosePNP(cameraProp, corners, foundTags);;
@@ -344,12 +349,14 @@ public class OdometryUtility {
                 SmartDashboard.putNumber(camera.getName() + "/multi/bestErr", pnpResults.bestReprojErr);
                 SmartDashboard.putNumber(camera.getName() + "/multi/altErr", pnpResults.altReprojErr);
     
-                if(pnpResults != null && pnpResults.bestReprojErr < 0.15) {
+                // TODO reduce back to .15
+                if(pnpResults != null && pnpResults.bestReprojErr < 0.95) {
                     final Pose3d pose = new Pose3d()
                         .plus(pnpResults.best)
                         .plus(robotToCameraPose.inverse());
                     
                     addVisionMeasurement(pose.toPose2d(), result.getLatencyMillis() / 1000.0);
+                    SmartDashboard.putNumberArray("AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
                 }
             }
         }

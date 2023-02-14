@@ -16,6 +16,8 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int STALL_LIMIT = 10;
     private final int FREE_LIMIT = 20;
 
+    private static double manipulatorOffset = -153.47;
+
     public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
         roller = new CANSparkMax(manipulatorRollerMotorID, MotorType.kBrushless);
@@ -23,7 +25,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
         manipulator.restoreFactoryDefaults();
         roller.restoreFactoryDefaults();
 
-        roller.setSmartCurrentLimit(STALL_LIMIT, FREE_LIMIT);
+        //roller.setSmartCurrentLimit(STALL_LIMIT, FREE_LIMIT);
 
         // Initializes Absolute Encoder from motors
         manipulatorEncoder = manipulator.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
@@ -40,7 +42,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
 
     @Override
     public double getCurrentAngleDegrees() {
-        return manipulatorEncoder.getPosition();
+        return manipulatorEncoder.getPosition() + manipulatorOffset;
     }
 
     @Override

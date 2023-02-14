@@ -5,7 +5,7 @@ import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class RunManipulatorRollerCommand extends CommandBase{
 
-    private final double ROLLER_SPEED = 0.5;
+    private double ROLLER_SPEED = 0.1;
 
     private ManipulatorSubsystem manipulator;
 
@@ -14,8 +14,9 @@ public class RunManipulatorRollerCommand extends CommandBase{
      * 
      * @param manipulatorSubsystem The manipulator subsystem
      */
-    public RunManipulatorRollerCommand(ManipulatorSubsystem manipulatorSubsystem) {
+    public RunManipulatorRollerCommand(ManipulatorSubsystem manipulatorSubsystem, double ROLLER_SPEED) {
         manipulator = manipulatorSubsystem;
+        this.ROLLER_SPEED = ROLLER_SPEED;
     }
 
     @Override
