@@ -83,7 +83,7 @@ public class RobotContainer {
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
     RobotInformation robotInfo = 
-      (RobotInformation.queryIfCompetitionRobot(false) ?
+      (isCompetitionRobot) ?
         // Competition robot attributes
         new RobotInformation(true,
           new SwerveModuleConstants(8, 9, 9, 200.479),
@@ -96,7 +96,7 @@ public class RobotContainer {
           new SwerveModuleConstants(8, 9, 9, 114.69),
           new SwerveModuleConstants(11, 10, 10, 235.1),
           new SwerveModuleConstants(1, 3, 3, 84.28),
-          new SwerveModuleConstants(18, 19, 19, 9.75)));
+          new SwerveModuleConstants(18, 19, 19, 9.75));
    
  /* Modules */
   public final SwerveModuleConstants frontLeftModule = robotInfo.getFrontLeft();

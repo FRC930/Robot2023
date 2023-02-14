@@ -12,7 +12,7 @@ import frc.robot.Robot;
 
 public class RobotInformation {
 
-    // TODO SET MAC Address for competition robot
+    // SET MAC Address for competition robot
     public static final String COMPETIION_ROBOT_MAC_ADDRESS = "00-80-2F-18-15-63";
     private static String macAddress = RobotInformation.getMACAdress();
     private SwerveModuleConstants m_FrontLeft;
@@ -57,9 +57,26 @@ public class RobotInformation {
     public static boolean queryIfCompetitionRobot(boolean default_to_competition_robot_in_simulation) {
       return Robot.isReal()?macAddress.equals(COMPETIION_ROBOT_MAC_ADDRESS):default_to_competition_robot_in_simulation;
     }
-
+    // TODO Find a better solution to getting the MAC adress 
+    //Doesn't appear to get the MAC adress when the RoboRio starts up
     public static String getMACAdress() {
-        String macAddress="unkwown";
+      String address = getInternalMACAdress();
+      int counter = 0;
+      while(address.equals("unknown") && counter<100) {
+        try {
+          Thread.sleep(10);
+          System.out.println("Counter = " + counter);
+          counter++;
+          address = getInternalMACAdress();
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }      
+      return address;
+    }
+    public static String getInternalMACAdress() {
+        String macAddress="unknown";
         InetAddress localHost;
         NetworkInterface ni;
         try {
@@ -81,7 +98,6 @@ public class RobotInformation {
         }catch (UnknownHostException e) {
           DriverStation.reportWarning("Unable to get MAC address (unknown host)", e.getStackTrace());
         }
-        //System.out.println("MAC Address:"+macAddress);
         Logger.getInstance().recordOutput("Robot/MACAddress", macAddress);
         return macAddress;
       }
