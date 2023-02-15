@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class ManipulatorSubsystem extends SubsystemBase {
     
@@ -55,7 +56,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        if (DriverStation.isEnabled()){
+        if (DriverStation.isEnabled() || !Robot.isReal()){
             
             this.io.updateInputs();
 

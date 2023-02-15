@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class ArmSubsystem extends SubsystemBase {
 
@@ -66,7 +67,7 @@ public class ArmSubsystem extends SubsystemBase {
         this.io.updateInputs();
         // caculate PID and Feet forward angles 
 
-        if (DriverStation.isEnabled()) {
+        if (DriverStation.isEnabled() || !Robot.isReal()) {
             double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
             double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
 

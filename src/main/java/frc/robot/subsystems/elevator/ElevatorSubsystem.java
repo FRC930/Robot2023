@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class ElevatorSubsystem extends SubsystemBase{
     
@@ -56,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
 
-        if (DriverStation.isEnabled()) {
+        if (DriverStation.isEnabled() || !Robot.isReal()) {
             io.updateInputs();
 
             double voltage = controller.calculate(io.getCurrentHeight(), targetElevatorPosition);
