@@ -42,10 +42,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.MonitorPitchIntakeCommand;
 import frc.robot.commands.PitchIntakeCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.LEDCommand;
@@ -108,7 +106,6 @@ public class RobotContainer {
   CommandXboxController m_driverController = new CommandXboxController(kDriverControllerPort);
   CommandXboxController m_codriverController = new CommandXboxController(kCodriverControllerPort);
 
-
   // Subsystems \\
   //private final DriveSubsystem m_robotDrive = new DriveSubsystem(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
@@ -130,9 +127,8 @@ public class RobotContainer {
   private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(6, m_ExtendIntakeMotorSubsystem);
   private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
-  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(90.0);
-  private final PitchIntakeCommand m_MediumPitchIntakeCommand = new PitchIntakeCommand(0.0);
-  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(-90.0);
+  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
+  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
 
     //TODO REMOVE
     private static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -140,7 +136,6 @@ public class RobotContainer {
     private static final double kMaxAccelerationMetersPerSecondSquared = 3;
     private static final double kPXController = 1;
     private static final double kPYController = 1;
-  
     
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
@@ -194,34 +189,45 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    m_driverController.x().whileTrue(m_travelToTarget);
-    m_driverController.y().whileTrue(m_rotateCommand);
-    m_driverController.b().whileTrue(m_autoBalanceCommand);
-    m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
-    m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
-    m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
-    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
-    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
-    m_driverController.a().whileTrue(m_LowElevatorPosition);
-    m_driverController.back().whileTrue(m_HighestElevatorPosition);
+    // m_driverController.x().whileTrue(m_travelToTarget);
+    // m_driverController.y().whileTrue(m_rotateCommand);
+    // m_driverController.b().whileTrue(m_autoBalanceCommand);
+    // m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
+    // m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
+    // m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
+    // m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    // m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    // m_driverController.a().whileTrue(m_LowElevatorPosition);
+    // m_driverController.back().whileTrue(m_HighestElevatorPosition);
 
-    m_codriverController.x().whileTrue(m_HighArmPosition);
-    m_codriverController.y().whileTrue(m_MediumArmPosition);
-    //m_codriverController.a().whileTrue(m_GroundArmPosition);
-    //m_codriverController.b().whileTrue(m_IntakeArmPosition);
-    m_codriverController.a().whileTrue(m_ArmMoveTest);
-    m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
-    //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
-    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
-    m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
-    m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
-    m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
+    // m_codriverController.x().whileTrue(m_HighArmPosition);
+    // m_codriverController.y().whileTrue(m_MediumArmPosition);
+    // m_codriverController.a().whileTrue(m_GroundArmPosition);
+    // m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    // m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    // m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+
+    // // TODO deal with these extra controls
+    // // m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+
+    // m_codriverController.x().whileTrue(m_HighArmPosition);
+    // m_codriverController.y().whileTrue(m_MediumArmPosition);
+    // //m_codriverController.a().whileTrue(m_GroundArmPosition);
+    // //m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    // m_codriverController.a().whileTrue(m_ArmMoveTest);
+    // m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
+    // //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    // m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+    // m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
+    // m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
+    // m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
     // Configure default commands
-    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
+    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.5));
     m_fieldSim.initSim();
     m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
-    m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
-
+    m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
+    //pitchintake middle as default
+    //stow arm position as default
   }
 
   /**
@@ -231,10 +237,35 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_codriverController.rightTrigger().whileTrue(m_ExtendIntakeCommand);
-    m_codriverController.povLeft().whileTrue(m_EjectRoller);
-    m_codriverController.povDown().whileTrue(m_IntakeRoller);
+    //Turbo boost
+    m_driverController.leftTrigger().whileTrue(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 1.0));
 
+    //Auto balance
+    m_driverController.start().whileTrue(m_autoBalanceCommand);
+  
+    //Arm
+    // m_driverController.leftTrigger().whileTrue(m_IntakeArmPosition);
+    // m_driverController.
+  
+    //Elevator
+    // m_driverController.
+      
+    //Intake buttons
+    m_codriverController.rightBumper().whileTrue(m_IntakeRoller);
+    m_codriverController.leftBumper().whileTrue(m_EjectRoller);
+    m_codriverController.rightTrigger().whileTrue(m_ExtendIntakeCommand);
+    m_codriverController.y().whileTrue(m_HighPitchIntakeCommand); //get to only work while codriver presses right trigger
+    m_codriverController.a().whileTrue(m_LowPitchIntakeCommand); //get to only work while codriver presses right trigger
+  
+    //Arm positions
+    m_codriverController.povUp().toggleOnTrue(m_HighArmPosition);
+    m_codriverController.povLeft().toggleOnTrue(m_MediumArmPosition);
+    m_codriverController.povRight().toggleOnTrue(m_MediumArmPosition);
+    m_codriverController.povDown().toggleOnTrue(m_GroundArmPosition);
+  
+    //Cube and Cone selector
+    //m_codriverController.x().toggleOnTrue();
+    //m_codriverController.b().toggleOnTrue();
   }
 
   /**
