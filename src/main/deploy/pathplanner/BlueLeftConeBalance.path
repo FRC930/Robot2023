@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6402703482098702,
-        "y": 4.600808600113441
+        "x": 1.7042348614611758,
+        "y": 4.453475573617814
       },
       "holonomicAngle": 178.9769698113321,
       "isReversal": false,
@@ -28,12 +28,12 @@
         "y": 5.012671378726218
       },
       "prevControl": {
-        "x": 1.8512244543286098,
-        "y": 4.6409903346122485
+        "x": 1.6813965251862129,
+        "y": 4.716116440779891
       },
       "nextControl": {
-        "x": 1.8512244543286098,
-        "y": 4.6409903346122485
+        "x": 1.6813965251862129,
+        "y": 4.716116440779891
       },
       "holonomicAngle": -179.3634064240364,
       "isReversal": true,
@@ -49,16 +49,41 @@
     },
     {
       "anchorPoint": {
-        "x": 6.833759532180718,
-        "y": 4.580717732864038
+        "x": 3.337175905121041,
+        "y": 4.8874039628421135
       },
       "prevControl": {
-        "x": 7.239201994310403,
-        "y": 5.391602657123481
+        "x": 3.1087925423714093,
+        "y": 4.853146458429669
       },
       "nextControl": {
-        "x": 6.813668664931316,
-        "y": 4.540535998365231
+        "x": 3.5287620151672074,
+        "y": 4.916141879349039
+      },
+      "holonomicAngle": 4.085616779974956,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.8200221870529205,
+        "y": 4.601924759405074
+      },
+      "prevControl": {
+        "x": 6.568800488028326,
+        "y": 4.544828918717666
+      },
+      "nextControl": {
+        "x": 6.863829586813058,
+        "y": 4.611880986623287
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -114,7 +139,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "AutoBalance here"
+          "AutoBalance "
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -129,19 +154,13 @@
     {
       "position": 1.018181818181841,
       "names": [
-        "PreloadConeScore"
-      ]
-    },
-    {
-      "position": 2.127272727272696,
-      "names": [
-        "Picks up an new cone or cube"
+        "ScoreCone"
       ]
     },
     {
       "position": 3.006060606060626,
       "names": [
-        "Change of velocity"
+        "IntakeCube"
       ]
     }
   ]
