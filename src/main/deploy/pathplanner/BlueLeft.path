@@ -148,5 +148,18 @@
   "maxVelocity": 4.41,
   "maxAcceleration": 2.2,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 1.01818181818176,
+      "names": [
+        "scoreCone"
+      ]
+    },
+    {
+      "position": 4.072727272727147,
+      "names": [
+        "intakeCone"
+      ]
+    }
+  ]
 }
