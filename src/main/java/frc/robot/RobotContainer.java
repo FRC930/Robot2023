@@ -75,7 +75,7 @@ public class RobotContainer {
     //Intake Motors
     private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
     private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
-    private final boolean isCompetitionRobot = RobotInformation.queryIfCompetitionRobot(false);
+    private final boolean isCompetitionRobot = true; //RobotInformation.queryIfCompetitionRobot(false);
 
     // Which Robot code should we use? competition or not
     //Cannot use an ID of 0
