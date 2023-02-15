@@ -16,6 +16,7 @@ import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.ExtendIntakeCommand;
@@ -204,7 +205,8 @@ public class RobotContainer {
     m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
     m_driverController.a().whileTrue(m_LowElevatorPosition);
     m_driverController.back().whileTrue(m_HighestElevatorPosition);
-
+    //m_driverController.rightBumper().whileTrue(m_ManipulatorRollerReleaseCommand);
+    
     m_codriverController.x().whileTrue(m_HighArmPosition);
     m_codriverController.y().whileTrue(m_MediumArmPosition);
     //m_codriverController.a().whileTrue(m_GroundArmPosition);
@@ -213,9 +215,8 @@ public class RobotContainer {
     m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
     //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
     m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
-    m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
+    //m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
     m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
-    m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
     m_fieldSim.initSim();
@@ -231,9 +232,19 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    //--DRIVER CONTROLLER--//
+    m_driverController.rightBumper()
+      .and(m_driverController.rightTrigger()).whileTrue(m_ManipulatorRollerReleaseCommand);
+    m_driverController.leftBumper().whileTrue(
+      new ParallelCommandGroup(m_IntakeArmPosition, m_ManipulatorRollerCommand)
+    );
+
+    //__CODRIVER CONTROLLER--//
     m_codriverController.rightTrigger().whileTrue(m_ExtendIntakeCommand);
     m_codriverController.povLeft().whileTrue(m_EjectRoller);
     m_codriverController.povDown().whileTrue(m_IntakeRoller);
+
+    
 
   }
 
