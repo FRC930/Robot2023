@@ -2,11 +2,15 @@ package frc.robot.autos;
 
 import java.util.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.commands.PPSwerveControllerCommand;
 import frc.robot.subsystems.*;
+import frc.robot.utilities.LogUtil;
 
 /**
  * <h3>AutonomouseCommandManager</h3>
@@ -16,6 +20,7 @@ import frc.robot.subsystems.*;
  */
 public class AutoCommandManager {
     HashMap<String, Subsystem> subsystemMap = new HashMap<String, Subsystem>();
+    private Field2d pp_field2d = new Field2d();
 
     public static enum subNames {
         SwerveDriveSubsystem("SwerveDrive");
@@ -47,6 +52,32 @@ public class AutoCommandManager {
      * @param eventCommandMap a command that uses strings to returna command that we want to execute at a marker
      */
     public void initCommands(Map<String, Command> eventCommandMap) {
+        // Setup Logging for PathPlanner (for Ghost image)
+        // NOTE: Make sure same as setting correct PPSwerveControllerCommand (ours or theirs)
+        PPSwerveControllerCommand.setLoggingCallbacks(
+                null, // logACtiveTRajectory
+                // (PathPlannerTrajectory activeTrajectory) -> {
+                //     // Log current trajectory
+                //     pp_field2d.getObject("traj").setTrajectory(activeTrajectory);
+                // },
+                (Pose2d targetPose) -> {
+                    // Log target pose
+                    // TODO May not want both pose and trajectory
+                    pp_field2d.setRobotPose(targetPose);
+                    // May just want dashboard not on field2d
+                    SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
+                },
+                null, // logSetPoint
+                // (ChassisSpeeds setpointSpeeds) -> {
+                //     // Log setpoint ChassisSpeeds
+                // },
+                null // loggError
+                // TODO  how to set default log error
+                // (Translation2d translationError, Rotation2d rotationError) ->  {
+                //     PPSwerveControllerCommand.defaultLogError(translationError, rotationError);
+                // }
+            );
+        SmartDashboard.putData("PP_Field", pp_field2d);
         //Subsystems used by auto commands
         SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
         
