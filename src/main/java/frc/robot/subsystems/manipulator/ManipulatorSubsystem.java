@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -53,23 +54,32 @@ public class ManipulatorSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        this.io.updateInputs();
-        // Set up PID controller
-        double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
-        controller.setTolerance(1, 1);
-        controller.enableContinuousInput(-180, 180);
-        
-        //Set up Feed Forward
-        double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
 
-        effort += feedforward;
-        effort = MathUtil.clamp(effort, -12, 12);
+        if (DriverStation.isEnabled()){
+            
+            this.io.updateInputs();
 
-        io.setVoltage(effort);
+            double currentDegrees = io.getCurrentAngleDegrees();
 
-        SmartDashboard.putNumber("MANIPULATOR FEED FORWARD", feedforward);
+            // Set up PID controller
+            double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
+            controller.setTolerance(1, 1);
+            controller.enableContinuousInput(0, 360);
+            
+            //Set up Feed Forward
+            double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
+
+            effort += feedforward;
+            effort = MathUtil.clamp(effort, -12, 12);
+
+            io.setVoltage(effort);
+            
+            SmartDashboard.putNumber("MANIPULATOR EFFORT", effort);
+            SmartDashboard.putNumber("MANIPULATOR FEED FORWARD", feedforward);
+
+        }
+
         SmartDashboard.putNumber("MANIPULATOR TARGET POSITION", targetPosition);
-        SmartDashboard.putNumber("MANIPULATOR EFFORT", effort);
         SmartDashboard.putNumber("Manipulator Encoder Value", getPosition());
     }
 

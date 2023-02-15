@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -65,19 +66,22 @@ public class ArmSubsystem extends SubsystemBase {
         this.io.updateInputs();
         // caculate PID and Feet forward angles 
 
-        double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
-        double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
+        if (DriverStation.isEnabled()) {
+            double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
+            double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
 
-        effort += feedforward;
-        effort = MathUtil.clamp(effort, -6, 6);
+            effort += feedforward;
+            effort = MathUtil.clamp(effort, -6, 6);
 
-        io.setVoltage(effort);
+            io.setVoltage(effort);
 
-        SmartDashboard.putNumber("ARM FEED FORWARD", feedforward);
+            SmartDashboard.putNumber("ARM FEED FORWARD", feedforward);
+            SmartDashboard.putNumber("ARM EFFORT", effort);
+            //SmartDashboard.putNumber("ARM SETPOINT", controller.getSetpoint());
+            SmartDashboard.putNumber("ARM ERROR", controller.getPositionError());
+        }
+        
         SmartDashboard.putNumber("ARM TARGET POSITION", targetPosition);
-        SmartDashboard.putNumber("ARM EFFORT", effort);
-        //SmartDashboard.putNumber("ARM SETPOINT", controller.getSetpoint());
-        SmartDashboard.putNumber("ARM ERROR", controller.getPositionError());
         SmartDashboard.putNumber("Arm Encoder Value", getPosition());
     }
 
