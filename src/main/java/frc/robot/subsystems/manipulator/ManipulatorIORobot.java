@@ -17,7 +17,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int STALL_LIMIT = 10;
     private final int FREE_LIMIT = 20;
 
-    private static double manipulatorOffset = 153.47;
+    private static double manipulatorOffset = 154.1;
 
     public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
@@ -39,6 +39,8 @@ public class ManipulatorIORobot implements ManipulatorIO {
         // Sets position and velocity conversion factors so units are in degrees and degrees/second
         manipulatorEncoder.setPositionConversionFactor(360);
         manipulatorEncoder.setVelocityConversionFactor(60);
+
+        manipulator.setInverted(true);
 
         manipulatorEncoder.setZeroOffset(manipulatorOffset);
     }

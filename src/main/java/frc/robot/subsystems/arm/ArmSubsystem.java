@@ -49,8 +49,8 @@ public class ArmSubsystem extends SubsystemBase {
         controller.enableContinuousInput(0, 360);
 
         // TODO Change values when manipulator is added
-        ff = new ArmFeedforward(0, 0.3, 0);
-
+        ff = new ArmFeedforward(0, 0.6, 0);
+        
         this.io = io;
 
         targetPosition = 0;//stowPosition;
