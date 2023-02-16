@@ -5,8 +5,10 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class ElevatorSubsystem extends SubsystemBase{
     
@@ -54,18 +56,22 @@ public class ElevatorSubsystem extends SubsystemBase{
      */
     @Override
     public void periodic() {
-        io.updateInputs();
 
-        double voltage = controller.calculate(io.getCurrentHeight(), targetElevatorPosition);
-        double feedforward = ff.calculate(io.getCurrentVelocity());
-        MathUtil.clamp(voltage, -12, 12);
+        if (DriverStation.isEnabled() || !Robot.isReal()) {
+            io.updateInputs();
 
-        io.setVoltage(voltage + feedforward);
+            double voltage = controller.calculate(io.getCurrentHeight(), targetElevatorPosition);
+            double feedforward = ff.calculate(io.getCurrentVelocity());
+            MathUtil.clamp(voltage, -12, 12);
 
+            io.setVoltage(voltage + feedforward);
+
+            SmartDashboard.putNumber("ELEVATOR VOLTAGE", voltage + feedforward);
+        }
+        
         //Updates shuffleboard values for elevator
         SmartDashboard.putNumber("ELEVATOR TARGET POSITION", targetElevatorPosition);
         SmartDashboard.putNumber("Elevator Encoder Value: ", getElevatorPosition());
         SmartDashboard.putNumber("Elevator Encoder Value (Inches): ", Units.metersToInches(getElevatorPosition()));
-        SmartDashboard.putNumber("ELEVATOR VOLTAGE", voltage + feedforward);
     }
 }
