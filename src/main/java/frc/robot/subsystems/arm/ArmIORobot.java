@@ -4,6 +4,7 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 public class ArmIORobot implements ArmIO {
 
@@ -11,12 +12,16 @@ public class ArmIORobot implements ArmIO {
     
     private AbsoluteEncoder armEncoder;
 
-    private static double armOffset = -179.47;
+    private static double armOffset = 179.47;
 
     public ArmIORobot(int armMotorID) {
         arm = new CANSparkMax(armMotorID, MotorType.kBrushless);
 
         arm.restoreFactoryDefaults(); 
+
+        // TODO: Determine if this helps encoder position update faster
+        arm.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+        arm.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         // Initializes Absolute Encoders from motors
         armEncoder = arm.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
@@ -25,8 +30,10 @@ public class ArmIORobot implements ArmIO {
         armEncoder.setPositionConversionFactor(360);
         armEncoder.setVelocityConversionFactor(60);
 
-        //armEncoder.setInverted(true);
+        armEncoder.setInverted(true);
         arm.setInverted(true);
+
+        armEncoder.setZeroOffset(armOffset);
     }
 
     /**
@@ -45,7 +52,7 @@ public class ArmIORobot implements ArmIO {
      */
     @Override
     public double getCurrentAngleDegrees() {
-        return (armEncoder.getPosition() + armOffset) * -1;
+        return armEncoder.getPosition();
     }
 
     /**
