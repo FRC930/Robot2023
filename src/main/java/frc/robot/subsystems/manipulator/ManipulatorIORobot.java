@@ -3,6 +3,7 @@ package frc.robot.subsystems.manipulator;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 
 public class ManipulatorIORobot implements ManipulatorIO { 
@@ -16,7 +17,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int STALL_LIMIT = 10;
     private final int FREE_LIMIT = 20;
 
-    private static double manipulatorOffset = -153.47;
+    private static double manipulatorOffset = 153.47;
 
     public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
@@ -25,6 +26,11 @@ public class ManipulatorIORobot implements ManipulatorIO {
         manipulator.restoreFactoryDefaults();
         roller.restoreFactoryDefaults();
 
+        // TODO: Determine if this helps encoder position update faster
+        manipulator.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+        manipulator.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
+        // TODO: Was too low when tested
         //roller.setSmartCurrentLimit(STALL_LIMIT, FREE_LIMIT);
 
         // Initializes Absolute Encoder from motors
@@ -34,7 +40,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
         manipulatorEncoder.setPositionConversionFactor(360);
         manipulatorEncoder.setVelocityConversionFactor(60);
 
-        
+        manipulatorEncoder.setZeroOffset(manipulatorOffset);
     }
 
     @Override
@@ -42,7 +48,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
 
     @Override
     public double getCurrentAngleDegrees() {
-        return manipulatorEncoder.getPosition() + manipulatorOffset;
+        return manipulatorEncoder.getPosition();
     }
 
     @Override
