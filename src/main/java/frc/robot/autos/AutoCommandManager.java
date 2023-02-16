@@ -3,6 +3,7 @@ package frc.robot.autos;
 import java.util.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +20,19 @@ import frc.robot.utilities.LogUtil;
  * into the Shuffleboard.
  */
 public class AutoCommandManager {
+    public AutoCommandManager() {
+        SmartDashboard.putBoolean(this.getClass().getSimpleName()+"/CanTunePIDValues", TUNE_PID);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kPX", kPXController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kIX", kIXController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kDX", kDXController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kPY", kPYController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kIY", kIYController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kDY", kDYController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kPTheta", kPThetaController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kITheta", kIThetaController);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/kDTheta", kDThetaController);
+    }
+
     HashMap<String, Subsystem> subsystemMap = new HashMap<String, Subsystem>();
     private Field2d pp_field2d = new Field2d();
 
@@ -43,6 +57,18 @@ public class AutoCommandManager {
     }
 
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+    private static final boolean TUNE_PID = true;
+    //TODO TUNE FOR GHOST
+    public static final double kPXController = usePIDValueOrTune("kPX",10.18); //0.076301;
+    public static final double kIXController = usePIDValueOrTune("kIX",0.0);; 
+    public static final double kDXController = usePIDValueOrTune("kDX",0.0);; 
+    public static final double kPYController = usePIDValueOrTune("kPY",7.596); //0.076301;
+    public static final double kIYController = usePIDValueOrTune("kIY",0.0); 
+    public static final double kDYController = usePIDValueOrTune("kDY",0.0);  
+    public static final double kPThetaController = usePIDValueOrTune("kPTheta",1.33);
+    public static final double kIThetaController = usePIDValueOrTune("kITheta",0.0);
+    public static final double kDThetaController = usePIDValueOrTune("kDTheta",0.0);
     
     /**
      * <h3>initCommands</h3>
@@ -100,6 +126,16 @@ public class AutoCommandManager {
         m_chooser.addOption("BlueLeftCone", BlueLeftCone);
         //adding chooser to dashboard
         SmartDashboard.putData("Auto choices", m_chooser);
+    }
+
+    private static double usePIDValueOrTune(String key, double defaultValue) {
+        double pidValue;
+        if(TUNE_PID) {
+            pidValue = Preferences.getDouble(key, defaultValue);
+        } else {
+            pidValue = defaultValue;
+        }
+        return pidValue;
     }
     /**
      *

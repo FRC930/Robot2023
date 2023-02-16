@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.utilities.RobotInformation.WhichRobot;
 import frc.robot.simulation.FieldSim;
 import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
@@ -75,7 +76,7 @@ public class RobotContainer {
     //Intake Motors
     private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
     private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
-    private final boolean isCompetitionRobot = true; //RobotInformation.queryIfCompetitionRobot(false);
+    private final WhichRobot whichRobot = RobotInformation.queryWhichRobotUsingPreferences();
 
     // Which Robot code should we use? competition or not
     //Cannot use an ID of 0
@@ -83,16 +84,16 @@ public class RobotContainer {
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
     RobotInformation robotInfo = 
-      (isCompetitionRobot) ?
+      (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
         // Competition robot attributes
-        new RobotInformation(true,
+        new RobotInformation(whichRobot,
           new SwerveModuleConstants(8, 9, 9, 200.479),
           new SwerveModuleConstants(11, 10, 10, 11.338),
           new SwerveModuleConstants(1, 3, 3, 108.193  ),
           new SwerveModuleConstants(18, 19, 19, 117.158  ))
         :
         // Non-Competition robot attributes
-        new RobotInformation(false,
+        new RobotInformation(whichRobot,
           new SwerveModuleConstants(8, 9, 9, 114.69),
           new SwerveModuleConstants(11, 10, 10, 235.1),
           new SwerveModuleConstants(1, 3, 3, 84.28),

@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.autos.AutoCommandManager;
 import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
 
@@ -48,9 +49,6 @@ public class SwerveDrive extends SubsystemBase {
     private OdometryUtility m_aprilCameraOne;
 
     private double m_simYaw;
-    //TODO TUNE FOR GHOST
-    public static final double kPXController = 10.18; //0.076301;
-    public static final double kPYController = 7.596; //0.076301;
 
     public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
     //TODO VALIDATE AND TURN
@@ -90,10 +88,9 @@ public class SwerveDrive extends SubsystemBase {
     
         m_pigeon.setYaw(0);
         //used for Autonous
-        autoXController = new PIDController(kPXController, 0, 0);
-        autoYController = new PIDController(kPYController, 0, 0);
-        autoThetaController = new PIDController(
-        1.33, 0, 0);
+        autoXController = new PIDController(AutoCommandManager.kPXController, AutoCommandManager.kIXController, AutoCommandManager.kDXController);
+        autoYController = new PIDController(AutoCommandManager.kPYController, AutoCommandManager.kIYController, AutoCommandManager.kDYController);
+        autoThetaController = new PIDController(AutoCommandManager.kPThetaController, AutoCommandManager.kIThetaController, AutoCommandManager.kDThetaController);
         autoPitchController = new PIDController(1, 0, 0);
         
     // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());

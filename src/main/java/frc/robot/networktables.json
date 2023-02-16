@@ -1,0 +1,93 @@
+[
+    {
+      "name": "/Preferences/WHICH_ROBOT",
+      "type": "string",
+      "value": "COMPETITION_ROBOT",
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kPX",
+      "type": "double",
+      "value": 10.18,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kIX",
+      "type": "double",
+      "value": 0.0,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kDX",
+      "type": "double",
+      "value": 0.0,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kPY",
+      "type": "double",
+      "value": 7.5969,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kIY",
+      "type": "double",
+      "value": 0.0,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kDY",
+      "type": "double",
+      "value": 0.0,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kPTheta",
+      "type": "double",
+      "value": 1.339,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kITheta",
+      "type": "double",
+      "value": 0.0,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    },
+    {
+      "name": "/Preferences/kDTheta",
+      "type": "double",
+      "value": 0.0,
+      "properties": {
+        "persistent": true,
+        "retained": true
+      }
+    }
+  
+  ]
