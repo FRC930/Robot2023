@@ -190,38 +190,44 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    // m_driverController.x().whileTrue(m_travelToTarget);
-    // m_driverController.y().whileTrue(m_rotateCommand);
-    // m_driverController.b().whileTrue(m_autoBalanceCommand);
-    // m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
-    // m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
-    // m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
-    // m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
-    // m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
-    // m_driverController.a().whileTrue(m_LowElevatorPosition);
-    // m_driverController.back().whileTrue(m_HighestElevatorPosition);
+    //test buttons
+    /* 
+    m_driverController.x().whileTrue(m_travelToTarget);
+    m_driverController.y().whileTrue(m_rotateCommand);
+    m_driverController.b().whileTrue(m_autoBalanceCommand);
+    m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
+    m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
+    m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
+    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    m_driverController.a().whileTrue(m_LowElevatorPosition);
+    m_driverController.back().whileTrue(m_HighestElevatorPosition);
 
-    // m_codriverController.x().whileTrue(m_HighArmPosition);
-    // m_codriverController.y().whileTrue(m_MediumArmPosition);
-    // m_codriverController.a().whileTrue(m_GroundArmPosition);
-    // m_codriverController.b().whileTrue(m_IntakeArmPosition);
-    // m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
-    // m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+    m_codriverController.x().whileTrue(m_HighArmPosition);
+    m_codriverController.y().whileTrue(m_MediumArmPosition);
+    m_codriverController.a().whileTrue(m_GroundArmPosition);
+    m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+       Arm
+    m_driverController.leftTrigger().whileTrue(m_IntakeArmPosition);
 
-    // // TODO deal with these extra controls
-    // // m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+     TODO deal with these extra controls
+     m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
 
-    // m_codriverController.x().whileTrue(m_HighArmPosition);
-    // m_codriverController.y().whileTrue(m_MediumArmPosition);
-    // //m_codriverController.a().whileTrue(m_GroundArmPosition);
-    // //m_codriverController.b().whileTrue(m_IntakeArmPosition);
-    // m_codriverController.a().whileTrue(m_ArmMoveTest);
-    // m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
-    // //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
-    // m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
-    // m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
-    // m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
-    // m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
+    m_codriverController.x().whileTrue(m_HighArmPosition);
+    m_codriverController.y().whileTrue(m_MediumArmPosition);
+     m_codriverController.a().whileTrue(m_GroundArmPosition);
+    m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.a().whileTrue(m_ArmMoveTest);
+    m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
+    m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+    m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
+    m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
+    m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
+        m_codriverController.rightBumper().whileTrue(m_IntakeRoller);
+    */
     // Configure default commands
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.5));
     m_fieldSim.initSim();
@@ -238,25 +244,29 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    //Final Button Bindings
+    //--DRIVER CONTROLLER--//
+    //.and() makes it so both buttons must be held in order to run the command
+    m_driverController.rightBumper()
+      .and(m_driverController.rightTrigger()).whileTrue(m_ManipulatorRollerReleaseCommand);
+    m_driverController.leftBumper().whileTrue(
+      new ParallelCommandGroup(m_IntakeArmPosition, m_ManipulatorRollerCommand));  
     //Turbo boost
     m_driverController.leftTrigger().whileTrue(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 1.0));
-
     //Auto balance
     m_driverController.start().whileTrue(m_autoBalanceCommand);
   
-    //Arm
-    // m_driverController.leftTrigger().whileTrue(m_IntakeArmPosition);
-    // m_driverController.
-  
-    //Elevator
-    // m_driverController.
       
+    //--CODRIVER CONTROLLER--//
     //Intake buttons
-    m_codriverController.rightBumper().whileTrue(m_IntakeRoller);
     m_codriverController.leftBumper().whileTrue(m_EjectRoller);
-    m_codriverController.rightTrigger().whileTrue(m_ExtendIntakeCommand);
-    m_codriverController.y().whileTrue(m_HighPitchIntakeCommand); //get to only work while codriver presses right trigger
-    m_codriverController.a().whileTrue(m_LowPitchIntakeCommand); //get to only work while codriver presses right trigger
+    m_codriverController.rightTrigger().whileTrue((m_ExtendIntakeCommand.andThen(m_IntakeRoller)));
+    m_codriverController.y()
+      .and(m_codriverController.rightTrigger())
+      .whileTrue(m_HighPitchIntakeCommand); 
+    m_codriverController.a()
+      .and(m_codriverController.rightTrigger())
+      .whileTrue(m_LowPitchIntakeCommand); 
   
     //Arm positions
     m_codriverController.povUp().toggleOnTrue(m_HighArmPosition);
@@ -265,15 +275,8 @@ public class RobotContainer {
     m_codriverController.povDown().toggleOnTrue(m_GroundArmPosition);
   
     //Cube and Cone selector
-    //m_codriverController.x().toggleOnTrue();
-    //m_codriverController.b().toggleOnTrue();
-    //--DRIVER CONTROLLER--//
-    m_driverController.rightBumper()
-      .and(m_driverController.rightTrigger()).whileTrue(m_ManipulatorRollerReleaseCommand);
-    m_driverController.leftBumper().whileTrue(
-      new ParallelCommandGroup(m_IntakeArmPosition, m_ManipulatorRollerCommand)
-    );
-
+    m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
+    m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
   }
 
   /**
