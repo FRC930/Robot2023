@@ -59,7 +59,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
                 getPIDConstants(thetaController), //PID constants to correct for rotation error (used to create the rotation controller)
                 s_Swerve::setSwerveModuleStates,
                 eventCommandMap, 
-                false, // TODO Should the path be automatically mirrored depending on alliance color
+                true, // TODO Should the path be automatically mirrored depending on alliance color
                 s_Swerve);
         // creates a command based on the path group
         Command swerveControllerCommand = autoBuilder.fullAuto(loadPathGroup);
@@ -68,6 +68,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
             swerveControllerCommand
         );
     }
+    
     /**
      * <h3>getPIDConstants</h3>
      * 

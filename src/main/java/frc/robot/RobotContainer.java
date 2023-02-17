@@ -11,13 +11,17 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.utilities.RobotInformation.WhichRobot;
 import frc.robot.simulation.FieldSim;
 import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
 import frc.robot.subsystems.elevator.ElevatorIO;
@@ -75,7 +79,7 @@ public class RobotContainer {
     //Intake Motors
     private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
     private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
-    private final boolean isCompetitionRobot = true; //RobotInformation.queryIfCompetitionRobot(false);
+    private final WhichRobot whichRobot = RobotInformation.queryWhichRobotUsingPreferences();
 
     // Which Robot code should we use? competition or not
     //Cannot use an ID of 0
@@ -83,16 +87,16 @@ public class RobotContainer {
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
     RobotInformation robotInfo = 
-      (isCompetitionRobot) ?
+      (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
         // Competition robot attributes
-        new RobotInformation(true,
+        new RobotInformation(whichRobot,
           new SwerveModuleConstants(8, 9, 9, 200.479),
           new SwerveModuleConstants(11, 10, 10, 11.338),
           new SwerveModuleConstants(1, 3, 3, 108.193  ),
           new SwerveModuleConstants(18, 19, 19, 117.158  ))
         :
         // Non-Competition robot attributes
-        new RobotInformation(false,
+        new RobotInformation(whichRobot,
           new SwerveModuleConstants(8, 9, 9, 114.69),
           new SwerveModuleConstants(11, 10, 10, 235.1),
           new SwerveModuleConstants(1, 3, 3, 84.28),
@@ -175,6 +179,7 @@ public class RobotContainer {
   private final LEDCommand m_RunRandomLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.RANDOMLED);
   private final LEDCommand m_RunAutoBalanceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.AUTOBALANCE);
 
+  
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
 
@@ -185,7 +190,11 @@ public class RobotContainer {
     // TODO Add markers for real commands/paths
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
-    eventCommandMap.put("PreloadConeScore", new PrintCommand("NeedCommandForPreloadedConeScore"));
+    eventCommandMap.put("PreloadConeScore", new SequentialCommandGroup( 
+        new PrintCommand("***********NeedCommandForPreloadedConeScore"), 
+        //new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false), m_robotDrive),
+        new WaitCommand(40.0),
+        new PrintCommand("***********scoredCone")));
     eventCommandMap.put("Picks up an new cone or cube", new PrintCommand("NeedCommandforPickingupGamepiece"));
     eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
     eventCommandMap.put("AutoBalance here", new PrintCommand("Need command to AutoBalance"));
@@ -195,33 +204,34 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    m_driverController.x().whileTrue(m_travelToTarget);
-    m_driverController.y().whileTrue(m_rotateCommand);
-    m_driverController.b().whileTrue(m_autoBalanceCommand);
-    m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
-    m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
-    m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
-    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
-    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
-    m_driverController.a().whileTrue(m_LowElevatorPosition);
-    m_driverController.back().whileTrue(m_HighestElevatorPosition);
+    m_driverController.x().whileTrue(m_RunConeRequestLEDPattern);
+    // m_driverController.y().whileTrue();
+    // m_driverController.b().whileTrue();
+      // m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
+    // m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
+    // m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
+    // m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    // m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    // m_driverController.a().whileTrue(m_LowElevatorPosition);
+    // m_driverController.back().whileTrue(m_HighestElevatorPosition);
 
-    m_codriverController.x().whileTrue(m_HighArmPosition);
-    m_codriverController.y().whileTrue(m_MediumArmPosition);
-    //m_codriverController.a().whileTrue(m_GroundArmPosition);
-    //m_codriverController.b().whileTrue(m_IntakeArmPosition);
-    m_codriverController.a().whileTrue(m_ArmMoveTest);
-    m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
-    //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
-    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
-    m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
-    m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
-    m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
-    // Configure default commands
-    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
-    m_fieldSim.initSim();
-    m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
-    m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
+    // m_codriverController.x().whileTrue(m_HighArmPosition);
+    // m_codriverController.y().whileTrue(m_MediumArmPosition);
+    // //m_codriverController.a().whileTrue(m_GroundArmPosition);
+    // //m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    // m_codriverController.a().whileTrue(m_ArmMoveTest);
+    // m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
+    // //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    // m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+    // m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
+    // m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
+    // m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
+    // // Configure default commands
+    m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
+    // m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
+    // m_fieldSim.initSim();
+    // m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
+    // m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
 
   }
 

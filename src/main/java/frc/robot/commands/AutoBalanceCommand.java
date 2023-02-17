@@ -15,7 +15,6 @@ import frc.robot.subsystems.SwerveDrive;
      */
 public class AutoBalanceCommand extends CommandBase {
     
-    private final double pitchDeadbandInDegrees = 5.0;
     private final double maxSpeed = 0.2;
 
     private SwerveDrive m_swerveDrive;
@@ -71,16 +70,7 @@ public class AutoBalanceCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // if (robotPitchInDegrees < pitchDeadbandInDegrees && robotPitchInDegrees > - pitchDeadbandInDegrees) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
         return false;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        
-    }
 }

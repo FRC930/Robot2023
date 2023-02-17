@@ -1,41 +1,53 @@
 package frc.robot.utilities;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.util.Arrays;
 
-import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Robot;
 
 public class RobotInformation {
 
-    // SET MAC Address for competition robot
-    public static final String COMPETIION_ROBOT_MAC_ADDRESS = "00-80-2F-18-15-63";
-    private static String macAddress = RobotInformation.getMACAdress();
+    private static final String WHICH_ROBOT_PREFERENCE_KEY = "WHICH_ROBOT";
+
+    public enum WhichRobot {
+      COMPETITION_ROBOT,
+      PRACTICE_ROBOT;
+      public static WhichRobot getEnum(String s){
+        if(COMPETITION_ROBOT.name().equals(s)){
+            return COMPETITION_ROBOT;
+        }else if(PRACTICE_ROBOT.name().equals(s)){
+            return PRACTICE_ROBOT;
+        } else {
+          WhichRobot[] nn = WhichRobot.values();
+          throw new IllegalArgumentException("No WhichRobot Enum specified for this string: "+s
+            +" Set robot Preference "+WHICH_ROBOT_PREFERENCE_KEY+" correctly to one these values: "+Arrays.toString(nn)
+            +" Using SmartDashBoard!");
+        }
+      }
+    }
+
     private SwerveModuleConstants m_FrontLeft;
     private SwerveModuleConstants m_FrontRIght;
     private SwerveModuleConstants m_BackLeft;
     private SwerveModuleConstants m_BackRight;
-    private boolean m_useCompetitionConfiguration;
+    private WhichRobot m_WhichRobot;
 
-    public RobotInformation(boolean useCompetitionConfiguration, 
+    public RobotInformation(WhichRobot whichRobot, 
             SwerveModuleConstants frontLeft,
             SwerveModuleConstants frontRight, 
             SwerveModuleConstants backLeft,
             SwerveModuleConstants backRight) {
-        m_useCompetitionConfiguration = useCompetitionConfiguration;
-        Logger.getInstance().recordOutput("Robot/UseCompetitionConfiguration", m_useCompetitionConfiguration);
+        m_WhichRobot = whichRobot;
+        SmartDashboard.putString("RobotInformation/RobotConfiguration", whichRobot.toString());
         m_FrontLeft = frontLeft;
         m_FrontRIght = frontRight;
         m_BackLeft = backLeft;
         m_BackRight = backRight;
     }
 
-    public boolean isCompetitionConfiguration() {
-      return m_useCompetitionConfiguration;
+    public WhichRobot whichRobotConfiguRobot() {
+      return m_WhichRobot;
     }
 
     public SwerveModuleConstants getFrontLeft() {
@@ -54,51 +66,12 @@ public class RobotInformation {
       return m_BackRight;
     }
 
-    public static boolean queryIfCompetitionRobot(boolean default_to_competition_robot_in_simulation) {
-      return Robot.isReal()?macAddress.equals(COMPETIION_ROBOT_MAC_ADDRESS):default_to_competition_robot_in_simulation;
+    public static WhichRobot queryWhichRobotUsingPreferences() {
+      // https://docs.wpilib.org/en/stable/docs/software/dashboards/smartdashboard/smartdashboard-intro.html
+      // To set value must run SmartDashboard when robot/simulation is connected.
+      // View->Add...->Robot Preferences  
+      // Add WHICH_ROBOT (string) value COMPETITION_ROBOT or PRACTICE_ROBOT
+      String whichRobotString = Preferences.getString(WHICH_ROBOT_PREFERENCE_KEY, WhichRobot.PRACTICE_ROBOT.toString());
+      return WhichRobot.getEnum(whichRobotString);
     }
-    // TODO Find a better solution to getting the MAC adress 
-    //Doesn't appear to get the MAC adress when the RoboRio starts up
-    public static String getMACAdress() {
-      String address = getInternalMACAdress();
-      int counter = 0;
-      while(address.equals("unknown") && counter<100) {
-        try {
-          Thread.sleep(10);
-          System.out.println("Counter = " + counter);
-          counter++;
-          address = getInternalMACAdress();
-        } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }      
-      return address;
-    }
-    public static String getInternalMACAdress() {
-        String macAddress="unknown";
-        InetAddress localHost;
-        NetworkInterface ni;
-        try {
-          localHost = InetAddress.getLocalHost();
-          ni = NetworkInterface.getByInetAddress(localHost);
-          byte[] hardwareAddress = ni.getHardwareAddress();
-          if(hardwareAddress != null){
-            String[] hexadecimal = new String[hardwareAddress.length];
-            for (int i = 0; i < hardwareAddress.length; i++) {
-                hexadecimal[i] = String.format("%02X", hardwareAddress[i]);
-            }
-            macAddress = String.join("-", hexadecimal);
-          }else{
-            DriverStation.reportWarning("Unable to get MAC address (hardwareAdress is null)", Thread.currentThread().getStackTrace());
-          }
-
-        } catch (SocketException e) {
-          DriverStation.reportWarning("Unable to get MAC address", e.getStackTrace());
-        }catch (UnknownHostException e) {
-          DriverStation.reportWarning("Unable to get MAC address (unknown host)", e.getStackTrace());
-        }
-        Logger.getInstance().recordOutput("Robot/MACAddress", macAddress);
-        return macAddress;
-      }
 }

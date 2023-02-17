@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 
+// TODO Move used code to swerve module
 public final class RevUtils {
   public static void setTurnMotorConfig(CANSparkMax motorController) {
     // TODO Tune Manually

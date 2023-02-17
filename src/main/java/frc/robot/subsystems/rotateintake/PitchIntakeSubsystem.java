@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PitchIntakeSubsystem extends SubsystemBase{
     
     private IntakeMotorIO m_RotateIntakerollerMotorIO;
-    // private CANSparkMax m_RotateIntakeRollerMotor;
-    // private RelativeEncoder m_RotateIntakeRollerEncoder;
     
     /**
      * <h3>RotateIntakeRollerMotorSubsystem</h3>
