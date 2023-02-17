@@ -178,6 +178,7 @@ public class RobotContainer {
   private final LEDCommand m_RunRandomLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.RANDOMLED);
   private final LEDCommand m_RunAutoBalanceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.AUTOBALANCE);
 
+  
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
 
@@ -202,33 +203,34 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    m_driverController.x().whileTrue(m_travelToTarget);
-    m_driverController.y().whileTrue(m_rotateCommand);
-    m_driverController.b().whileTrue(m_autoBalanceCommand);
-    m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
-    m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
-    m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
-    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
-    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
-    m_driverController.a().whileTrue(m_LowElevatorPosition);
-    m_driverController.back().whileTrue(m_HighestElevatorPosition);
+    m_driverController.x().whileTrue(m_RunConeRequestLEDPattern);
+    // m_driverController.y().whileTrue();
+    // m_driverController.b().whileTrue();
+      // m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
+    // m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
+    // m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
+    // m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    // m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    // m_driverController.a().whileTrue(m_LowElevatorPosition);
+    // m_driverController.back().whileTrue(m_HighestElevatorPosition);
 
-    m_codriverController.x().whileTrue(m_HighArmPosition);
-    m_codriverController.y().whileTrue(m_MediumArmPosition);
-    //m_codriverController.a().whileTrue(m_GroundArmPosition);
-    //m_codriverController.b().whileTrue(m_IntakeArmPosition);
-    m_codriverController.a().whileTrue(m_ArmMoveTest);
-    m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
-    //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
-    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
-    m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
-    m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
-    m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
-    // Configure default commands
-    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
-    m_fieldSim.initSim();
-    m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
-    m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
+    // m_codriverController.x().whileTrue(m_HighArmPosition);
+    // m_codriverController.y().whileTrue(m_MediumArmPosition);
+    // //m_codriverController.a().whileTrue(m_GroundArmPosition);
+    // //m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    // m_codriverController.a().whileTrue(m_ArmMoveTest);
+    // m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
+    // //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    // m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+    // m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
+    // m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
+    // m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
+    // // Configure default commands
+    m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
+    // m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
+    // m_fieldSim.initSim();
+    // m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
+    // m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
 
   }
 
