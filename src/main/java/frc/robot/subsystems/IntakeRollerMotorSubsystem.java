@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.SparkMaxWrapper;
@@ -53,7 +52,4 @@ public class IntakeRollerMotorSubsystem extends SubsystemBase{
         m_IntakerollerMotor.set(0.0);
     }
 
-    public void getSerialNumber() {
-        // return m_IntakerollerMotor.getSerialNumber();
-    }
 }

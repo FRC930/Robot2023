@@ -5,6 +5,8 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 
+
+// TODO Move into OdometryUtility
 public final class LogUtil {
     public static double[] toPoseArray2d(Pose2d pose) {
         return new double[]{

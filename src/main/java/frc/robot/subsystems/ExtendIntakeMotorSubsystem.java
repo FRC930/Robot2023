@@ -1,19 +1,11 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.SparkMaxWrapper;
 
@@ -52,6 +44,7 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
         m_intakeMotor.setInverted(false);
 
     }
+    
     /**
      * <h3> extendIntake</h3>
      * It runs the intake and extends it by setting voltage

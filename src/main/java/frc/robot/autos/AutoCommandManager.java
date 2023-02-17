@@ -58,7 +58,7 @@ public class AutoCommandManager {
         Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap);
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
-        //Adding options to the chooser
+        // Adding options to the chooser in Shuffleboard/smartdashboard
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
         m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
@@ -67,9 +67,10 @@ public class AutoCommandManager {
         m_chooser.addOption("MiddleCubeEngagecommand", MiddleCubeEngagecommand);
         m_chooser.addOption("BlueRightCommand", BlueRightCommand);
         m_chooser.addOption("BlueLeftCone", BlueLeftCone);
-        //adding chooser to dashboard
+        //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }
+
     /**
      *
      * Gets the autonomous path that is selected in the Shuffleboard

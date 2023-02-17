@@ -15,7 +15,6 @@ public class TeleopSwerve extends CommandBase {
     public static final double percentSpeed = 0.5; // TODO increase for driver
 
     private double rotation;
-    private Translation2d translation;
     private boolean fieldRelative;
     private boolean openLoop;
     

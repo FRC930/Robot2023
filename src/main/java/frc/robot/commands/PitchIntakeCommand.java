@@ -30,15 +30,9 @@ public class PitchIntakeCommand extends CommandBase{
         DesiredPitchUtility.getInstance().setDesiredPosition(desiredPosition);
     }
 
-
-    @Override
-    public void execute() {}
-
     @Override
     public boolean isFinished() {
         return true;
     }
 
-    @Override
-    public void end(boolean interrupted) {}
 }
