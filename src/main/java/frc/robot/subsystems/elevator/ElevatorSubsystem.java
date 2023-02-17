@@ -28,23 +28,23 @@ public class ElevatorSubsystem extends SubsystemBase{
     public ElevatorSubsystem(ElevatorIO io){
         this.io = io;
         this.controller = new ProfiledPIDController(72, 0, 0, 
-                          new Constraints(1.0, 2.0)); //This is in meters
-        this.ff = new ElevatorFeedforward(0, 0, 0, 0);
+                          new Constraints(3.0, 2.0)); //This is in meters
+        this.ff = new ElevatorFeedforward(0, 4.4, 0, 0);
     }
     
     /**
      * <h3>setTargetElevatorPosition</h3>
      * 
-     * Sets the Target Elevator Position in inches.
+     * Sets the Target Elevator Position in meters.
      */
-    public void setTargetElevatorPosition(double inches){
-        targetElevatorPosition = inches;
+    public void setTargetElevatorPosition(double meters){
+        targetElevatorPosition = meters;
     }
 
     /**
      * <h3>getElevatorPosition</h3>
      * 
-     * Gets where the elevator is in inches.
+     * Gets where the elevator is in meters.
      */
     public double getElevatorPosition(){
         return io.getCurrentHeight();
@@ -56,17 +56,16 @@ public class ElevatorSubsystem extends SubsystemBase{
      */
     @Override
     public void periodic() {
+        io.updateInputs();
 
-        if (DriverStation.isEnabled() || !Robot.isReal()) {
-            io.updateInputs();
-
+        if (DriverStation.isEnabled()) {
             double voltage = controller.calculate(io.getCurrentHeight(), targetElevatorPosition);
             double feedforward = ff.calculate(io.getCurrentVelocity());
-            MathUtil.clamp(voltage, -12, 12);
+            double effort = MathUtil.clamp(voltage + feedforward, -12, 12);
 
-            io.setVoltage(voltage + feedforward);
+            io.setVoltage(effort);
 
-            SmartDashboard.putNumber("ELEVATOR VOLTAGE", voltage + feedforward);
+            SmartDashboard.putNumber("ELEVATOR VOLTAGE", effort);
         }
         
         //Updates shuffleboard values for elevator

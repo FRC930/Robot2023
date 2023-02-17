@@ -24,7 +24,8 @@
       "/SmartDashboard/Auto choices": "String Chooser",
       "/SmartDashboard/Field2d": "Field2d",
       "/SmartDashboard/Mech2d": "Mechanism2d",
-      "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d"
+      "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d",
+      "/SmartDashboard/PP_Field": "Field2d"
     },
     "windows": {
       "/SmartDashboard/Auto choices": {

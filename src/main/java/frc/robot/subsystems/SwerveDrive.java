@@ -54,7 +54,7 @@ public class SwerveDrive extends SubsystemBase {
 
     public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
     //TODO VALIDATE AND TURN
-    private static final double kMaxRotationRadiansPerSecond = Math.PI * 2.0; // Last year 11.5?
+    private static final double kMaxRotationRadiansPerSecond = 2 * Math.PI * 2.0; // Last year 11.5?
     private static final boolean invertGyro = false;
 
     //TODO they use ProfiledPIDController
@@ -64,6 +64,7 @@ public class SwerveDrive extends SubsystemBase {
     private PIDController autoPitchController;
 
     private SwerveModuleState[] moduleStates; 
+    private ChassisSpeeds chassisState;
 
     private SwerveModule[] mSwerveMods;
 
@@ -133,6 +134,34 @@ public class SwerveDrive extends SubsystemBase {
         SwerveModule module = mSwerveMods[i];
         module.setDesiredState(states[i], isOpenLoop);
     }
+  }
+
+  public double getChassisVelocity() {
+    ChassisSpeeds chassis = kDriveKinematics.toChassisSpeeds(getModuleStates());
+    double xSpeed = chassis.vxMetersPerSecond;
+    double ySpeed = chassis.vyMetersPerSecond;
+    return Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+  }
+
+  public Rotation2d getChassisVelocityHeading() {
+    ChassisSpeeds chassis = kDriveKinematics.toChassisSpeeds(getModuleStates());
+    double xSpeed = chassis.vxMetersPerSecond;
+    double ySpeed = chassis.vyMetersPerSecond;
+    return new Rotation2d(Math.atan2(ySpeed,xSpeed));
+  }
+
+  public Boolean withinHeading(Pose2d heading) {
+    var currentPose = getPose();
+    var x1 = currentPose.getX();
+    var y1 = currentPose.getY();
+    var x2 = heading.getX();
+    var y2 = heading.getY();
+    Rotation2d angle = new Rotation2d(Math.atan2( y2 - y1, x2 - x1 ));
+
+    var diff = getChassisVelocityHeading().getDegrees() - angle.getDegrees();
+    System.out.println(diff);
+
+    return diff < 360 && diff > -360;
   }
 
   public double getHeadingDegrees() {

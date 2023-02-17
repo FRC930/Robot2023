@@ -1,6 +1,13 @@
 package frc.robot.simulation;
 
 import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -12,6 +19,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
+import frc.robot.utilities.LogUtil;
 
 public class MechanismSimulator {
     private final Mechanism2d mech;
@@ -28,9 +36,9 @@ public class MechanismSimulator {
 
     private final SwerveDrive swerve;
 
-    private static double elevatorYOffset = 12.83;
-    private static double elevatorZOffset = 12.07;
-    private static double elevatorXOffset = 0;
+    private static double elevatorXOffset = Units.inchesToMeters(-4.070);
+    private static double elevatorZOffset = Units.inchesToMeters(15.732);
+    private static double elevatorYOffset = 0;
 
     private static double armYOffset = 0;
     private static double armZOffset = 0;
@@ -59,8 +67,8 @@ public class MechanismSimulator {
         manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.armLength;
         manipulatorZOffset = Math.sin(arm.getPosition()) * ArmSubsystem.armLength;
 
-        mech = new Mechanism2d(50, 50);
-        root = mech.getRoot("robot", 20, 20);
+        mech = new Mechanism2d(Units.inchesToMeters(100), Units.inchesToMeters(100));
+        root = mech.getRoot("robot", Units.inchesToMeters(20), Units.inchesToMeters(20));
         
 
         
@@ -69,7 +77,7 @@ public class MechanismSimulator {
             root.append(
                 new MechanismLigament2d(
                     "Elevator",
-                    10,
+                    Units.inchesToMeters(10),
                     45,
                     10,
                     new Color8Bit(Color.kGreen)
@@ -81,7 +89,7 @@ public class MechanismSimulator {
             m_elevator.append(
               new MechanismLigament2d(
                 "Arm",
-                10,
+                Units.inchesToMeters(10),
                 arm.getPosition(),
                 6,
                 new Color8Bit(Color.kYellow)
@@ -93,7 +101,7 @@ public class MechanismSimulator {
             m_arm.append(
                 new MechanismLigament2d(
                     "Hand",
-                    5,
+                    Units.inchesToMeters(5),
                     manipulator.getPosition(),
                     6,
                     new Color8Bit(Color.kRed)
@@ -105,7 +113,7 @@ public class MechanismSimulator {
             root.append(
                 new MechanismLigament2d(
                     "Intake",
-                    10,
+                    Units.inchesToMeters(10),
                     this.intake.getEncoderPosition(),
                     6,
                     new Color8Bit(Color.kBlueViolet)
@@ -125,6 +133,18 @@ public class MechanismSimulator {
         m_hand.setAngle(manipulator.getPosition()-arm.getPosition());
         m_intake.setAngle(intake.getEncoderPosition());
 
+        Pose3d robot = new Pose3d(swerve.getPose());
+        Pose3d carriage = robot.transformBy(
+            new Transform3d(
+                new Translation3d(
+                    elevatorXOffset + (elevator.getElevatorPosition() / 2),
+                    elevatorYOffset,
+                    elevatorZOffset + (elevator.getElevatorPosition() / 2)
+                ),
+                new Rotation3d()
+            )
+        );
+
         // Advantage scope
         double[] elevatorPosition = {
             elevatorXOffset + swerve.getPose().getX(),
@@ -133,19 +153,45 @@ public class MechanismSimulator {
             1,
             0,
             0,
-            swerve.getHeadingDegrees()};
-        Logger.getInstance().recordOutput("Elevator Position Advantage Scope", elevatorPosition);
+            swerve.getHeadingRotation2d().getRadians()};
+        Logger.getInstance().recordOutput("Elevator Position Advantage Scope", LogUtil.toPoseArray3d(carriage));
 
-        double[] armPosition = {
-            armXOffset + swerve.getPose().getX(),
-            armYOffset + swerve.getPose().getY() + elevator.getElevatorPosition(),
-            armZOffset + elevator.getElevatorPosition(),
-            1,
-            0,
-            arm.getPosition(),
-            swerve.getHeadingDegrees()
-        };
-        Logger.getInstance().recordOutput("Arm Position Advantage Scope", armPosition);
+        Pose3d armPose = carriage.transformBy(
+            new Transform3d(
+                new Translation3d(
+                    Units.inchesToMeters(8.821),
+                    0,
+                    0
+                ),
+                new Rotation3d(
+                    0,
+                    -Units.degreesToRadians(arm.getPosition()),
+                    0
+                )
+            )
+        );
+
+        // double[] armPosition = {
+        //     armXOffset + swerve.getPose().getX(),
+        //     armYOffset + swerve.getPose().getY() + elevator.getElevatorPosition(),
+        //     armZOffset + elevator.getElevatorPosition(),
+        //     1,
+        //     0,
+        //     arm.getPosition(),
+        //     swerve.getHeadingRotation2d().getDegrees()
+        // };
+        Logger.getInstance().recordOutput("Arm Position Advantage Scope", armPose);
+
+        Pose3d wristPose = armPose.transformBy(
+            new Transform3d(
+                new Translation3d(
+
+                ),
+                new Rotation3d(
+
+                )
+            )
+        );
 
         double[] manipulatorPosition = {
             manipulatorXOffset + swerve.getPose().getX(),
@@ -153,9 +199,9 @@ public class MechanismSimulator {
             manipulatorZOffset + elevator.getElevatorPosition(),
             1,
             0,
-            manipulator.getPosition()-arm.getPosition(),
-            swerve.getHeadingDegrees()
+            manipulator.getPosition(),
+            swerve.getHeadingRotation2d().getDegrees()
         };
-        Logger.getInstance().recordOutput("Manipulator Position Advantage Scope", manipulatorPosition);
+        Logger.getInstance().recordOutput("Manipulator Position Advantage Scope", wristPose);
     }
 }

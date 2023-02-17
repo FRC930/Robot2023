@@ -30,6 +30,8 @@ public class TravelToTarget extends SequentialCommandGroup {
         new PPSwerveControllerCommandWithIsFinish(targetPose,
             null, // set to NULL given need to set trajectory once command is initiated not created!
              m_swerveDrive::getPose, 
+             m_swerveDrive::getChassisVelocity,
+             m_swerveDrive::getChassisVelocityHeading,
             SwerveDrive.getSwerveKinematics(),
             m_swerveDrive.getAutoXController(),
             m_swerveDrive.getAutoYController(),

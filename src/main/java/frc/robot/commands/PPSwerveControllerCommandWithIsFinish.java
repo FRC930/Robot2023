@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.subsystems.SwerveDrive;
 
 public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCommand {
 
@@ -26,8 +27,12 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
 
     // TODO Passing or constanst from auto?
     private double MAX_SPEED = 3.0;
-    private double MAX_ACCELERATION = 1.0;
+    private double MAX_ACCELERATION = 2.0;
     private Pose2d m_targetPose;
+    private Supplier<Double> m_velocitySupplier;
+    private Supplier<Rotation2d> m_chassisHeadingSupplier;
+
+    private boolean safeToExecute = true;
 
  /**
    * Extended PPSwerveControllerCommand to override IsFinished method to stop the robot.
@@ -53,48 +58,38 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
    *     the field.
    * @param requirements The subsystems to require.
    */
-    public PPSwerveControllerCommandWithIsFinish(Pose2d target,  PathPlannerTrajectory trajectory, Supplier<Pose2d> poseSupplier, SwerveDriveKinematics kinematics,
+    public PPSwerveControllerCommandWithIsFinish(Pose2d target,  PathPlannerTrajectory trajectory, Supplier<Pose2d> poseSupplier, Supplier<Double> velocitySupplier, Supplier<Rotation2d> headingSupplier, SwerveDriveKinematics kinematics,
             PIDController xController, PIDController yController, PIDController rotationController,
             Consumer<SwerveModuleState[]> outputModuleStates, boolean useAllianceColor, Subsystem... requirements) {
         // useAllinceColor API so dont get NULL pointer on trajector
         super(trajectory, poseSupplier, kinematics, xController, yController, rotationController, outputModuleStates,
         useAllianceColor, requirements);
         m_targetPose = target;
+        m_velocitySupplier = velocitySupplier;
+        m_chassisHeadingSupplier = headingSupplier;
     }
 
     @Override
     public void initialize() {
         Pose2d currentPose = super.poseSupplier.get();
-        Rotation2d curRotation = currentPose.getRotation();
+
+        var x1 = currentPose.getX();
+        var y1 = currentPose.getY();
+        var x2 = m_targetPose.getX();
+        var y2 = m_targetPose.getY();
+        Rotation2d angle = Rotation2d.fromDegrees(Math.atan2( y2 - y1, x2 - x1 ) * ( 180 / Math.PI ));
 
         // The pathpoint is the starting and ending positions of the robot
-        PathPoint currentPathPoint = new PathPoint(currentPose.getTranslation(),curRotation);
-        PathPoint targetPathPoint = new PathPoint(m_targetPose.getTranslation(),m_targetPose.getRotation());
+        PathPoint currentPathPoint = new PathPoint(currentPose.getTranslation(),angle, m_velocitySupplier.get());
+        PathPoint targetPathPoint = new PathPoint(m_targetPose.getTranslation(),angle, m_targetPose.getRotation(), 0);
 
-        PathConstraints pathConstraints = new PathConstraints(MAX_SPEED, MAX_ACCELERATION);
+        PathConstraints pathConstraints = new PathConstraints(SwerveDrive.kMaxSpeedMetersPerSecond, MAX_ACCELERATION);
         super.trajectory = PathPlanner.generatePath(pathConstraints, false, currentPathPoint, targetPathPoint);        
         super.initialize();
     }
 
-    /*
-     * <h3> isFinished <h3>
-     * Stopping the command if the robot is within a range of the target
-     * 
-     */
     @Override
-    public boolean isFinished() { 
-        boolean isfinish = false;
-        
-        Pose2d currentPose = super.poseSupplier.get();
-        if(currentPose != null) {
-            Transform2d deltaPose = currentPose.minus(m_targetPose);
-            //If the robot is within a range of the target only using X and Y coordinates
-            if(Math.abs(deltaPose.getX())<= DELTA_X 
-                && Math.abs(deltaPose.getY())<= DELTA_Y 
-            ) {
-                isfinish = true;
-            }  
-        }
-        return isfinish;
+    public boolean isFinished() {
+        return !safeToExecute || super.isFinished();
     }
 }

@@ -12,7 +12,7 @@ public class TeleopSwerve extends CommandBase {
 
     private double stickDeadband = 0.1;
     // TODO Increase priority on this process (trick from example robot)
-    public static final double percentSpeed = 0.5; // TODO increase for driver
+    public static final double percentSpeed = 1; // TODO increase for driver
 
     private double rotation;
     private Translation2d translation;
@@ -44,7 +44,7 @@ public class TeleopSwerve extends CommandBase {
     public void execute() {
         double yAxis = -controller.getHID().getRawAxis(translationAxis);
         double xAxis = -controller.getHID().getRawAxis(strafeAxis);
-        double rAxis = -controller.getHID().getRawAxis(rotationAxis);
+        double rAxis = controller.getHID().getRawAxis(rotationAxis);
         
         /* Deadbands */
         yAxis = MathUtil.applyDeadband(yAxis, stickDeadband);
