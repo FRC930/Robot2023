@@ -192,45 +192,63 @@ public class RobotContainer {
     eventCommandMap.put("PreloadConeScore", new SequentialCommandGroup( 
         new PrintCommand("***********NeedCommandForPreloadedConeScore"), 
         //new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false), m_robotDrive),
-        new WaitCommand(40.0),
+        new WaitCommand(5.0),
         new PrintCommand("***********scoredCone")));
-    eventCommandMap.put("Picks up an new cone or cube", new PrintCommand("NeedCommandforPickingupGamepiece"));
+    eventCommandMap.put("pickCube", new SequentialCommandGroup(
+        new PrintCommand("******************************pickCube"),
+        new WaitCommand(5.0),
+        new PrintCommand("********************************************************pickCubeEnd")
+      )
+    );
+    eventCommandMap.put("intakeCone", new SequentialCommandGroup(
+        new PrintCommand("******************************intakeCone"),
+        new WaitCommand(5.0),
+        new PrintCommand("********************************************************endintakeCone")
+      )
+    );
+    eventCommandMap.put("scoreCone", new SequentialCommandGroup(
+        new PrintCommand("******************************scoreCone"),
+        new WaitCommand(5.0),
+        new PrintCommand("********************************************************endscoreCone")
+      )
+    );
     eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
-    eventCommandMap.put("AutoBalance here", new PrintCommand("Need command to AutoBalance"));
+    // Robot code complained given could not take over drive station during a path
+    // eventCommandMap.put("AutoBalance", new AutoBalanceCommand(m_robotDrive));
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
 
     // Configure the button bindings
     configureButtonBindings();
-    m_driverController.x().whileTrue(m_RunConeRequestLEDPattern);
-    // m_driverController.y().whileTrue();
-    // m_driverController.b().whileTrue();
-      // m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
-    // m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
-    // m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
-    // m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
-    // m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
-    // m_driverController.a().whileTrue(m_LowElevatorPosition);
-    // m_driverController.back().whileTrue(m_HighestElevatorPosition);
+    m_driverController.x().whileTrue(m_travelToTarget);
+    m_driverController.y().whileTrue(m_rotateCommand);
+    m_driverController.b().whileTrue(m_autoBalanceCommand);
+    m_driverController.povUp().onTrue(m_HighPitchIntakeCommand);
+    m_driverController.povRight().onTrue(m_MediumPitchIntakeCommand);
+    m_driverController.povDown().onTrue(m_LowPitchIntakeCommand);
+    m_driverController.leftBumper().whileTrue(m_HighElevatorPosition);
+    m_driverController.rightBumper().whileTrue(m_MedElevatorPosition);
+    m_driverController.a().whileTrue(m_LowElevatorPosition);
+    m_driverController.back().whileTrue(m_HighestElevatorPosition);
 
-    // m_codriverController.x().whileTrue(m_HighArmPosition);
-    // m_codriverController.y().whileTrue(m_MediumArmPosition);
-    // //m_codriverController.a().whileTrue(m_GroundArmPosition);
-    // //m_codriverController.b().whileTrue(m_IntakeArmPosition);
-    // m_codriverController.a().whileTrue(m_ArmMoveTest);
-    // m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
-    // //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
-    // m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
-    // m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
-    // m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
-    // m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
-    // // Configure default commands
+    m_codriverController.x().whileTrue(m_HighArmPosition);
+    m_codriverController.y().whileTrue(m_MediumArmPosition);
+    //m_codriverController.a().whileTrue(m_GroundArmPosition);
+    //m_codriverController.b().whileTrue(m_IntakeArmPosition);
+    m_codriverController.a().whileTrue(m_ArmMoveTest);
+    m_codriverController.b().whileTrue(m_ManipulatorMoveTest);
+    //m_codriverController.rightBumper().whileTrue(m_StowArmPosition);
+    m_codriverController.leftBumper().whileTrue(m_ManipulatorRollerCommand);
+    m_codriverController.rightBumper().whileTrue(m_ManipulatorRollerStopCommand);
+    m_codriverController.rightTrigger().whileTrue(m_ManipulatorRollerShootCommand);
+    m_codriverController.leftTrigger().whileTrue(m_ManipulatorRollerReleaseCommand);
+    // Configure default commands
     m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
-    // m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
-    // m_fieldSim.initSim();
-    // m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
-    // m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
+    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true));
+    m_fieldSim.initSim();
+    m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
+    m_PitchIntakeSubsystem.setDefaultCommand(new MonitorPitchIntakeCommand(m_PitchIntakeSubsystem));
 
   }
 
