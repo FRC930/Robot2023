@@ -17,8 +17,11 @@ import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
 import frc.robot.subsystems.elevator.ElevatorIO;
@@ -185,7 +188,11 @@ public class RobotContainer {
     // TODO Add markers for real commands/paths
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
-    eventCommandMap.put("PreloadConeScore", new PrintCommand("NeedCommandForPreloadedConeScore"));
+    eventCommandMap.put("PreloadConeScore", new SequentialCommandGroup( 
+        new PrintCommand("***********NeedCommandForPreloadedConeScore"), 
+        //new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false), m_robotDrive),
+        new WaitCommand(40.0),
+        new PrintCommand("***********scoredCone")));
     eventCommandMap.put("Picks up an new cone or cube", new PrintCommand("NeedCommandforPickingupGamepiece"));
     eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
     eventCommandMap.put("AutoBalance here", new PrintCommand("Need command to AutoBalance"));

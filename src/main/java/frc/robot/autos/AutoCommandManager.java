@@ -60,13 +60,13 @@ public class AutoCommandManager {
 
     private static final boolean TUNE_PID = true;
     //TODO TUNE FOR GHOST
-    public static final double kPXController = usePIDValueOrTune("kPX",10.18); //0.076301;
+    public static final double kPXController = usePIDValueOrTune("kPX",12.5); //0.076301;
     public static final double kIXController = usePIDValueOrTune("kIX",0.0);; 
     public static final double kDXController = usePIDValueOrTune("kDX",0.0);; 
     public static final double kPYController = usePIDValueOrTune("kPY",7.596); //0.076301;
     public static final double kIYController = usePIDValueOrTune("kIY",0.0); 
     public static final double kDYController = usePIDValueOrTune("kDY",0.0);  
-    public static final double kPThetaController = usePIDValueOrTune("kPTheta",1.33);
+    public static final double kPThetaController = usePIDValueOrTune("kPTheta",3.2);
     public static final double kIThetaController = usePIDValueOrTune("kITheta",0.0);
     public static final double kDThetaController = usePIDValueOrTune("kDTheta",0.0);
     
@@ -115,6 +115,7 @@ public class AutoCommandManager {
         Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap);
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
+        Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
         // Adding options to the chooser in Shuffleboard/smartdashboard
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
@@ -124,6 +125,7 @@ public class AutoCommandManager {
         m_chooser.addOption("MiddleCubeEngagecommand", MiddleCubeEngagecommand);
         m_chooser.addOption("BlueRightCommand", BlueRightCommand);
         m_chooser.addOption("BlueLeftCone", BlueLeftCone);
+        m_chooser.addOption("BlueLeft", BlueLeft);
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }
