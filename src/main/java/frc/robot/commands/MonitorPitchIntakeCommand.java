@@ -14,7 +14,6 @@ import frc.robot.utilities.DesiredPitchUtility;
  * 
  */
 public class MonitorPitchIntakeCommand extends CommandBase{
-    private final double deadBand = 0.0;
     private PIDController pitchController;
     private PitchIntakeSubsystem m_PitchIntakeSubsystem;
 
@@ -34,11 +33,6 @@ public class MonitorPitchIntakeCommand extends CommandBase{
     }
 
     @Override
-    public void initialize() {
-        
-    }
-
-    @Override
     public void execute() {
         double requiredAngle = pitchController.calculate(m_PitchIntakeSubsystem.getEncoderPosition(), DesiredPitchUtility.getInstance().getDesiredPosition());
         Logger.getInstance().recordOutput("RequiredAngle", requiredAngle);
@@ -54,8 +48,4 @@ public class MonitorPitchIntakeCommand extends CommandBase{
        return false;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-
-    }
 }

@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
@@ -16,7 +15,6 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RotateCommand extends CommandBase{
 
-    private final double Aim_Deadband = 2.5 * (Math.PI/180);
     private final double Speed_Reduction =  1;
 
     private SwerveDrive m_swerveDrive;
@@ -56,10 +54,6 @@ public class RotateCommand extends CommandBase{
     }
 
     @Override
-    public void initialize() {
-    } 
-
-    @Override
     public void execute() {
         //Gets current position and heading of the robot and target position.
         currentPose2d = m_swerveDrive.getPose();
@@ -95,22 +89,9 @@ public class RotateCommand extends CommandBase{
         m_swerveDrive.drive(throttle, strafe, turningSpeed * Speed_Reduction, isFieldRelative, isOpenLoop);
     }
     
-
     @Override
     public boolean isFinished() {
-        //Deadband for the robot aiming in radians
-        //TODO adjust deadband to something more realistic
-        /*
-        if (turningAngle < Aim_Deadband && turningAngle > - Aim_Deadband) {
-            return true;
-        } else {
-            return false;
-        }*/
         return false;
     }
 
-    @Override
-    public void end(boolean interrupted){
-
-    }
 }

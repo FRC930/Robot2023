@@ -37,9 +37,4 @@ public class ExtendIntakeCommand extends CommandBase{
         return false;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        
-    }
-
 }

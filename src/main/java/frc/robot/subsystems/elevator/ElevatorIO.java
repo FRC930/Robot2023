@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+// TODO document interface
 public interface ElevatorIO {
     public void updateInputs();
     public double getCurrentVelocity();

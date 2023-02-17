@@ -4,10 +4,6 @@ public class SwerveModuleConstants {
   
     public final int driveMotorChannel;
     public final int turningMotorChannel;
-    // public final int driveEncoderChannel;
-    // public final int turningEncoderChannel;
-    // public final  boolean turningEncoderReversed;
-    // public final boolean driveEncoderReversed;
     public final int cancoderID;
     public final double angleOffset;
  
@@ -28,10 +24,6 @@ public class SwerveModuleConstants {
         this.turningMotorChannel = turningMotorID;
         this.cancoderID = cancoderID;
         this.angleOffset = angleOffset;
-        // this.driveEncoderChannel = 0;
-        // this.turningEncoderChannel = 0;
-        // this.driveEncoderReversed = false;
-        // this.turningEncoderReversed = false;
     }
 
 }
