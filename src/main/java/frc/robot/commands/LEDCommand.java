@@ -24,6 +24,7 @@ public class LEDCommand extends CommandBase {
         RANDOMLED,
         AUTOBALANCE;
     }
+
     private LedPatterns m_pattern;
     private LEDsubsystem m_LEDSubsystem;
 
@@ -33,10 +34,12 @@ public class LEDCommand extends CommandBase {
         addRequirements (m_LEDSubsystem);
         // Do I need another addRequirment?
     }
+
     @Override
     public void end(boolean interrupted){
         super.end(interrupted);
     }
+
     @Override
     public void initialize(){
         switch(m_pattern){
@@ -73,11 +76,10 @@ public class LEDCommand extends CommandBase {
 
         }
     }
+
     @Override
     public boolean isFinished(){
-        return true;
+        return false;
     }
 
- 
-    
 }

@@ -85,7 +85,7 @@ public class Robot extends LoggedRobot {
         folder = "/home/lvuser";
         if (folder != null) {
           logger.addDataReceiver(new WPILOGWriter(folder));
-        } else {
+        // } else {
           //TODO logNoFileAlert.set(true);
         }
         logger.addDataReceiver(new NT4Publisher());

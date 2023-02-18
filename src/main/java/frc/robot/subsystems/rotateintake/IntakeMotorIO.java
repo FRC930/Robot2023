@@ -1,5 +1,6 @@
 package frc.robot.subsystems.rotateintake;
 
+// TODO document interface
 public interface IntakeMotorIO {
     public void updateInputs();
     public double getOutputVoltage();

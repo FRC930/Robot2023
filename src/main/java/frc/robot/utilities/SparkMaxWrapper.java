@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotController;
+
 //This class manages spark max speed and id's
 public class SparkMaxWrapper extends CANSparkMax {
     private SimDouble m_simSpeed;
@@ -18,6 +19,7 @@ public class SparkMaxWrapper extends CANSparkMax {
             m_simSpeed = m_simSparkMax.createDouble("speed", SimDevice.Direction.kInput, 0.0);
         }
     }
+    
     //pulls and returns speed from spark max   
     @Override
     public double get(){

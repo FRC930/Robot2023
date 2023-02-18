@@ -20,7 +20,7 @@ public class CameraOnRobot {
     private CameraProperties m_CameraProp;
     private final Transform3d m_RobotToCameraPose;
     private String m_CameraIpName;
-    private String m_CameraName;
+    private String m_CameraName;  // TODO comment why keep
 
     // ----- CONSTRUCTOR ----- \\
     /**
