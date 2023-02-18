@@ -5,6 +5,7 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 public class ManipulatorIORobot implements ManipulatorIO { 
 
@@ -24,7 +25,10 @@ public class ManipulatorIORobot implements ManipulatorIO {
         roller = new CANSparkMax(manipulatorRollerMotorID, MotorType.kBrushless);
 
         manipulator.restoreFactoryDefaults();
+        manipulator.setIdleMode(IdleMode.kBrake);
         roller.restoreFactoryDefaults();
+        roller.setIdleMode(IdleMode.kBrake);
+
 
         // TODO: Determine if this helps encoder position update faster
         manipulator.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);

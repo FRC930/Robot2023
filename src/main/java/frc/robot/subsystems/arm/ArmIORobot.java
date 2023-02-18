@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
@@ -18,7 +19,7 @@ public class ArmIORobot implements ArmIO {
         arm = new CANSparkMax(armMotorID, MotorType.kBrushless);
 
         arm.restoreFactoryDefaults(); 
-
+        arm.setIdleMode(IdleMode.kBrake);
         // TODO: Determine if this helps encoder position update faster
         arm.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
         arm.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
