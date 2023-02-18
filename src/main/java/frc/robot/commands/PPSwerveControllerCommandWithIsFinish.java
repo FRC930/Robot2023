@@ -64,7 +64,7 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
 
     @Override
     public void initialize() {
-        Pose2d currentPose = super.poseSupplier.get();
+        Pose2d currentPose = super.m_poseSupplier.get();
         double x1 = currentPose.getX();
         double y1 = currentPose.getY();
         double x2 = m_targetPose.getX();
@@ -77,7 +77,7 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
         
         //TODO May want to add a midpoint to avoid charging station (one to the left or right) 
         PathConstraints pathConstraints = new PathConstraints(MAX_SPEED, MAX_ACCELERATION);
-        super.trajectory = PathPlanner.generatePath(pathConstraints, false, currentPathPoint, targetPathPoint);        
+        super.m_trajectory = PathPlanner.generatePath(pathConstraints, false, currentPathPoint, targetPathPoint);        
         super.initialize();
     }
 
@@ -90,7 +90,7 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
     public boolean isFinished() { 
         boolean isfinish = false;
         
-        Pose2d currentPose = super.poseSupplier.get();
+        Pose2d currentPose = super.m_poseSupplier.get();
         if(currentPose != null) {
             Transform2d deltaPose = currentPose.minus(m_targetPose);
             //If the robot is within a range of the target only using X and Y coordinates
