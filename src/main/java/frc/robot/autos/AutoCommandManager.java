@@ -3,7 +3,9 @@ package frc.robot.autos;
 import java.util.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -110,17 +112,19 @@ public class AutoCommandManager {
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
         Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
-
+        
         // Adding options to the chooser in Shuffleboard/smartdashboard
+        Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
         m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
         m_chooser.addOption("score cone grab cone balance", BlueLeftBalanceCommand);
         m_chooser.addOption("Engage Charging Station", ChargeStationcommand);
         m_chooser.addOption("MiddleCubeEngagecommand", MiddleCubeEngagecommand);
-        m_chooser.addOption("BlueRightCommand", BlueRightCommand);
-        m_chooser.addOption("BlueLeftCone", BlueLeftCone);
-        m_chooser.addOption("BlueLeft", BlueLeft);
+        m_chooser.addOption(isBlue ? "BlueRightCommand" : "RedLeftCommand", BlueRightCommand);
+        m_chooser.addOption(isBlue ? "BlueLeftCone" : "RedRightCone", BlueLeftCone);
+        m_chooser.addOption(isBlue ? "BlueLeft" : "RedRight", BlueLeft);
+        
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }
