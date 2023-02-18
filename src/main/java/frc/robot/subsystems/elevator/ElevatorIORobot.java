@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
@@ -23,6 +24,7 @@ public class ElevatorIORobot implements ElevatorIO {
     
         //LeftElevatorFollower.restoreFactoryDefaults();
         rightElevatorMaster.restoreFactoryDefaults();
+        rightElevatorMaster.setIdleMode(IdleMode.kBrake);
 
         rightElevatorEncoder.setPositionConversionFactor(circumference / gearRatio);
         //LeftElevatorFollower.follow(RightElevatorMaster, true);
