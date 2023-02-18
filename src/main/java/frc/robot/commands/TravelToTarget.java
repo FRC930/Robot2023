@@ -10,15 +10,15 @@ public class TravelToTarget extends SequentialCommandGroup {
     
     private SwerveDrive m_swerveDrive;
 
-/**
- * <h3>Travel</h3>
- * 
- * Travel moves the robot from a current pose to a set target during telep
- *  
- * @param targetPose The desired position
- * @param swerveDrive The swerve drive subsytem
- *
- */
+    /**
+    * <h3>TravelToTarget</h3>
+    * 
+    * Travel moves the robot from a current pose to a set target during teleop
+    *  
+    * @param targetPose The desired position
+    * @param swerveDrive The swerve drive subsytem
+    *
+    */
     public TravelToTarget(Pose2d targetPose, SwerveDrive swerveDrive){
         m_swerveDrive = swerveDrive;
         addRequirements(swerveDrive);
