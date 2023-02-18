@@ -187,6 +187,7 @@ public class RobotContainer {
     // Auto Commands
 
     // TODO Add markers for real commands/paths
+    // TODO: Remove autobalance events, cannot autobalance through events
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
     eventCommandMap.put("PreloadConeScore", new SequentialCommandGroup( 

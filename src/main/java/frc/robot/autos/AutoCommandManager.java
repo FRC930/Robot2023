@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.PPSwerveControllerCommand;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.LogUtil;
@@ -107,15 +108,19 @@ public class AutoCommandManager {
         //Subsystems used by auto commands
         SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
         
+        // Post commands
+        Command autoBalanceCommand = new AutoBalanceCommand(s_SwerveDrive);
+
         //Autonomous Commands
         TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
         Command taxiOneBallAutoBuildCommand = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
-        Command BlueLeftBalanceCommand = new PathPlannerCommand(s_SwerveDrive, "BlueLeftConeBalance", eventCommandMap);
-        Command ChargeStationcommand = new PathPlannerCommand(s_SwerveDrive, "ChargingStation", eventCommandMap);
-        Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap);
+        Command BlueLeftBalanceCommand = new PathPlannerCommand(s_SwerveDrive, "BlueLeftConeBalance", eventCommandMap, autoBalanceCommand);
+        Command ChargeStationcommand = new PathPlannerCommand(s_SwerveDrive, "ChargingStation", eventCommandMap, autoBalanceCommand);
+        Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap, autoBalanceCommand);
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
         Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
+
         // Adding options to the chooser in Shuffleboard/smartdashboard
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
