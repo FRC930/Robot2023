@@ -9,32 +9,32 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 public class ArmIORobot implements ArmIO {
 
-    private CANSparkMax arm;
+    private CANSparkMax m_armMotor;
     
-    private AbsoluteEncoder armEncoder;
+    private AbsoluteEncoder m_armEncoder;
 
-    private static double armOffset = 182.64;
+    private static double m_armOffset = 182.64;
 
     public ArmIORobot(int armMotorID) {
-        arm = new CANSparkMax(armMotorID, MotorType.kBrushless);
+        m_armMotor = new CANSparkMax(armMotorID, MotorType.kBrushless);
 
-        arm.restoreFactoryDefaults(); 
-        arm.setIdleMode(IdleMode.kBrake);
+        m_armMotor.restoreFactoryDefaults(); 
+        m_armMotor.setIdleMode(IdleMode.kBrake);
         // TODO: Determine if this helps encoder position update faster
-        arm.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-        arm.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        m_armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+        m_armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         // Initializes Absolute Encoders from motors
-        armEncoder = arm.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        m_armEncoder = m_armMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
         // Sets position and velocity conversion factors so units are in degrees and degrees/second
-        armEncoder.setPositionConversionFactor(360);
-        armEncoder.setVelocityConversionFactor(60);
+        m_armEncoder.setPositionConversionFactor(360);
+        m_armEncoder.setVelocityConversionFactor(60);
 
-        armEncoder.setInverted(true);
-        arm.setInverted(true);
+        m_armEncoder.setInverted(true);
+        m_armMotor.setInverted(true);
 
-        armEncoder.setZeroOffset(armOffset);
+        m_armEncoder.setZeroOffset(m_armOffset);
     }
 
     /**
@@ -53,7 +53,7 @@ public class ArmIORobot implements ArmIO {
      */
     @Override
     public double getCurrentAngleDegrees() {
-        return armEncoder.getPosition();
+        return m_armEncoder.getPosition();
     }
 
     /**
@@ -64,17 +64,17 @@ public class ArmIORobot implements ArmIO {
      */
     @Override
     public double getVelocityDegreesPerSecond() {
-        return armEncoder.getVelocity();
+        return m_armEncoder.getVelocity();
     }
 
     /**
      * <h3>setVoltage</h3>
      * 
      * Set the shoulder motor voltage 
-     * @param volts
+     * @param volts desired voltage
      */
     @Override
     public void setVoltage(double volts) {
-        arm.setVoltage(volts);
+        m_armMotor.setVoltage(volts);
     }
 }
