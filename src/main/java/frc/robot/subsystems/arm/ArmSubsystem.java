@@ -44,12 +44,12 @@ public class ArmSubsystem extends SubsystemBase {
 
         // Sets up PID controller
         // controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(50, 100));
-        controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(10, 10));
+        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(90, 3600));
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 
         // TODO Change values when manipulator is added
-        ff = new ArmFeedforward(0, 0.95, 0);
+        ff = new ArmFeedforward(0, 0.85, 0);
         //ff = new ArmFeedforward(0, 0.0, 0);
         
         this.io = io;
@@ -81,6 +81,9 @@ public class ArmSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("ARM EFFORT", effort);
             //SmartDashboard.putNumber("ARM SETPOINT", controller.getSetpoint());
             SmartDashboard.putNumber("ARM ERROR", controller.getPositionError());
+        }
+        else{
+            controller.reset(io.getCurrentAngleDegrees());
         }
         
         SmartDashboard.putNumber("ARM TARGET POSITION", targetPosition);

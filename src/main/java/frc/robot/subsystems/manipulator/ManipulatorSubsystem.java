@@ -80,7 +80,8 @@ public class ManipulatorSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("MANIPULATOR EFFORT", effort);
 
             SmartDashboard.putNumber("MANIPULATOR FEED FORWARD", feedforward);
-
+        } else {
+            controller.reset(io.getCurrentAngleDegrees());
         }
 
         SmartDashboard.putNumber("MANIPULATOR TARGET POSITION", targetPosition);

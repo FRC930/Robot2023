@@ -13,7 +13,7 @@ import frc.robot.Robot;
 public class ElevatorSubsystem extends SubsystemBase{
     
     private final ElevatorIO io;
-    private double targetElevatorPosition;
+    private double targetElevatorPosition = 0;
 
     private final ProfiledPIDController controller;
     private final ElevatorFeedforward ff;
@@ -29,20 +29,20 @@ public class ElevatorSubsystem extends SubsystemBase{
         this.io = io;
         //this.controller = new ProfiledPIDController(72, 0, 0, 
                           //new Constraints(1.0, 2.0)); //This is in meters
-                          this.controller = new ProfiledPIDController(0, 0, 0, 
-                          new Constraints(0.0, 0.0)); //This is in meters
+                          this.controller = new ProfiledPIDController(10, 0, 0, 
+                          new Constraints(0.3, 0.3)); //This is in meters
         //this.ff = new ElevatorFeedforward(0, 0, 0, 0);
-        this.ff = new ElevatorFeedforward(0, 0, 0, 0);
+        this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
 
     }
     
     /**
      * <h3>setTargetElevatorPosition</h3>
      * 
-     * Sets the Target Elevator Position in inches.
+     * Sets the Target Elevator Position in meters.
      */
-    public void setTargetElevatorPosition(double inches){
-        targetElevatorPosition = inches;
+    public void setTargetElevatorPosition(double meters){
+        targetElevatorPosition = meters;
     }
 
     /**
@@ -70,12 +70,12 @@ public class ElevatorSubsystem extends SubsystemBase{
 
             io.setVoltage(voltage + feedforward);
 
-            SmartDashboard.putNumber("ELEVATOR VOLTAGE", voltage + feedforward);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Voltage", voltage + feedforward);
         }
         
         //Updates shuffleboard values for elevator
-        SmartDashboard.putNumber("ELEVATOR TARGET POSITION", targetElevatorPosition);
-        SmartDashboard.putNumber("Elevator Encoder Value: ", getElevatorPosition());
-        SmartDashboard.putNumber("Elevator Encoder Value (Inches): ", Units.metersToInches(getElevatorPosition()));
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetElevatorPosition);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getElevatorPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue(Inches)", Units.metersToInches(getElevatorPosition()));
     }
 }
