@@ -12,8 +12,9 @@ import frc.robot.Robot;
 
 public class ElevatorSubsystem extends SubsystemBase{
     
-    private final ElevatorIO io;
-    private double targetElevatorPosition = 0;
+    
+    private final ElevatorIO m_io;
+    private double targetElevatorPosition;
 
     private final ProfiledPIDController controller;
     private final ElevatorFeedforward ff;
@@ -26,13 +27,12 @@ public class ElevatorSubsystem extends SubsystemBase{
      * @param io The ElevatorIO, use IORobot if robot is real, otherwise use IOSim.
      */
     public ElevatorSubsystem(ElevatorIO io){
-        this.io = io;
-        //this.controller = new ProfiledPIDController(72, 0, 0, 
-                          //new Constraints(1.0, 2.0)); //This is in meters
-                          this.controller = new ProfiledPIDController(10, 0, 0, 
-                          new Constraints(0.3, 0.3)); //This is in meters
-        //this.ff = new ElevatorFeedforward(0, 0, 0, 0);
-        this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
+        m_io = io;
+        //controller = new ProfiledPIDController(72, 0, 0, 
+                        //new Constraints(1.0, 2.0)); //This is in meters
+        controller = new ProfiledPIDController(0, 0, 0, 
+                new Constraints(0.0, 0.0)); //This is in meters
+        ff = new ElevatorFeedforward(0, 0, 0, 0);
 
     }
     
@@ -51,7 +51,7 @@ public class ElevatorSubsystem extends SubsystemBase{
      * Gets where the elevator is in inches.
      */
     public double getElevatorPosition(){
-        return io.getCurrentHeight();
+        return m_io.getCurrentHeight();
     }
 
     /**
@@ -61,14 +61,15 @@ public class ElevatorSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
 
+        //Checks if the robot is a simulation
         if (DriverStation.isEnabled() || !Robot.isReal()) {
-            io.updateInputs();
+            m_io.updateInputs();
 
-            double voltage = controller.calculate(io.getCurrentHeight(), targetElevatorPosition);
-            double feedforward = ff.calculate(io.getCurrentVelocity());
+            double voltage = controller.calculate(m_io.getCurrentHeight(), targetElevatorPosition);
+            double feedforward = ff.calculate(m_io.getCurrentVelocity());
             MathUtil.clamp(voltage, -12, 12);
 
-            io.setVoltage(voltage + feedforward);
+            m_io.setVoltage(voltage + feedforward);
 
             SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Voltage", voltage + feedforward);
         }
