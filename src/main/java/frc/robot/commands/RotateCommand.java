@@ -10,7 +10,6 @@ import org.littletonrobotics.junction.Logger;
  * <h3>RotateCommand</h3>
  * 
  * Turns towards a desired spot on the field based on a given coordinate
- * 
  */
 public class RotateCommand extends CommandBase {
 
