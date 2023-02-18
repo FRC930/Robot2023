@@ -79,7 +79,7 @@ public class LEDCommand extends CommandBase {
 
     @Override
     public boolean isFinished(){
-        return true;
+        return false;
     }
 
 }

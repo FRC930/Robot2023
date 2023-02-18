@@ -11,11 +11,17 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.utilities.RobotInformation.WhichRobot;
 import frc.robot.simulation.FieldSim;
 import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
@@ -66,34 +72,34 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;   
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+    //Intake Motors
+    private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
+    private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
+    private final WhichRobot whichRobot = RobotInformation.queryWhichRobotUsingPreferences();
+
+    // Which Robot code should we use? competition or not
+    //Cannot use an ID of 0
+    //Changed the turningMotorID and cancoderID from 0 to 3
+    //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
+    //page 100
+    RobotInformation robotInfo = 
+      (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
+        // Competition robot attributes
+        new RobotInformation(whichRobot,
+          new SwerveModuleConstants(8, 9, 9, 200.479),
+          new SwerveModuleConstants(11, 10, 10, 11.338),
+          new SwerveModuleConstants(1, 3, 3, 108.193  ),
+          new SwerveModuleConstants(18, 19, 19, 117.158  ))
+        :
+        // Non-Competition robot attributes
+        new RobotInformation(whichRobot,
+          new SwerveModuleConstants(8, 9, 9, 114.69),
+          new SwerveModuleConstants(11, 10, 10, 235.1),
+          new SwerveModuleConstants(1, 3, 3, 84.28),
+          new SwerveModuleConstants(18, 19, 19, 9.75));
+
   public static final int kDriverControllerPort = 0;
   public static final int kCodriverControllerPort = 1;
-
-  //Intake Motors
-  private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
-  private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
-  private final boolean isCompetitionRobot = RobotInformation.queryIfCompetitionRobot(false);
-
-  // Which Robot code should we use? competition or not
-  //Cannot use an ID of 0
-  //Changed the turningMotorID and cancoderID from 0 to 3
-  //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
-  //page 100
-  RobotInformation robotInfo = 
-    (RobotInformation.queryIfCompetitionRobot(false) ?
-      // Competition robot attributes
-      new RobotInformation(true,
-        new SwerveModuleConstants(8, 9, 9, 200.479),
-        new SwerveModuleConstants(11, 10, 10, 11.338),
-        new SwerveModuleConstants(1, 3, 3, 108.193  ),
-        new SwerveModuleConstants(18, 19, 19, 117.158  ))
-      :
-      // Non-Competition robot attributes
-      new RobotInformation(false,
-        new SwerveModuleConstants(8, 9, 9, 114.69),
-        new SwerveModuleConstants(11, 10, 10, 235.1),
-        new SwerveModuleConstants(1, 3, 3, 84.28),
-        new SwerveModuleConstants(18, 19, 19, 9.75)));
    
  /* Modules */
   public final SwerveModuleConstants frontLeftModule = robotInfo.getFrontLeft();
@@ -164,12 +170,35 @@ public class RobotContainer {
     // Auto Commands
 
     // TODO Add markers for real commands/paths
+    // TODO: Remove autobalance events, cannot autobalance through events
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
-    eventCommandMap.put("PreloadConeScore", new PrintCommand("NeedCommandForPreloadedConeScore"));
-    eventCommandMap.put("Picks up an new cone or cube", new PrintCommand("NeedCommandforPickingupGamepiece"));
+    eventCommandMap.put("PreloadConeScore", new SequentialCommandGroup( 
+        new PrintCommand("***********NeedCommandForPreloadedConeScore"), 
+        //new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false), m_robotDrive),
+        new WaitCommand(5.0),
+        new PrintCommand("***********scoredCone")));
+    eventCommandMap.put("pickCube", new SequentialCommandGroup(
+        new PrintCommand("******************************pickCube"),
+        new WaitCommand(5.0),
+        new PrintCommand("********************************************************pickCubeEnd")
+      )
+    );
+    eventCommandMap.put("intakeCone", new SequentialCommandGroup(
+        new PrintCommand("******************************intakeCone"),
+        new WaitCommand(5.0),
+        new PrintCommand("********************************************************endintakeCone")
+      )
+    );
+    eventCommandMap.put("scoreCone", new SequentialCommandGroup(
+        new PrintCommand("******************************scoreCone"),
+        new WaitCommand(5.0),
+        new PrintCommand("********************************************************endscoreCone")
+      )
+    );
     eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
-    eventCommandMap.put("AutoBalance here", new PrintCommand("Need command to AutoBalance"));
+    // Robot code complained given could not take over drive station during a path
+    // eventCommandMap.put("AutoBalance", new AutoBalanceCommand(m_robotDrive));
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
@@ -178,6 +207,7 @@ public class RobotContainer {
     configureButtonBindings();
     
     // Configure default commands
+    m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.5));
     m_fieldSim.initSim();
     m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);

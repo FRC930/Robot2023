@@ -116,7 +116,8 @@ public class OdometryUtility {
     private Pose2d m_position;
     private SwerveDrivePoseEstimator m_PoseEstimator;
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
-    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(0.1));
+    //TODO Bumped up to 0.5 for testing, please put back down
+    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(0.5));
     private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(45));
 
     private AprilTagFieldLayout tagLayout;
@@ -327,7 +328,7 @@ public class OdometryUtility {
     
             targets.stream().forEach( target -> {
                 final int fiducialId = target.getFiducialId();
-                System.out.println("this ID =" + fiducialId);
+  
                 Optional<Pose3d> unknownTag = this.tagLayout.getTagPose(fiducialId); 
 
             if(!unknownTag.isEmpty()){

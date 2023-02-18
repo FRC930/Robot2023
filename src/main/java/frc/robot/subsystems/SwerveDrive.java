@@ -18,6 +18,8 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.autos.AutoCommandManager;
+import frc.robot.utilities.FieldCentricOffset;
 import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
 
@@ -44,9 +46,6 @@ public class SwerveDrive extends SubsystemBase {
   private OdometryUtility m_aprilCameraOne;
 
   private double m_simYaw;
-  // TODO TUNE FOR GHOST
-  public static final double kPXController = 10.18; // 0.076301;
-  public static final double kPYController = 7.596; // 0.076301;
 
   public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);// 3;
   // TODO VALIDATE AND TURN
@@ -73,32 +72,27 @@ public class SwerveDrive extends SubsystemBase {
         new SwerveModule(3, backRightModuleConstants)
     };
 
-    /*
-     * By pausing init for a second before setting module offsets, we avoid a bug
-     * with inverting motors.
-     * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-     */
-    Timer.delay(1.0);
-    resetAngleToAbsolute();
-
-    m_odometry = new SwerveDriveOdometry(
-        kDriveKinematics,
-        getHeadingRotation2d(),
-        getModulePositions(),
-        new Pose2d());
-
-    m_pigeon.setYaw(0);
-    // used for Autonous
-    autoXController = new PIDController(kPXController, 0, 0);
-    autoYController = new PIDController(kPYController, 0, 0);
-    autoThetaController = new PIDController(
-        1.33, 0, 0);
-    autoPitchController = new PIDController(1, 0, 0);
-
-    // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics,
-    // getHeadingRotation2d(), getModulePositions(), getPoseMeters());
-    m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(),
-        getPoseMeters());
+        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
+        * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+        */
+        Timer.delay(1.0);
+        resetAngleToAbsolute();
+        
+        m_odometry = new SwerveDriveOdometry(
+                kDriveKinematics,
+                getHeadingRotation2d(),
+                getModulePositions(),
+                new Pose2d());
+    
+        m_pigeon.setYaw(0);
+        //used for Autonous
+        autoXController = new PIDController(AutoCommandManager.kPXController, AutoCommandManager.kIXController, AutoCommandManager.kDXController);
+        autoYController = new PIDController(AutoCommandManager.kPYController, AutoCommandManager.kIYController, AutoCommandManager.kDYController);
+        autoThetaController = new PIDController(AutoCommandManager.kPThetaController, AutoCommandManager.kIThetaController, AutoCommandManager.kDThetaController);
+        autoPitchController = new PIDController(1, 0, 0);
+        
+    // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
   }
 
   public Pose2d getPose() {
@@ -119,7 +113,9 @@ public class SwerveDrive extends SubsystemBase {
 
     ChassisSpeeds chassisSpeeds = isFieldRelative
         ? ChassisSpeeds.fromFieldRelativeSpeeds(
-            throttle, strafe, rotation, getHeadingRotation2d())
+            throttle, strafe, rotation, 
+            // Sets an offset if robot path doesn't start facing drive station
+              getHeadingRotation2d().minus(Rotation2d.fromDegrees(FieldCentricOffset.getInstance().getOffset())))
         : new ChassisSpeeds(throttle, strafe, rotation);
 
     moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
