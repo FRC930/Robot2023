@@ -63,12 +63,12 @@ public class ManipulatorSubsystem extends SubsystemBase {
             double currentDegrees = io.getCurrentAngleDegrees();
 
             // Set up PID controller
-            double effort = controller.calculate(io.getCurrentAngleDegrees(), targetPosition);
+            double effort = controller.calculate(currentDegrees, targetPosition);
             controller.setTolerance(1, 1);
             controller.enableContinuousInput(0, 360);
             
             //Set up Feed Forward
-            double feedforward = ff.calculate(Units.degreesToRadians(io.getCurrentAngleDegrees()), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
+            double feedforward = ff.calculate(Units.degreesToRadians(currentDegrees), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
 
             effort += feedforward;
             effort = MathUtil.clamp(effort, -12, 12);

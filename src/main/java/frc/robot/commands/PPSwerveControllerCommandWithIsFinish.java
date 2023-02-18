@@ -3,8 +3,6 @@ package frc.robot.commands;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
