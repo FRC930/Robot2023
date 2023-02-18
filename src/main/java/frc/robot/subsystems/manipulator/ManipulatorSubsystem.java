@@ -25,7 +25,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public static double groundPosition = 5.2; //at ground elevator position
 
-    public static double stowPosition = 90.0; //at ground elevator position
+    public static double stowPosition = 45.0; //at ground elevator position
 
     //TODO: These are nonsensical (Fix once we get actual values)
     public static double intakePosition = -225.0;
@@ -47,7 +47,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         this.io = io;
 
-        targetPosition = 0;//stowPosition;
+        targetPosition = stowPosition;
     }
 
     /**

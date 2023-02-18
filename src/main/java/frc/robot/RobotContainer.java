@@ -219,13 +219,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {
-    m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
-      .onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
-    //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
-      //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
-  }
-
+ 
   private void configureButtonBindingsOld() {
     //Final Button Bindings
     //--DRIVER CONTROLLER--//
@@ -281,5 +275,77 @@ public class RobotContainer {
 
   public void disabledInit() {
   }
+ 
+  private void configureButtonBindings() {
+    // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
+    //                         // .onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
+    //                         .onFalse(m_StowArmPosition);
+
+    m_codriverController.y()
+    .onTrue(
+      new SequentialCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55)),
+        new WaitCommand(2),
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0),
+        new WaitCommand(1),
+        new RunManipulatorRollerCommand(m_manipulatorSubsystem,  -0.3) // TODO constant)
+      ))
+    .onFalse(
+      new ParallelCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
+      ));
+ 
+   m_codriverController.a()
+    .onTrue(
+      new SequentialCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22)),
+        new WaitCommand(1),
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0),
+        new WaitCommand(1),
+        new RunManipulatorRollerCommand(m_manipulatorSubsystem,  -0.3) // TODO constant)
+      ))
+    .onFalse(
+      new ParallelCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
+      ));
+   m_codriverController.a()
+    .onTrue(
+      new SequentialCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22)),
+        new WaitCommand(1),
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,45, 0),
+        new WaitCommand(1),
+        m_ManipulatorRollerReleaseCommand)
+      )
+    .onFalse(
+      new ParallelCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+        m_StowArmPosition,
+        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
+      ));
+  m_codriverController.b()
+  .onTrue(
+      new RunManipulatorRollerCommand(m_manipulatorSubsystem, 1.0) //TODO: Constant
+    )
+  .onFalse(
+        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
+    );
+    //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
+      //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
+    m_codriverController.x()
+    .onTrue(
+      new ParallelCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(40)))
+      )
+    .onFalse(
+      new ParallelCommandGroup(
+        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
+      );
     
+  }
+
 }

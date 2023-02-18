@@ -17,10 +17,12 @@ public class RunManipulatorRollerCommand extends CommandBase{
     public RunManipulatorRollerCommand(ManipulatorSubsystem manipulatorSubsystem, double ROLLER_SPEED) {
         manipulator = manipulatorSubsystem;
         this.ROLLER_SPEED = ROLLER_SPEED;
+        addRequirements(manipulatorSubsystem);
     }
 
     @Override
     public void initialize() {
         manipulator.setRollerSpeed(ROLLER_SPEED);
+        System.out.println("geioeriogerjgieogrjigrjioeg");
     }
 }

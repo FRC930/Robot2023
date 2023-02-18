@@ -12,11 +12,16 @@ import frc.robot.Robot;
 
 public class ElevatorSubsystem extends SubsystemBase{
     
+    /**
+     *
+     */
+    private static final double UPPER_STAGE_HIGHT = 20.0;
     private final ElevatorIO io;
     private double targetElevatorPosition = 0;
 
     private final ProfiledPIDController controller;
     private final ElevatorFeedforward ff;
+    private final ElevatorFeedforward topff;
    
     /**
      * <h3>ElevatorSubsystem</h3>
@@ -29,10 +34,14 @@ public class ElevatorSubsystem extends SubsystemBase{
         this.io = io;
         //this.controller = new ProfiledPIDController(72, 0, 0, 
                           //new Constraints(1.0, 2.0)); //This is in meters
-                          this.controller = new ProfiledPIDController(10, 0, 0, 
-                          new Constraints(0.3, 0.3)); //This is in meters
+                          //our p is in terms of meters, meaning you are multiplying a decmal by p
+                          this.controller = new ProfiledPIDController(45, 0, 0, 
+                          new Constraints(Units.inchesToMeters(36), Units.inchesToMeters(30))); //This is in meters
         //this.ff = new ElevatorFeedforward(0, 0, 0, 0);
         this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
+
+        this.topff = new ElevatorFeedforward(0, 0.45, 0, 0);
+
 
     }
     
@@ -63,14 +72,21 @@ public class ElevatorSubsystem extends SubsystemBase{
 
         if (DriverStation.isEnabled() || !Robot.isReal()) {
             io.updateInputs();
+            double currentheight = io.getCurrentHeight();
 
-            double voltage = controller.calculate(io.getCurrentHeight(), targetElevatorPosition);
-            double feedforward = ff.calculate(io.getCurrentVelocity());
+            double voltage = controller.calculate(currentheight, targetElevatorPosition);
+            double feedforward;
+            if(currentheight < Units.inchesToMeters(UPPER_STAGE_HIGHT)) {
+                feedforward  = ff.calculate(io.getCurrentVelocity());
+            }else {
+                feedforward  = topff.calculate(io.getCurrentVelocity());
+            }
             MathUtil.clamp(voltage, -12, 12);
 
             io.setVoltage(voltage + feedforward);
 
             SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Voltage", voltage + feedforward);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Feedforward", feedforward);
         }
         
         //Updates shuffleboard values for elevator
