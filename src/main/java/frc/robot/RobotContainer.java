@@ -171,18 +171,17 @@ public class RobotContainer {
     // Auto Commands
 
     // TODO Add markers for real commands/paths
-    // TODO: Remove autobalance events, cannot autobalance through events
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
-    eventCommandMap.put("PreloadConeScore", new SequentialCommandGroup( 
-        new PrintCommand("***********NeedCommandForPreloadedConeScore"), 
+    eventCommandMap.put("intakeCube", new SequentialCommandGroup( 
+        new PrintCommand("***********intakeCube"), 
         //new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false), m_robotDrive),
         new WaitCommand(5.0),
-        new PrintCommand("***********scoredCone")));
-    eventCommandMap.put("pickCube", new SequentialCommandGroup(
-        new PrintCommand("******************************pickCube"),
+        new PrintCommand("***********intakeCubeEnd")));
+    eventCommandMap.put("scoreCube", new SequentialCommandGroup(
+        new PrintCommand("******************************scoreCube"),
         new WaitCommand(5.0),
-        new PrintCommand("********************************************************pickCubeEnd")
+        new PrintCommand("********************************************************scoreCubeEnd")
       )
     );
     eventCommandMap.put("intakeCone", new SequentialCommandGroup(
@@ -198,8 +197,6 @@ public class RobotContainer {
       )
     );
     eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
-    // Robot code complained given could not take over drive station during a path
-    // eventCommandMap.put("AutoBalance", new AutoBalanceCommand(m_robotDrive));
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
