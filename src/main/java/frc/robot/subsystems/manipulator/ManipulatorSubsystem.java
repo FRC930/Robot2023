@@ -38,11 +38,12 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public ManipulatorSubsystem (ManipulatorIO io) {
 
         // Sets up PID controller TODO: Change these values
-        controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
+        //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
+        controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(180, 720));
         controller.setTolerance(1, 1);
 
         // Sets up Feetforward TODO: Change these values
-        ff = new ArmFeedforward(0.1, 0, 0);
+        ff = new ArmFeedforward(0.0, 0.7, 0);
 
         this.io = io;
 
@@ -69,6 +70,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
             
             //Set up Feed Forward
             double feedforward = ff.calculate(Units.degreesToRadians(currentDegrees), Units.degreesToRadians(io.getVelocityDegreesPerSecond()));
+
 
             effort += feedforward;
             effort = MathUtil.clamp(effort, -6, 6);
