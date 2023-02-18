@@ -109,14 +109,14 @@ public class AutoCommandManager {
         SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
         
         // Post commands
-        Command autoBalanceCommand = new AutoBalanceCommand(s_SwerveDrive);
+        // Command autoBalanceCommand = new AutoBalanceCommand(s_SwerveDrive);
 
         //Autonomous Commands
         TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
         Command taxiOneBallAutoBuildCommand = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
-        Command BlueLeftBalanceCommand = new PathPlannerCommand(s_SwerveDrive, "BlueLeftConeBalance", eventCommandMap, autoBalanceCommand);
-        Command ChargeStationcommand = new PathPlannerCommand(s_SwerveDrive, "ChargingStation", eventCommandMap, autoBalanceCommand);
-        Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap, autoBalanceCommand);
+        Command BlueLeftBalanceCommand = new PathPlannerCommand(s_SwerveDrive, "BlueLeftConeBalance", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command ChargeStationcommand = new PathPlannerCommand(s_SwerveDrive, "ChargingStation", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
         Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
