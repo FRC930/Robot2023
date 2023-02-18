@@ -15,6 +15,7 @@ import frc.robot.commands.PPSwerveControllerCommand; // our version of PPSwerveC
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
 /**
  * <h3>SwerveAutoBuilder</h3>
  * 
@@ -208,6 +209,7 @@ public class SwerveAutoBuilder extends BaseAutoBuilder {
 
     this.useKinematics = true;
   }
+
   //Makes the robot follow the path
   @Override
   public CommandBase followPath(PathPlannerTrajectory trajectory) {
