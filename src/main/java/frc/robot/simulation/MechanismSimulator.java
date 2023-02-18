@@ -53,8 +53,8 @@ public class MechanismSimulator {
         this.intake = intake;
         this.swerve = swerve;
 
-        manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.armLength;
-        manipulatorZOffset = Math.sin(arm.getPosition()) * ArmSubsystem.armLength;
+        manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
+        manipulatorZOffset = Math.sin(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
 
         mech = new Mechanism2d(50, 50);
         root = mech.getRoot("robot", 20, 20);

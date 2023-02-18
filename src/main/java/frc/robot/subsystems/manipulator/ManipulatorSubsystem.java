@@ -20,9 +20,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static double MEDIUM_POSITION = 23.9; //at medium elevator position
     public static double GROUND_POSITION = 5.2; //at ground elevator position
     public static double STOW_POSITION = 90.0; //at ground elevator position
-
-    //TODO: These are nonsensical (Fix once we get actual values)
-    public static double intakePosition = -225.0;
+    public static double INTAKE_POSITION = -225.0; //TODO: Find actual intake position value
 
     /**<h3>ManipulatorSubsystem</h3>
      * Decides desired output, in volts, for the manipulator.

@@ -1,6 +1,10 @@
 package frc.robot.subsystems.arm;
 
-// TODO document interface
+/**
+ * <h3>ArmIO</h3>
+ * 
+ * Sets up the methods that we use in the IORobot and IOSim
+ */
 public interface ArmIO {
     public void updateInputs();
     public double getCurrentAngleDegrees();

@@ -10,6 +10,7 @@ public class RobotInformation {
 
     private static final String WHICH_ROBOT_PREFERENCE_KEY = "WHICH_ROBOT";
 
+    //sets the whichrobot input to which ever robot name it is  
     public enum WhichRobot {
       COMPETITION_ROBOT,
       PRACTICE_ROBOT;
@@ -28,11 +29,22 @@ public class RobotInformation {
     }
 
     private SwerveModuleConstants m_FrontLeft;
-    private SwerveModuleConstants m_FrontRIght;
+    private SwerveModuleConstants m_FrontRight;
     private SwerveModuleConstants m_BackLeft;
     private SwerveModuleConstants m_BackRight;
     private WhichRobot m_WhichRobot;
 
+    /**
+     * <h3> RobotInformation</h3>
+     * 
+     * puts which robot on smartdashboard
+     * 
+     * @param whichRobot
+     * @param frontLeft
+     * @param frontRight
+     * @param backLeft
+     * @param backRight
+     */
     public RobotInformation(WhichRobot whichRobot, 
             SwerveModuleConstants frontLeft,
             SwerveModuleConstants frontRight, 
@@ -41,31 +53,73 @@ public class RobotInformation {
         m_WhichRobot = whichRobot;
         SmartDashboard.putString("RobotInformation/RobotConfiguration", whichRobot.toString());
         m_FrontLeft = frontLeft;
-        m_FrontRIght = frontRight;
+        m_FrontRight = frontRight;
         m_BackLeft = backLeft;
         m_BackRight = backRight;
     }
 
+    /**
+     * <h3> whichrobotConFiguzRobot</h3>
+     * 
+     * returns whether its the competition robot or practice robot.
+     * 
+     * @return m_whichRobot
+     */
     public WhichRobot whichRobotConfiguRobot() {
       return m_WhichRobot;
     }
 
+    /**
+     * <h3>getfrontLeft</h3>
+     * 
+     * returns front left Module
+     * 
+     * @return m_frontLeft
+     */
     public SwerveModuleConstants getFrontLeft() {
       return m_FrontLeft;
     }
 
+    /**
+     * <h3>getFrontRight</h3>
+     * 
+     * returns front Right module
+     *
+     * @return m_frontRight
+     */
     public SwerveModuleConstants getFrontRight() {
-      return m_FrontRIght;
+      return m_FrontRight;
     }
 
+    /**
+     * <h3> getBackLeft</h3>
+     * 
+     * returns back left module
+     * 
+     * @return m_backLeft
+     */
     public SwerveModuleConstants getBackLeft() {
       return m_BackLeft;
     }
 
+    /**
+     * <h3> getBackRight</h3>
+     * 
+     * returns back right module
+     * 
+     * @return m_backRight
+     */
     public SwerveModuleConstants getBackRight() {
       return m_BackRight;
     }
 
+    /**
+     * <h3>queryWhichRobotUsingPreferances</h3>
+     *
+     *  gets the prefered robot and returns it
+     * 
+     * @return WhichRobot
+     */
     public static WhichRobot queryWhichRobotUsingPreferences() {
       // https://docs.wpilib.org/en/stable/docs/software/dashboards/smartdashboard/smartdashboard-intro.html
       // To set value must run SmartDashboard when robot/simulation is connected.
