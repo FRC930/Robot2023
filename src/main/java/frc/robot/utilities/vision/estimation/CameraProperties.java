@@ -41,6 +41,7 @@ import edu.wpi.first.math.numbers.*;
  * estimation does not
  * account for network latency and the latency reported will always be perfect.
  */
+
 public class CameraProperties {
     private final Random rand = new Random();
     // calibration
