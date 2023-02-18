@@ -82,11 +82,8 @@ public class AutoCommandManager {
         // Setup Logging for PathPlanner (for Ghost image)
         // NOTE: Make sure same as setting correct PPSwerveControllerCommand (ours or theirs)
         PPSwerveControllerCommand.setLoggingCallbacks(
-                null, // logACtiveTRajectory
-                // (PathPlannerTrajectory activeTrajectory) -> {
-                //     // Log current trajectory
-                //     pp_field2d.getObject("traj").setTrajectory(activeTrajectory);
-                // },
+                null, 
+
                 (Pose2d targetPose) -> {
                     // Log target pose
                     // TODO May not want both pose and trajectory
@@ -95,22 +92,15 @@ public class AutoCommandManager {
                     SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
                 },
                 null, // logSetPoint
-                // (ChassisSpeeds setpointSpeeds) -> {
-                //     // Log setpoint ChassisSpeeds
-                // },
+
                 null // loggError
                 // TODO  how to set default log error
-                // (Translation2d translationError, Rotation2d rotationError) ->  {
-                //     PPSwerveControllerCommand.defaultLogError(translationError, rotationError);
-                // }
-            );
+
+        );
         SmartDashboard.putData("PP_Field", pp_field2d);
         //Subsystems used by auto commands
         SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
         
-        // Post commands
-        // Command autoBalanceCommand = new AutoBalanceCommand(s_SwerveDrive);
-
         //Autonomous Commands
         TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
         Command taxiOneBallAutoBuildCommand = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
@@ -135,6 +125,15 @@ public class AutoCommandManager {
         SmartDashboard.putData("Auto choices", m_chooser);
     }
 
+    /**
+    * <h3>usePIDVauleOrTune</h3>
+    *
+    * manualy set a defautValue in robot container and if Tune_pid is true 
+    * it gives pidValue with the key and defultvalue if false gives just the defaultValue
+    * @param key
+    * @param defaultValue
+    * @return pidValue
+    */
     private static double usePIDValueOrTune(String key, double defaultValue) {
         double pidValue;
         if(TUNE_PID) {
@@ -146,7 +145,8 @@ public class AutoCommandManager {
     }
     
     /**
-     *
+     *<h3> getAutonomousCommand</h3>
+
      * Gets the autonomous path that is selected in the Shuffleboard
      *
      * @return The selected autonomous command

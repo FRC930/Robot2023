@@ -1,6 +1,5 @@
 package frc.robot.autos;
 
-import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utilities.FieldCentricOffset;
 import frc.robot.utilities.SwerveAutoBuilder;
@@ -42,7 +41,6 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
         PathConstraints pathConstraints = PathPlanner.getConstraintsFromPath(pathName);
         if(pathConstraints == null) {
-            //TODO add constraints
             pathConstraints = new PathConstraints(MAX_VELOCITY, MAX_ACCELERATION);
         }
 
@@ -59,7 +57,6 @@ public class PathPlannerCommand extends SequentialCommandGroup {
                 s_Swerve::resetOdometry, //pose2D consumer, used to reset odometry at beginning of zero
                 SwerveDrive.getSwerveKinematics(),
                 getPIDConstants(s_Swerve.getAutoXController()), //PID constants to correct for translation error (X and Y)
-                //s_Swerve.getAutoYController(), //NOTE:  This does not use a YPID it only has one for both X and Y
                 getPIDConstants(thetaController), //PID constants to correct for rotation error (used to create the rotation controller)
                 s_Swerve::setSwerveModuleStates,
                 eventCommandMap, 
@@ -68,7 +65,6 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         // creates a command based on the path group
         Command swerveControllerCommand = autoBuilder.fullAuto(loadPathGroup);
         addCommands(
-       //     new InstantCommand(() -> s_Swerve.resetOdometry(pathPlannerExample.getInitialHolonomicPose())),
             // TODO: Use april tags to help set this
             new InstantCommand(() -> FieldCentricOffset.getInstance().setOffset(loadPathGroup.get(0).getInitialHolonomicPose().getRotation().getDegrees())),
             swerveControllerCommand
