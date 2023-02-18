@@ -65,12 +65,17 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
     @Override
     public void initialize() {
         Pose2d currentPose = super.poseSupplier.get();
-        Rotation2d curRotation = currentPose.getRotation();
+        double x1 = currentPose.getX();
+        double y1 = currentPose.getY();
+        double x2 = m_targetPose.getX();
+        double y2 = m_targetPose.getY();
+        Rotation2d angle = Rotation2d.fromDegrees(Math.atan2( y2 - y1, x2 - x1 ) * ( 180 / Math.PI ));
 
         // The pathpoint is the starting and ending positions of the robot
-        PathPoint currentPathPoint = new PathPoint(currentPose.getTranslation(),curRotation);
-        PathPoint targetPathPoint = new PathPoint(m_targetPose.getTranslation(),m_targetPose.getRotation());
-
+        PathPoint currentPathPoint = new PathPoint(currentPose.getTranslation(),angle);
+        PathPoint targetPathPoint = new PathPoint(m_targetPose.getTranslation(),angle, m_targetPose.getRotation());
+        
+        //TODO May want to add a midpoint to avoid charging station (one to the left or right) 
         PathConstraints pathConstraints = new PathConstraints(MAX_SPEED, MAX_ACCELERATION);
         super.trajectory = PathPlanner.generatePath(pathConstraints, false, currentPathPoint, targetPathPoint);        
         super.initialize();
