@@ -19,6 +19,9 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     private final ManipulatorIO io;
 
+    public static final double ROLLER_INTAKE_SPEED = 0.8;
+    public static final double RELEASE_SPEED = -0.3;
+
     public static double highPosition = 27.6; //at high elevator position
 
     public static double mediumPosition = 23.9; //at medium elevator position

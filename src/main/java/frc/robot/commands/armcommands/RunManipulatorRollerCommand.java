@@ -25,4 +25,11 @@ public class RunManipulatorRollerCommand extends CommandBase{
         manipulator.setRollerSpeed(ROLLER_SPEED);
         System.out.println("geioeriogerjgieogrjigrjioeg");
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
+    
 }
