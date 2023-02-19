@@ -427,13 +427,13 @@ public class RobotContainer {
       m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
       m_codriverController.povRight().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
       m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
-  // m_codriverController.x()
-  // .onTrue(
-  //     new RunManipulatorRollerCommand(m_manipulatorSubsystem, 1.0) //TODO: Constant
-  //   )
-  // .onFalse(
-  //       new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
-  //   );
+      m_codriverController.rightBumper()
+      .onTrue(
+          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED) //TODO: Constant
+        )
+      .onFalse(
+            new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
+      );
     //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
       //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
     // m_codriverController.x()
