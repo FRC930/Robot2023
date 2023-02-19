@@ -413,7 +413,7 @@ public class RobotContainer {
         new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED), // TODO constant
         new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(12)),
         new WaitCommand(1),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,-30, 25) // -40
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,-33, 25) // -40
         )
       )
     .onFalse(
