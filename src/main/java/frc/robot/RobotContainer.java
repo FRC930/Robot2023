@@ -141,6 +141,17 @@ public class RobotContainer {
       new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
       new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
       new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
+  private Command m_AutoMidTargetCommand =  new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22))
+  .andThen(new WaitCommand(1))
+  .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
+  .andThen(new WaitCommand(1))
+  .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED))
+  .andThen(new WaitCommand(3)) //pause after scoring
+  .andThen( //release cone and retract
+    new ParallelCommandGroup(
+      new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+      new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
   private Command m_highTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55))
   .andThen(new WaitCommand(2))
   .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
@@ -205,6 +216,7 @@ public class RobotContainer {
 
     // TODO Add markers for real commands/paths
     eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
+    eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
     eventCommandMap.put("intakeCube", new SequentialCommandGroup( 
@@ -240,7 +252,7 @@ public class RobotContainer {
     
     // Configure default commands
     m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
-    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.50));
+    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.60));
     m_fieldSim.initSim();
     m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
     m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
