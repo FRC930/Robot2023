@@ -6,14 +6,16 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -24,17 +26,22 @@ import java.util.function.Supplier;
  */
 public class PPSwerveControllerCommand extends CommandBase {
   private final Timer timer = new Timer();
-  protected  PathPlannerTrajectory m_trajectory;  // Need protected for can be call from extended object.
-  protected final Supplier<Pose2d> m_poseSupplier; // Need protected for can be call from extended object.
-  private final SwerveDriveKinematics m_kinematics;
-  private final PPHolonomicDriveController m_controller;
-  private final Consumer<SwerveModuleState[]> m_outputModuleStates;
-  private final Consumer<ChassisSpeeds> m_outputChassisSpeeds;
-  private final boolean m_useKinematics;
-  private final boolean m_useAllianceColor;
-  private final Field2d field = new Field2d();
+  protected  PathPlannerTrajectory trajectory;  // Need protected for can be call from extended object.
+  protected final Supplier<Pose2d> poseSupplier; // Need protected for can be call from extended object.
+  private final SwerveDriveKinematics kinematics;
+  private final PPHolonomicDriveController controller;
+  private final Consumer<SwerveModuleState[]> outputModuleStates;
+  private final Consumer<ChassisSpeeds> outputChassisSpeeds;
+  private final boolean useKinematics;
+  private final boolean useAllianceColor;
 
   private PathPlannerTrajectory transformedTrajectory;
+
+  private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
+  private static Consumer<Pose2d> logTargetPose = null;
+  private static Consumer<ChassisSpeeds> logSetpoint = null;
+  private static BiConsumer<Translation2d, Rotation2d> logError =
+      PPSwerveControllerCommand::defaultLogError;
 
   /**
    * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
@@ -65,14 +72,14 @@ public class PPSwerveControllerCommand extends CommandBase {
       Consumer<ChassisSpeeds> outputChassisSpeeds,
       boolean useAllianceColor,
       Subsystem... requirements) {
-    m_trajectory = trajectory;
-    m_poseSupplier = poseSupplier;
-    m_controller = new PPHolonomicDriveController(xController, yController, rotationController);
-    m_outputChassisSpeeds = outputChassisSpeeds;
-    m_outputModuleStates = null;
-    m_kinematics = null;
-    m_useKinematics = false;
-    m_useAllianceColor = useAllianceColor;
+    this.trajectory = trajectory;
+    this.poseSupplier = poseSupplier;
+    this.controller = new PPHolonomicDriveController(xController, yController, rotationController);
+    this.outputChassisSpeeds = outputChassisSpeeds;
+    this.outputModuleStates = null;
+    this.kinematics = null;
+    this.useKinematics = false;
+    this.useAllianceColor = useAllianceColor;
 
     addRequirements(requirements);
 
@@ -117,7 +124,7 @@ public class PPSwerveControllerCommand extends CommandBase {
         yController,
         rotationController,
         outputChassisSpeeds,
-        true,
+        false,
         requirements);
   }
 
@@ -152,14 +159,14 @@ public class PPSwerveControllerCommand extends CommandBase {
       Consumer<SwerveModuleState[]> outputModuleStates,
       boolean useAllianceColor,
       Subsystem... requirements) {
-    m_trajectory = trajectory;
-    m_poseSupplier = poseSupplier;
-    m_kinematics = kinematics;
-    m_controller = new PPHolonomicDriveController(xController, yController, rotationController);
-    m_outputModuleStates = outputModuleStates;
-    m_outputChassisSpeeds = null;
-    m_useKinematics = true;
-    m_useAllianceColor = useAllianceColor;
+    this.trajectory = trajectory;
+    this.poseSupplier = poseSupplier;
+    this.kinematics = kinematics;
+    this.controller = new PPHolonomicDriveController(xController, yController, rotationController);
+    this.outputModuleStates = outputModuleStates;
+    this.outputChassisSpeeds = null;
+    this.useKinematics = true;
+    this.useAllianceColor = useAllianceColor;
 
     addRequirements(requirements);
 
@@ -207,25 +214,26 @@ public class PPSwerveControllerCommand extends CommandBase {
         yController,
         rotationController,
         outputModuleStates,
-        true,
+        false,
         requirements);
   }
 
   @Override
   public void initialize() {
-    if (m_useAllianceColor && m_trajectory.fromGUI) {
+    if (useAllianceColor && trajectory.fromGUI) {
       transformedTrajectory =
           PathPlannerTrajectory.transformTrajectoryForAlliance(
-              m_trajectory, DriverStation.getAlliance());
+              trajectory, DriverStation.getAlliance());
     } else {
-      transformedTrajectory = m_trajectory;
+      transformedTrajectory = trajectory;
     }
 
-    SmartDashboard.putData("PPSwerveControllerCommand_field", this.field);
-    this.field.getObject("traj").setTrajectory(transformedTrajectory);
+    if (logActiveTrajectory != null) {
+      logActiveTrajectory.accept(transformedTrajectory);
+    }
 
-    this.timer.reset();
-    this.timer.start();
+    timer.reset();
+    timer.start();
 
     PathPlannerServer.sendActivePath(transformedTrajectory.getStates());
   }
@@ -235,31 +243,36 @@ public class PPSwerveControllerCommand extends CommandBase {
     double currentTime = this.timer.get();
     PathPlannerState desiredState = (PathPlannerState) transformedTrajectory.sample(currentTime);
 
-    Pose2d currentPose = m_poseSupplier.get();
-    //this.field.setRobotPose(currentPose); // FRC930 commented out
-    Pose2d desiredPose;
+    Pose2d currentPose = this.poseSupplier.get();
+
     PathPlannerServer.sendPathFollowingData(
-        desiredPose = new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation),
+        new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation),
         currentPose);
-    this.field.setRobotPose(desiredPose); // FRC930 set desiredpose not currentpos
-    
-    SmartDashboard.putNumber(
-        "PPSwerveControllerCommand_xError", currentPose.getX() - desiredState.poseMeters.getX());
-    SmartDashboard.putNumber(
-        "PPSwerveControllerCommand_yError", currentPose.getY() - desiredState.poseMeters.getY());
-    SmartDashboard.putNumber(
-        "PPSwerveControllerCommand_rotationError",
-        currentPose.getRotation().getRadians() - desiredState.holonomicRotation.getRadians());
 
-    ChassisSpeeds targetChassisSpeeds = m_controller.calculate(currentPose, desiredState);
+    ChassisSpeeds targetChassisSpeeds = this.controller.calculate(currentPose, desiredState);
 
-    if (m_useKinematics) {
+    if (this.useKinematics) {
       SwerveModuleState[] targetModuleStates =
-          m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
+          this.kinematics.toSwerveModuleStates(targetChassisSpeeds);
 
-      m_outputModuleStates.accept(targetModuleStates);
+      this.outputModuleStates.accept(targetModuleStates);
     } else {
-      m_outputChassisSpeeds.accept(targetChassisSpeeds);
+      this.outputChassisSpeeds.accept(targetChassisSpeeds);
+    }
+
+    if (logTargetPose != null) {
+      logTargetPose.accept(
+          new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation));
+    }
+
+    if (logError != null) {
+      logError.accept(
+          currentPose.getTranslation().minus(desiredState.poseMeters.getTranslation()),
+          currentPose.getRotation().minus(desiredState.holonomicRotation));
+    }
+
+    if (logSetpoint != null) {
+      logSetpoint.accept(targetChassisSpeeds);
     }
   }
 
@@ -267,12 +280,13 @@ public class PPSwerveControllerCommand extends CommandBase {
   public void end(boolean interrupted) {
     this.timer.stop();
 
-    if (interrupted) {
-      if (m_useKinematics) {
-        m_outputModuleStates.accept(
-            m_kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0)));
+    if (interrupted
+        || Math.abs(transformedTrajectory.getEndState().velocityMetersPerSecond) < 0.1) {
+      if (useKinematics) {
+        this.outputModuleStates.accept(
+            this.kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0)));
       } else {
-        m_outputChassisSpeeds.accept(new ChassisSpeeds());
+        this.outputChassisSpeeds.accept(new ChassisSpeeds());
       }
     }
   }
@@ -280,5 +294,36 @@ public class PPSwerveControllerCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     return this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds());
+  }
+
+  private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
+    SmartDashboard.putNumber("PPSwerveControllerCommand/xErrorMeters", translationError.getX());
+    SmartDashboard.putNumber("PPSwerveControllerCommand/yErrorMeters", translationError.getY());
+    SmartDashboard.putNumber(
+        "PPSwerveControllerCommand/rotationErrorDegrees", rotationError.getDegrees());
+  }
+
+  /**
+   * Set custom logging callbacks for this command to use instead of the default configuration of
+   * pushing values to SmartDashboard
+   *
+   * @param logActiveTrajectory Consumer that accepts a PathPlannerTrajectory representing the
+   *     active path. This will be called whenever a PPSwerveControllerCommand starts
+   * @param logTargetPose Consumer that accepts a Pose2d representing the target pose while path
+   *     following
+   * @param logSetpoint Consumer that accepts a ChassisSpeeds object representing the setpoint
+   *     speeds
+   * @param logError BiConsumer that accepts a Translation2d and Rotation2d representing the error
+   *     while path following
+   */
+  public static void setLoggingCallbacks(
+      Consumer<PathPlannerTrajectory> logActiveTrajectory,
+      Consumer<Pose2d> logTargetPose,
+      Consumer<ChassisSpeeds> logSetpoint,
+      BiConsumer<Translation2d, Rotation2d> logError) {
+    PPSwerveControllerCommand.logActiveTrajectory = logActiveTrajectory;
+    PPSwerveControllerCommand.logTargetPose = logTargetPose;
+    PPSwerveControllerCommand.logSetpoint = logSetpoint;
+    PPSwerveControllerCommand.logError = logError;
   }
 }
