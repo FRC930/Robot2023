@@ -18,7 +18,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int STALL_LIMIT = 10;
     private final int FREE_LIMIT = 20;
 
-    private static double manipulatorOffset = 154.1;
+    private static double manipulatorOffset = 302.7 + -45; // -45 needed to adjust to get angle back to where tested
 
     public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
