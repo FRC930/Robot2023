@@ -19,8 +19,11 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static double HIGH_POSITION = 27.6; //at high elevator position
     public static double MEDIUM_POSITION = 23.9; //at medium elevator position
     public static double GROUND_POSITION = 5.2; //at ground elevator position
-    public static double STOW_POSITION = 90.0; //at ground elevator position
+    public static double STOW_POSITION = 45.0; //at ground elevator position
     public static double INTAKE_POSITION = -225.0; //TODO: Find actual intake position value
+
+    public static final double ROLLER_INTAKE_SPEED = 0.8;
+    public static final double RELEASE_SPEED = -0.3;
 
     /**<h3>ManipulatorSubsystem</h3>
      * Decides desired output, in volts, for the manipulator.
@@ -38,7 +41,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         m_io = io;
 
-        targetPosition = 0;//stowPosition;
+        targetPosition = STOW_POSITION;
     }
 
     /**<h3>periodic</h3>

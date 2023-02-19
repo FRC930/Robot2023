@@ -13,7 +13,7 @@ public class ArmIORobot implements ArmIO {
     
     private AbsoluteEncoder m_armEncoder;
 
-    private static double m_armOffset = 182.64;
+    private static double m_armOffset = 182.64+17.9;
 
     public ArmIORobot(int armMotorID) {
         m_armMotor = new CANSparkMax(armMotorID, MotorType.kBrushless);

@@ -23,7 +23,7 @@ public class ArmSubsystem extends SubsystemBase {
     public static double HIGH_POSITION = 10; //at high elevator position
     public static double MEDIUM_POSITION = 17.9; //at medium elevator position
     public static double GROUND_POSITION = 46.8; //at ground elevator position
-    public static double STOW_POSITION = 120.0;//-60.0; //at ground elevator position
+    public static double STOW_POSITION = 70.0;//-60.0; //at ground elevator position
     public static double INTAKE_POSITION = 50.0; // TODO: Find an actual intake value
 
     public static double ARM_LENGTH = 27.12;
@@ -38,7 +38,7 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO armIO) {
 
         // Sets up PID controller
-        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(90, 3600));
+        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(90, 360));
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 
@@ -47,7 +47,7 @@ public class ArmSubsystem extends SubsystemBase {
         
         m_armIO = armIO;
 
-        targetPosition = 0;//stowPosition;
+        targetPosition = STOW_POSITION;
     }
 
     /**

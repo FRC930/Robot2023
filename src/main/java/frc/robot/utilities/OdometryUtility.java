@@ -101,7 +101,7 @@ public class OdometryUtility {
     private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(0.0);
 
     // Three cameras on the robot, 2 in the front, 1 on the back
-    private final CameraOnRobot m_backCamera;
+    // private final CameraOnRobot m_backCamera;
     // private final CameraOnRobot m_rightCamera;
     // private final CameraOnRobot m_leftCamera;
 
@@ -152,20 +152,20 @@ public class OdometryUtility {
         );
 
         // Creates the cameras
-        m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
-                                        BACK_CAMERA_IP_NAME, 
-                                        BACK_CAMERA_PIPELINE, 
-                                        BACK_CAMERA_PORT_TO_FORWARD,
-                                        BACK_CAMERA_CONFIG_FILE,
-                                        BACK_CAMERA_RESOLUTION_WIDTH,
-                                        BACK_CAMERA_RESOLUTION_HEIGHT,
-                                        BACK_CAMERA_POSITION_X,
-                                        BACK_CAMERA_POSITION_Y,
-                                        BACK_CAMERA_POSITION_Z,
-                                        BACK_CAMERA_ROTATION_ROLL,
-                                        BACK_CAMERA_ROTATION_PITCH,
-                                        BACK_CAMERA_ROTATION_YAW
-                                        );
+        // m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
+        //                                 BACK_CAMERA_IP_NAME, 
+        //                                 BACK_CAMERA_PIPELINE, 
+        //                                 BACK_CAMERA_PORT_TO_FORWARD,
+        //                                 BACK_CAMERA_CONFIG_FILE,
+        //                                 BACK_CAMERA_RESOLUTION_WIDTH,
+        //                                 BACK_CAMERA_RESOLUTION_HEIGHT,
+        //                                 BACK_CAMERA_POSITION_X,
+        //                                 BACK_CAMERA_POSITION_Y,
+        //                                 BACK_CAMERA_POSITION_Z,
+        //                                 BACK_CAMERA_ROTATION_ROLL,
+        //                                 BACK_CAMERA_ROTATION_PITCH,
+        //                                 BACK_CAMERA_ROTATION_YAW
+        //                                 );
         // m_leftCamera = new CameraOnRobot(LEFT_CAMERA_NAME, 
         //                                 LEFT_CAMERA_IP_NAME, 
         //                                 LEFT_CAMERA_PIPELINE, 
@@ -195,7 +195,8 @@ public class OdometryUtility {
         //                                 RIGHT_CAMERA_ROTATION_YAW
         //                                 );
 
-        cameras = List.of(m_backCamera);//, m_leftCamera, m_rightCamera);
+        // cameras = List.of(m_backCamera);//, m_leftCamera, m_rightCamera);
+        cameras = List.of();
     }
 
     /**
@@ -204,10 +205,10 @@ public class OdometryUtility {
      * Returns the PhotonCamera representing the back camera
      * 
      * @return a reference to the back camera
-     */
-    public PhotonCamera getBackCamera() { 
-        return m_backCamera.getPhotonCamera();
-    }
+    //  */
+    // public PhotonCamera getBackCamera() { 
+    //     return m_backCamera.getPhotonCamera();
+    // }
 
     /**
      * <h3>getLeftCamera</h3>
