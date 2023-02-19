@@ -38,7 +38,13 @@ public class IntakeRollerCommand extends CommandBase{
     }
 
     @Override
+    public boolean isFinished(){ 
+        return false;
+    }
+
+    @Override
     public void end(boolean interrupted) {
         m_IntakeRollerMotorSubsystem.setRollerVoltage(0.0);     
     }    
+    
 }

@@ -38,4 +38,8 @@ public class ExtendIntakeCommand extends CommandBase{
         Logger.getInstance().recordOutput("ExtendIntakeMotorCommand/Voltage", m_voltage);
     }
 
+    @Override
+    public boolean isFinished(){ 
+        return false;
+    }
 }
