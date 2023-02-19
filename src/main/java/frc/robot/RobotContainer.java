@@ -130,6 +130,17 @@ public class RobotContainer {
   private final LEDsubsystem m_LEDsubsystem = new LEDsubsystem(0, 1,2,3 );
   
   // Commands \\
+  private Command m_AutohighTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55))
+  .andThen(new WaitCommand(2))
+  .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
+  .andThen(new WaitCommand(1))
+  .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED))
+  .andThen(new WaitCommand(3)) //pause after scoring
+  .andThen( //release cone and retract
+    new ParallelCommandGroup(
+      new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+      new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
   private Command m_highTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55))
   .andThen(new WaitCommand(2))
   .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
@@ -193,6 +204,7 @@ public class RobotContainer {
     // Auto Commands
 
     // TODO Add markers for real commands/paths
+    eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
     eventCommandMap.put("intakeCube", new SequentialCommandGroup( 

@@ -120,7 +120,7 @@ public class AutoCommandManager {
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
         Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
-
+        Command ScoreHighCone = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
         // Adding options to the chooser in Shuffleboard/smartdashboard
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
@@ -131,6 +131,7 @@ public class AutoCommandManager {
         m_chooser.addOption("BlueRightCommand", BlueRightCommand);
         m_chooser.addOption("BlueLeftCone", BlueLeftCone);
         m_chooser.addOption("BlueLeft", BlueLeft);
+        m_chooser.addOption("ScoreHighCone", ScoreHighCone);
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }
