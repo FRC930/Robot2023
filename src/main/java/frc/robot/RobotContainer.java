@@ -240,7 +240,7 @@ public class RobotContainer {
     
     // Configure default commands
     m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
-    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.40));
+    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.50));
     m_fieldSim.initSim();
     m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
     m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
