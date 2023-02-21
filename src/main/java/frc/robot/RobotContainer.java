@@ -139,7 +139,7 @@ public class RobotContainer {
   .andThen( //release cone and retract
     new ParallelCommandGroup(
       new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
       new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
   private Command m_AutoMidTargetCommand =  new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22))
   .andThen(new WaitCommand(1))
@@ -150,7 +150,7 @@ public class RobotContainer {
   .andThen( //release cone and retract
     new ParallelCommandGroup(
       new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
       new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
   private Command m_highTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55))
   .andThen(new WaitCommand(2))
@@ -426,7 +426,7 @@ public class RobotContainer {
     .onFalse(
       new ParallelCommandGroup(
         new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
         new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
       ));
 
@@ -443,7 +443,7 @@ public class RobotContainer {
     .onFalse(
       new ParallelCommandGroup(
         new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.stowPosition, ManipulatorSubsystem.stowPosition),
+        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
         new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
       ));
 
