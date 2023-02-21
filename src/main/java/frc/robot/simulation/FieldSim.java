@@ -5,7 +5,6 @@
 package frc.robot.simulation;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -30,6 +29,7 @@ public class FieldSim {
     m_swerveDrive = swerveDrive;
   }
 
+  // TODO comment why keeping
   public void initSim() {}
 
   public Field2d getField2d() {
@@ -64,5 +64,6 @@ public class FieldSim {
     SmartDashboard.putData("Field2d", m_field2d);
   }
 
+  // TODO comment why keeping (from wpilib)
   public void simulationPeriodic() {}
 }

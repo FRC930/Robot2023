@@ -1,16 +1,90 @@
 {
+  "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
+    "Other Devices": {
+      "SPARK MAX [18]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SparkMax[12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SparkMax[7]": {
+        "header": {
+          "open": true
+        }
+      }
+    },
+    "PowerDistributions": {
+      "0": {
+        "PowerDistribution[0]": {
+          "open": true
+        }
+      }
+    },
+    "RoboRIO": {
+      "3.3V Rail": {
+        "open": true
+      },
+      "5V Rail": {
+        "open": true
+      },
+      "6V Rail": {
+        "open": true
+      },
+      "RoboRIO Input": {
+        "open": true
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto choices": "String Chooser",
       "/SmartDashboard/Field2d": "Field2d",
-      "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d"
+      "/SmartDashboard/Mech2d": "Mechanism2d",
+      "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d",
+      "/SmartDashboard/PP_Field": "Field2d"
     },
     "windows": {
+      "/SmartDashboard/Auto choices": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field2d": {
         "image": "C:\\Users\\JackL\\Downloads\\2023-field.png",
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Mech2d": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "photonvision": {
+        "CV5647": {
+          "open": true
+        },
+        "Camera5": {
+          "open": true
+        },
+        "OV5647": {
+          "open": true
+        },
+        "open": true
       }
     }
   }

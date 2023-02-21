@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 
+// TODO Move used code to swerve module
 public final class CtreUtils {
   public static TalonFXConfiguration generateTurnMotorConfig() {
     TalonFXConfiguration motorConfig = new TalonFXConfiguration();
@@ -21,8 +22,7 @@ public final class CtreUtils {
     motorConfig.slot0.kI = 0.0;
     motorConfig.slot0.kD = 12.0;
 
-    SupplyCurrentLimitConfiguration supplyCurrentLimit =
-        new SupplyCurrentLimitConfiguration(true, 25, 40, 0.1);
+    SupplyCurrentLimitConfiguration supplyCurrentLimit = new SupplyCurrentLimitConfiguration(true, 25, 40, 0.1);
     motorConfig.supplyCurrLimit = supplyCurrentLimit;
 
     motorConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
@@ -38,8 +38,7 @@ public final class CtreUtils {
     motorConfig.slot0.kI = 0.0;
     motorConfig.slot0.kD = 0.0;
 
-    SupplyCurrentLimitConfiguration supplyCurrentLimit =
-        new SupplyCurrentLimitConfiguration(true, 35, 60, 0.1);
+    SupplyCurrentLimitConfiguration supplyCurrentLimit = new SupplyCurrentLimitConfiguration(true, 35, 60, 0.1);
     motorConfig.supplyCurrLimit = supplyCurrentLimit;
 
     motorConfig.openloopRamp = 0.25;
@@ -50,12 +49,19 @@ public final class CtreUtils {
     return motorConfig;
   }
 
+  /**
+   * <h3>generateCanCoderConfig</h3>
+   * 
+   * Generates and returns the configuration of the sensor.
+   * @return - The config of the sensor
+   */
   public static CANCoderConfiguration generateCanCoderConfig() {
     CANCoderConfiguration sensorConfig = new CANCoderConfiguration();
 
     sensorConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
     // https://github.com/FRC5892/ChargedUp2023/commit/ad06f53ce54cbc78df013fd333e2b98b9cc0454c
-    //sensorConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;  // But may want optimize back on
+    // sensorConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
+    // // But may want optimize back on
     sensorConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
     sensorConfig.sensorTimeBase = SensorTimeBase.PerSecond;
 
@@ -64,8 +70,7 @@ public final class CtreUtils {
 
   public static SwerveModuleState optimize(
       SwerveModuleState desiredState, Rotation2d currentAngle) {
-    double targetAngle =
-        placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
+    double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
     double targetSpeed = desiredState.speedMetersPerSecond;
     double delta = targetAngle - currentAngle.getDegrees();
     if (Math.abs(delta) > 90) {
@@ -77,7 +82,7 @@ public final class CtreUtils {
 
   /**
    * @param scopeReference Current Angle
-   * @param newAngle Target Angle
+   * @param newAngle       Target Angle
    * @return Closest angle within scope
    */
   private static double placeInAppropriate0To360Scope(double scopeReference, double newAngle) {
@@ -105,9 +110,16 @@ public final class CtreUtils {
     return newAngle;
   }
 
+  /**
+   * <h3>checkCtreError</h3>
+   * 
+   * Checks for a specified error.
+   * @param errorCode - Code of error
+   * @param message - Desired message if error detected
+   */
   public static void checkCtreError(ErrorCode errorCode, String message) {
     if (RobotBase.isReal() && errorCode != ErrorCode.OK) {
-        DriverStation.reportError(String.format("%s: %s", message, errorCode.toString()), false);
+      DriverStation.reportError(String.format("%s: %s", message, errorCode.toString()), false);
     }
   }
 }

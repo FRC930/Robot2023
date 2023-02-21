@@ -20,5 +20,11 @@
       "resolution": [960, 720],
       "fov": 100
     }
+  ],
+  "components": [
+    {
+        "zeroedRotations": [{ "axis": "x", "degrees": 90 }],
+        "zeroedPosition": [0, 0, 0]
+    }
   ]
 }
