@@ -18,7 +18,9 @@ public class ManipulatorIORobot implements ManipulatorIO {
     // Constant, in amps
     private final int STALL_LIMIT = 10;
     private final int FREE_LIMIT = 20;
-    private static double manipulatorOffset = 154.1;
+
+    private static double manipulatorOffset = 302.7 + -45; // -45 needed to adjust to get angle back to where tested
+
 
     //----------Constructor---------\\
     public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {

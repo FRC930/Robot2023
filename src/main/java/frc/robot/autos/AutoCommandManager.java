@@ -112,7 +112,9 @@ public class AutoCommandManager {
         Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
         Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
         Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
-        
+        Command ScoreHighCone = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
+        Command ScoreMidCone = new PathPlannerCommand(s_SwerveDrive, "ScoreMidCone", eventCommandMap);
+
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
@@ -121,9 +123,12 @@ public class AutoCommandManager {
         m_chooser.addOption("score cone grab cone balance", BlueLeftBalanceCommand);
         m_chooser.addOption("Engage Charging Station", ChargeStationcommand);
         m_chooser.addOption("MiddleCubeEngagecommand", MiddleCubeEngagecommand);
+
         m_chooser.addOption(isBlue ? "BlueRightCommand" : "RedLeftCommand", BlueRightCommand);
         m_chooser.addOption(isBlue ? "BlueLeftCone" : "RedRightCone", BlueLeftCone);
         m_chooser.addOption(isBlue ? "BlueLeft" : "RedRight", BlueLeft);
+        m_chooser.addOption("ScoreHighCone", ScoreHighCone);
+        m_chooser.addOption("ScoreMidCone", ScoreMidCone);
         
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
