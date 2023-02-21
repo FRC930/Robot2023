@@ -1,6 +1,10 @@
 package frc.robot.subsystems.elevator;
 
-// TODO document interface
+/**
+ * <h3>ElevatorIO</h3>
+ * 
+ * Sets up the methods that we use in the IORobot and IOSim
+ */
 public interface ElevatorIO {
     public void updateInputs();
     public double getCurrentVelocity();

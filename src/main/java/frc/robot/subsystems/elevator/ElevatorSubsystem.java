@@ -12,11 +12,9 @@ import frc.robot.Robot;
 
 public class ElevatorSubsystem extends SubsystemBase{
     
-    /**
-     *
-     */
+    
+    private final ElevatorIO m_io;
     private static final double UPPER_STAGE_HIGHT = 20.0;
-    private final ElevatorIO io;
     private double targetElevatorPosition = 0;
 
     private final ProfiledPIDController controller;
@@ -31,13 +29,12 @@ public class ElevatorSubsystem extends SubsystemBase{
      * @param io The ElevatorIO, use IORobot if robot is real, otherwise use IOSim.
      */
     public ElevatorSubsystem(ElevatorIO io){
-        this.io = io;
+        this.m_io = io;
         //this.controller = new ProfiledPIDController(72, 0, 0, 
-                          //new Constraints(1.0, 2.0)); //This is in meters
-                          //our p is in terms of meters, meaning you are multiplying a decmal by p
-                          this.controller = new ProfiledPIDController(45, 0, 0, 
-                          new Constraints(Units.inchesToMeters(36), Units.inchesToMeters(30))); //This is in meters
-        //this.ff = new ElevatorFeedforward(0, 0, 0, 0);
+        //new Constraints(1.0, 2.0)); //This is in meters
+        //our p is in terms of meters, meaning you are multiplying a decmal by p
+        this.controller = new ProfiledPIDController(45, 0, 0, 
+                 new Constraints(Units.inchesToMeters(36), Units.inchesToMeters(30))); //This is in meters
         this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
 
         this.topff = new ElevatorFeedforward(0, 0.45, 0, 0);
@@ -60,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase{
      * Gets where the elevator is in inches.
      */
     public double getElevatorPosition(){
-        return io.getCurrentHeight();
+        return m_io.getCurrentHeight();
     }
 
     /**
@@ -70,20 +67,21 @@ public class ElevatorSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
 
+        //Checks if the robot is a simulation
         if (DriverStation.isEnabled() || !Robot.isReal()) {
-            io.updateInputs();
-            double currentheight = io.getCurrentHeight();
+            m_io.updateInputs();
+            double currentheight = m_io.getCurrentHeight();
 
             double voltage = controller.calculate(currentheight, targetElevatorPosition);
             double feedforward;
             if(currentheight < Units.inchesToMeters(UPPER_STAGE_HIGHT)) {
-                feedforward  = ff.calculate(io.getCurrentVelocity());
+                feedforward  = ff.calculate(m_io.getCurrentVelocity());
             }else {
-                feedforward  = topff.calculate(io.getCurrentVelocity());
+                feedforward  = topff.calculate(m_io.getCurrentVelocity());
             }
             MathUtil.clamp(voltage, -12, 12);
 
-            io.setVoltage(voltage + feedforward);
+            m_io.setVoltage(voltage + feedforward);
 
             SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Voltage", voltage + feedforward);
             SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Feedforward", feedforward);
