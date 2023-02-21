@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCommand {
 
 
-    //TODO tune the value
+    // TODO tune the value
     private static final double DELTA_X = Units.inchesToMeters(3.15);
     private static final double DELTA_Y = Units.inchesToMeters(3.15);
 
@@ -81,8 +81,9 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
         super.initialize();
     }
 
-    /*
-     * <h3> isFinished <h3>
+    /**
+     * <h3>isFinished<h3>
+     * 
      * Stopping the command if the robot is within a range of the target
      * 
      */
@@ -93,10 +94,9 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
         Pose2d currentPose = super.poseSupplier.get();
         if(currentPose != null) {
             Transform2d deltaPose = currentPose.minus(m_targetPose);
-            //If the robot is within a range of the target only using X and Y coordinates
+            // If the robot is within a range of the target only using X and Y coordinates the command finishes
             if(Math.abs(deltaPose.getX())<= DELTA_X 
-                && Math.abs(deltaPose.getY())<= DELTA_Y 
-            ) {
+                && Math.abs(deltaPose.getY())<= DELTA_Y) {
                 isfinish = true;
             }  
         }

@@ -29,6 +29,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.OpenCVHelp;
 import frc.robot.utilities.vision.estimation.PNPResults;
@@ -55,6 +56,7 @@ public class OdometryUtility {
      * Position and rotation are accounting for the difference between the camera and the center of the robot
      * 
      */
+
     // Back camera constants
     private static final String BACK_CAMERA_NAME = "Camera5"; 
     private static final String BACK_CAMERA_IP_NAME = "10.9.30.35";
@@ -113,6 +115,7 @@ public class OdometryUtility {
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
     //TODO Bumped up to 0.5 for testing, please put back down
     private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(0.5));
+    // Confidence level, 0 means that we have 100% confidence in the camera values and it won't trust odometry positions
     private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(45));
 
     private AprilTagFieldLayout tagLayout;
@@ -129,7 +132,9 @@ public class OdometryUtility {
      * @param swerveModulePositions used to represent the states of the swerve modules
      * @param position used to represent a Pose2D of the robot for the pose estimator
      */
-    public OdometryUtility(SwerveDriveKinematics swerveDriveKinematics, Rotation2d rotation, SwerveModulePosition[] swerveModulePositions, Pose2d position) {
+    public OdometryUtility(SwerveDriveKinematics swerveDriveKinematics, Rotation2d rotation, 
+                           SwerveModulePosition[] swerveModulePositions, Pose2d position) {
+
         m_swerveDriveKinematics = swerveDriveKinematics;
         m_rotation = rotation;
         m_swerveModulePositions = swerveModulePositions;
