@@ -39,9 +39,11 @@
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreCone"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -89,9 +91,11 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "intakeCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -138,9 +142,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "AutoBalance "
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -150,18 +152,5 @@
   "maxVelocity": 4.41,
   "maxAcceleration": 2.5,
   "isReversed": null,
-  "markers": [
-    {
-      "position": 1.018181818181841,
-      "names": [
-        "ScoreCone"
-      ]
-    },
-    {
-      "position": 3.006060606060626,
-      "names": [
-        "IntakeCube"
-      ]
-    }
-  ]
+  "markers": []
 }

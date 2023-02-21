@@ -5,12 +5,14 @@ import frc.robot.subsystems.LEDsubsystem;
 
 
 public class LEDCommand extends CommandBase {
+    //----Declarations----\\
     int pin0;
     int pin1;
     int pin2;
     int pin3;
-    
-    
+
+    private LedPatterns m_pattern;
+    private LEDsubsystem m_LEDSubsystem;
 
     public static enum LedPatterns{
         CONEREQUEST,
@@ -25,21 +27,30 @@ public class LEDCommand extends CommandBase {
         AUTOBALANCE;
     }
 
-    private LedPatterns m_pattern;
-    private LEDsubsystem m_LEDSubsystem;
-
+    /**
+     * <h3>LEDCommand</h3>
+     * Create LED command and pattern and assign variables to values
+     * @param ledSubsystem
+     * @param pattern
+     */
     public LEDCommand(LEDsubsystem ledSubsystem, LedPatterns pattern){
         m_pattern = pattern;
         m_LEDSubsystem = ledSubsystem;
         addRequirements (m_LEDSubsystem);
-        // Do I need another addRequirment?
     }
-
+    /**
+     * <h3>end</h3>
+     * Ends LED patterns
+     * @param interrupted
+     */
     @Override
     public void end(boolean interrupted){
         super.end(interrupted);
     }
-
+    /**
+     * <h3>initalize</h3>
+     * Intialize all the LED commands and set up thier correct DIO pins
+     */
     @Override
     public void initialize(){
         switch(m_pattern){
@@ -76,7 +87,11 @@ public class LEDCommand extends CommandBase {
 
         }
     }
-
+    /**
+     * <h3>isFinished</h3>
+     * Ends the commands when done
+     * @return isFinished
+     */
     @Override
     public boolean isFinished(){
         return false;

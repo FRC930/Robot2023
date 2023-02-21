@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreCone"
+          "scoreCone"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -66,10 +66,10 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "AutoBalance"
+          "intakeCone"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -117,9 +117,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "AutoBalance"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -129,12 +127,5 @@
   "maxVelocity": 4.41,
   "maxAcceleration": 2.2,
   "isReversed": null,
-  "markers": [
-    {
-      "position": 1.9199999999999422,
-      "names": [
-        "intakePeice"
-      ]
-    }
-  ]
+  "markers": []
 }

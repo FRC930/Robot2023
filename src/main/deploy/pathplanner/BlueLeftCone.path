@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreCone"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -42,7 +44,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "PreloadConeScore"
+          "coneScore"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -69,7 +71,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "pickCube"
+          "scoreCube"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
