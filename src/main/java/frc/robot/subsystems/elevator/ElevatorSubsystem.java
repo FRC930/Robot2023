@@ -1,12 +1,17 @@
 package frc.robot.subsystems.elevator;
 
+import java.sql.Time;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -34,7 +39,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         //new Constraints(1.0, 2.0)); //This is in meters
         //our p is in terms of meters, meaning you are multiplying a decmal by p
         this.controller = new ProfiledPIDController(45, 0, 0, 
-                 new Constraints(Units.inchesToMeters(36), Units.inchesToMeters(30))); //This is in meters
+                 new Constraints(Units.inchesToMeters(90), Units.inchesToMeters(90))); //This is in meters
         this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
 
         this.topff = new ElevatorFeedforward(0, 0.45, 0, 0);
@@ -79,11 +84,14 @@ public class ElevatorSubsystem extends SubsystemBase{
             }else {
                 feedforward  = topff.calculate(m_io.getCurrentVelocity());
             }
-            MathUtil.clamp(voltage, -12, 12);
 
-            m_io.setVoltage(voltage + feedforward);
+            double effort = voltage + feedforward;
 
-            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Voltage", voltage + feedforward);
+            effort = MathUtil.clamp(effort, -12, 12);
+
+            m_io.setVoltage(effort);
+
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Voltage", effort);
             SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Feedforward", feedforward);
         }
         
@@ -91,5 +99,11 @@ public class ElevatorSubsystem extends SubsystemBase{
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetElevatorPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getElevatorPosition());
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue(Inches)", Units.metersToInches(getElevatorPosition()));
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/FPGATimestamp", Timer.getFPGATimestamp());
     }
+
+    public Command setElevatorPositionCommand(double meters) {
+        return new InstantCommand(() -> setTargetElevatorPosition(meters), this);
+    }
+
 }
