@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
@@ -310,9 +311,26 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+        // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    if(!DriverStation.isFMSAttached()) {
+      m_robotDrive.setOriginBasedOnAlliance();
+    }
     return m_autoManager.getAutonomousCommand();
     //TODO determine if autoManager needs to have andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
   }
+
+  /**
+   * Method to run before teleop starts, needed to help reset April Tag direction before teleop if operator does not do 
+   * autonomous first.
+   */
+  public void teleopInit() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    if(!DriverStation.isFMSAttached()) {
+      m_robotDrive.setOriginBasedOnAlliance();
+    }
+
+}
+  
 
   public void periodic() {
     m_fieldSim.periodic();
