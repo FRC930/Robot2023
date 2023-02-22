@@ -2,6 +2,8 @@ package frc.robot.subsystems.elevator;
 
 import java.sql.Time;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -11,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -40,8 +43,8 @@ public class ElevatorSubsystem extends SubsystemBase{
         //our p is in terms of meters, meaning you are multiplying a decmal by p
         this.controller = new ProfiledPIDController(45, 0, 0, 
                  new Constraints(Units.inchesToMeters(90), Units.inchesToMeters(90))); //This is in meters
-        this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
 
+        this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
         this.topff = new ElevatorFeedforward(0, 0.45, 0, 0);
 
 
@@ -71,10 +74,10 @@ public class ElevatorSubsystem extends SubsystemBase{
      */
     @Override
     public void periodic() {
+        m_io.updateInputs();
 
         //Checks if the robot is a simulation
         if (DriverStation.isEnabled() || !Robot.isReal()) {
-            m_io.updateInputs();
             double currentheight = m_io.getCurrentHeight();
 
             double voltage = controller.calculate(currentheight, targetElevatorPosition);
@@ -104,6 +107,16 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public Command setElevatorPositionCommand(double meters) {
         return new InstantCommand(() -> setTargetElevatorPosition(meters), this);
+    }
+
+    private Boolean pastHeight(double meters) {
+        double height = getElevatorPosition();
+        System.out.println("height: " + height + " target: " + meters);
+        return height > meters;
+    }
+
+    public Command waitUntilPastHeightCommand(double meters) {
+        return Commands.waitUntil(() -> this.pastHeight(meters));
     }
 
 }

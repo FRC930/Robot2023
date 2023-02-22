@@ -1,6 +1,8 @@
 package frc.robot.simulation;
 
 import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -56,15 +58,18 @@ public class MechanismSimulator {
         manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
         manipulatorZOffset = Math.sin(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
 
-        mech = new Mechanism2d(50, 50);
-        root = mech.getRoot("robot", 20, 20);
+        mech = new Mechanism2d(Units.inchesToMeters(100), Units.inchesToMeters(100));
+        root = mech.getRoot("elevator", Units.inchesToMeters(7.35), Units.inchesToMeters(10));
+        mech.getRoot("Robot", 0, Units.inchesToMeters(7)).append(
+            new MechanismLigament2d("frame", Units.inchesToMeters(26+7.5), 0, 5, new Color8Bit(Color.kBlanchedAlmond))
+        );
         
         // Adds elevator to the robot in simulation
         m_elevator =
             root.append(
                 new MechanismLigament2d(
                     "Elevator",
-                    10,
+                    Units.inchesToMeters(10),
                     45,
                     10,
                     new Color8Bit(Color.kGreen)
@@ -76,7 +81,7 @@ public class MechanismSimulator {
             m_elevator.append(
               new MechanismLigament2d(
                 "Arm",
-                10,
+                Units.inchesToMeters(24.719),
                 arm.getPosition(),
                 6,
                 new Color8Bit(Color.kYellow)
@@ -88,7 +93,7 @@ public class MechanismSimulator {
             m_arm.append(
                 new MechanismLigament2d(
                     "Hand",
-                    5,
+                    Units.inchesToMeters(5),
                     manipulator.getPosition(),
                     6,
                     new Color8Bit(Color.kRed)
@@ -100,7 +105,7 @@ public class MechanismSimulator {
             root.append(
                 new MechanismLigament2d(
                     "Intake",
-                    10,
+                    Units.inchesToMeters(9.4),
                     this.intake.getEncoderPosition(),
                     6,
                     new Color8Bit(Color.kBlueViolet)
@@ -118,8 +123,8 @@ public class MechanismSimulator {
      */
     public void periodic(){
         m_elevator.setLength(elevator.getElevatorPosition());
-        m_arm.setAngle(arm.getPosition());
-        m_hand.setAngle(manipulator.getPosition()-arm.getPosition());
+        m_arm.setAngle(arm.getPosition()-45);
+        m_hand.setAngle(manipulator.getPosition()-arm.getPosition()-45);
         m_intake.setAngle(intake.getEncoderPosition());
 
         // Elevator Position in Advantage Scope

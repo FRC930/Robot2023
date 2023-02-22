@@ -5,7 +5,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public class ArmIOSim implements ArmIO {
-    private final SingleJointedArmSim sim = new SingleJointedArmSim(DCMotor.getNEO(1), 75, SingleJointedArmSim.estimateMOI(Units.inchesToMeters(27.12), Units.lbsToKilograms(11)), Units.inchesToMeters(27.12), 0, 2 * Math.PI, true);
+    private final SingleJointedArmSim sim = new SingleJointedArmSim(DCMotor.getNEO(1), 75,
+            SingleJointedArmSim.estimateMOI(Units.inchesToMeters(24.719), Units.lbsToKilograms(11)),
+            Units.inchesToMeters(24.719), -2 * Math.PI, 2 * Math.PI, true);
 
     /**
      * <h3>updateInputs</h3>
@@ -21,6 +23,7 @@ public class ArmIOSim implements ArmIO {
      * <h3>getCurrentAngleDegrees</h3>
      * 
      * Gets the shoulder motor position in degrees
+     * 
      * @return the shoulder motor position
      */
     @Override
@@ -31,7 +34,8 @@ public class ArmIOSim implements ArmIO {
     /**
      * <h3>getVelocityDegreesPerSecond</h3>
      * 
-     * Gets the Shoulder 
+     * Gets the Shoulder
+     * 
      * @return
      */
     @Override
@@ -42,7 +46,8 @@ public class ArmIOSim implements ArmIO {
     /**
      * <h3>setVoltage</h3>
      * 
-     * Set the shoulder motor voltage 
+     * Set the shoulder motor voltage
+     * 
      * @param volts
      */
     @Override

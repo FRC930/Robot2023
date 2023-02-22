@@ -25,6 +25,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
 
     private static final double MAX_ACCELERATION = 2.5;
     private static final double MAX_VELOCITY = 1.0;
+    public List<PathPlannerTrajectory> trajectories;
 
     /**
      * <h3>PathPlannerCommand</h3>
@@ -48,6 +49,8 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         List<PathPlannerTrajectory> loadPathGroup = PathPlanner.loadPathGroup(pathName, 
              false, pathConstraints);
         
+        this.trajectories = loadPathGroup;
+
         var thetaController = s_Swerve.getAutoThetaController();
         thetaController.enableContinuousInput(-180.0, 180.0); //-Math.PI, Math.PI);
 
@@ -62,6 +65,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
                 eventCommandMap, 
                 true, // TODO Should the path be automatically mirrored depending on alliance color
                 s_Swerve);
+
         // creates a command based on the path group
         Command swerveControllerCommand = autoBuilder.fullAuto(loadPathGroup);
         addCommands(

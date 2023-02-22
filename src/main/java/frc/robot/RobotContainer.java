@@ -20,6 +20,7 @@ import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -154,7 +155,7 @@ public class RobotContainer {
       new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
       new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
   private Command m_highTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55))
-  .andThen(new WaitCommand(2))
+  .andThen(m_elevatorSubsystem.waitUntilPastHeightCommand(Units.inchesToMeters(30)))
   .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
   .andThen(new WaitCommand(1))
   .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED)) ;
@@ -216,33 +217,40 @@ public class RobotContainer {
     // Auto Commands
 
     // TODO Add markers for real commands/paths
-    eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
-    eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
+    eventCommandMap.put("scoreHighCone",
+    m_armSubsystem.setArmPositionCommand(45)
+    .andThen(m_elevatorSubsystem.setElevatorPositionCommand(55)
+    .andThen(Commands.waitSeconds(2)))
+  );
+    eventCommandMap.put("scoreMidCone",
+    m_armSubsystem.setArmPositionCommand(45)
+    .andThen(m_elevatorSubsystem.setElevatorPositionCommand(55)
+    .andThen(Commands.waitSeconds(2)))
+  );
     eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
     eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
-    eventCommandMap.put("intakeCube", new SequentialCommandGroup( 
-        new PrintCommand("***********intakeCube"), 
-        //new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false), m_robotDrive),
-        new WaitCommand(5.0),
-        new PrintCommand("***********intakeCubeEnd")));
-    eventCommandMap.put("scoreCube", new SequentialCommandGroup(
-        new PrintCommand("******************************scoreCube"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************scoreCubeEnd")
-      )
+    eventCommandMap.put("intakeCube", 
+      m_armSubsystem.setArmPositionCommand(-10)
+      .andThen(m_elevatorSubsystem.setElevatorPositionCommand(30)
+      .andThen(Commands.waitSeconds(2)))
     );
-    eventCommandMap.put("intakeCone", new SequentialCommandGroup(
-        new PrintCommand("******************************intakeCone"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************endintakeCone")
-      )
+    eventCommandMap.put("scoreCube",
+      m_armSubsystem.setArmPositionCommand(45)
+      .andThen(m_elevatorSubsystem.setElevatorPositionCommand(55)
+      .andThen(Commands.waitSeconds(2)))
     );
-    eventCommandMap.put("scoreCone", new SequentialCommandGroup(
-        new PrintCommand("******************************scoreCone"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************endscoreCone")
-      )
-    );
+    eventCommandMap.put("intakeCone", 
+    m_armSubsystem.setArmPositionCommand(-10)
+    .andThen(m_elevatorSubsystem.setElevatorPositionCommand(30)
+    .andThen(Commands.waitSeconds(2)))
+  );
+    eventCommandMap.put("scoreCone", 
+    m_armSubsystem.setArmPositionCommand(45)
+    .andThen(m_elevatorSubsystem.setElevatorPositionCommand(55)
+    .andThen(Commands.waitSeconds(2)))
+  );
+
+  eventCommandMap.put("lowerElevator", m_elevatorSubsystem.setElevatorPositionCommand(10));
     eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
@@ -477,7 +485,17 @@ public class RobotContainer {
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
       );
 
-      m_codriverController.a().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(0)));
+      m_codriverController.a().onTrue(
+        m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(30))
+        .andThen(m_armSubsystem.setArmPositionCommand(-70))
+        .andThen(m_manipulatorSubsystem.setWristPositionCommand(-5))
+      ).onFalse(
+        new ParallelCommandGroup(
+          new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+          new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
+          new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
+        )
+      );
       m_codriverController.x().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(20)));
       m_codriverController.y().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(55)));
     //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))

@@ -2,7 +2,12 @@ package frc.robot.autos;
 
 import java.util.*;
 
+import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -165,7 +170,14 @@ public class AutoCommandManager {
      * @return The selected autonomous command
      */
     public Command getAutonomousCommand() {
-        return m_chooser.getSelected();
+        PathPlannerCommand command = (PathPlannerCommand) m_chooser.getSelected();
+        List<PathPlannerTrajectory> trajs = command.trajectories;
+        Trajectory autoPath = trajs.get(0);
+        for(int index = 1; index < trajs.size(); index++) {
+            autoPath = autoPath.concatenate(trajs.get(index));
+        }
+        Logger.getInstance().recordOutput("Auto Path", autoPath);
+        return command;
     }
 
 }

@@ -207,6 +207,7 @@ public class SwerveDrive extends SubsystemBase {
       Logger.getInstance().recordOutput("SwerveModuleStates/Subsystem", moduleStates);
     }
     m_aprilCameraOne.updateCameraPos(getHeadingRotation2d(), getModulePositions(), getPoseMeters());
+    Logger.getInstance().recordOutput("Estimator Pose", m_aprilCameraOne.getPose());
     // kDriveKinematics, getHeadingRotation2d(), getModulePositions(),
     // getPoseMeters()
   }
