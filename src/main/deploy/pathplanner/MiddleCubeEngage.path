@@ -39,9 +39,11 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -114,10 +116,10 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "AutoBalance"
+          "intakeCube"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -150,44 +152,5 @@
   "maxVelocity": 4.41,
   "maxAcceleration": 2.2,
   "isReversed": null,
-  "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "event",
-        "scoreCube"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 0.9890909090908441,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 2.705454545454498,
-      "names": [
-        "Picks up an new cone or cube"
-      ]
-    },
-    {
-      "position": 3.985454545454484,
-      "names": [
-        "event",
-        "AutoBalance"
-      ]
-    },
-    {
-      "position": 0.029090909090899158,
-      "names": [
-        "ScoreCube"
-      ]
-    }
-  ]
+  "markers": []
 }

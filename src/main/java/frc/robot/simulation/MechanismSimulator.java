@@ -40,9 +40,6 @@ public class MechanismSimulator {
     private static double manipulatorZOffset;
     private static double manipulatorXOffset = 0;
 
-    
-
-
     /**
      * Simulates the arm and elevator systems in simulation, in a 2d window.
      * 
@@ -56,13 +53,11 @@ public class MechanismSimulator {
         this.intake = intake;
         this.swerve = swerve;
 
-        manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.armLength;
-        manipulatorZOffset = Math.sin(arm.getPosition()) * ArmSubsystem.armLength;
+        manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
+        manipulatorZOffset = Math.sin(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
 
         mech = new Mechanism2d(50, 50);
         root = mech.getRoot("robot", 20, 20);
-        
-
         
         // Adds elevator to the robot in simulation
         m_elevator =
@@ -100,7 +95,7 @@ public class MechanismSimulator {
                     )
             );
         
-        
+        // Adds intake to the root robot simulation
         m_intake =
             root.append(
                 new MechanismLigament2d(
@@ -117,7 +112,9 @@ public class MechanismSimulator {
     }
     
     /**
-     * Constantly updates current simulation angle to the display
+     * <h3>periodic</h3>
+     * 
+     * Constantly updates current simulation angle to the display and update the positions for Advantage Scope
      */
     public void periodic(){
         m_elevator.setLength(elevator.getElevatorPosition());
@@ -125,7 +122,7 @@ public class MechanismSimulator {
         m_hand.setAngle(manipulator.getPosition()-arm.getPosition());
         m_intake.setAngle(intake.getEncoderPosition());
 
-        // Advantage scope
+        // Elevator Position in Advantage Scope
         double[] elevatorPosition = {
             elevatorXOffset + swerve.getPose().getX(),
             elevatorYOffset + elevator.getElevatorPosition() + swerve.getPose().getY(),
@@ -135,7 +132,8 @@ public class MechanismSimulator {
             0,
             swerve.getHeadingDegrees()};
         Logger.getInstance().recordOutput("Elevator Position Advantage Scope", elevatorPosition);
-
+        
+        // Arm Position in Advantage Scope
         double[] armPosition = {
             armXOffset + swerve.getPose().getX(),
             armYOffset + swerve.getPose().getY() + elevator.getElevatorPosition(),
@@ -147,6 +145,7 @@ public class MechanismSimulator {
         };
         Logger.getInstance().recordOutput("Arm Position Advantage Scope", armPosition);
 
+        // Manipulator Position in Advantage Scope
         double[] manipulatorPosition = {
             manipulatorXOffset + swerve.getPose().getX(),
             manipulatorYOffset + elevator.getElevatorPosition() + swerve.getPose().getY(),

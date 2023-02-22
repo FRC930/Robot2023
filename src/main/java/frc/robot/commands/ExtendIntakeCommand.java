@@ -4,27 +4,33 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
 
-
+/**
+ * <h3>ExtendIntakeCommand</h3>
+ * 
+ * Extends or retracts the intake based on the given voltage
+ */
 public class ExtendIntakeCommand extends CommandBase{
-   private ExtendIntakeMotorSubsystem m_ExtendIntakeMotor;
+   private ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem;
    private double m_voltage;
     
 
     /**
      * <h3>ExtendIntakeCommand</h3>
-     * retracts and Extends the Intake
      * 
-     * @param voltage //gets voltage to determine speed and retract or Extend
+     * Extends or retracts the intake based on the given voltage
+     * 
+     * @param voltage Gets voltage to determine speed and retract or Extend
+     * @param extendIntakeMotorSubsystem Extend intake motor subsystem
      */
-    public ExtendIntakeCommand(int voltage, ExtendIntakeMotorSubsystem ExtendIntakeMotor){
+    public ExtendIntakeCommand(int voltage, ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem){
         m_voltage = voltage;
-        m_ExtendIntakeMotor = ExtendIntakeMotor;
-        addRequirements(m_ExtendIntakeMotor);
+        m_ExtendIntakeMotorSubsystem = extendIntakeMotorSubsystem;
+        addRequirements(m_ExtendIntakeMotorSubsystem);
         
     } 
      @Override
     public void initialize() {
-        m_ExtendIntakeMotor.setVoltage(m_voltage);
+        m_ExtendIntakeMotorSubsystem.setVoltage(m_voltage);
     }
 
     @Override
@@ -36,5 +42,4 @@ public class ExtendIntakeCommand extends CommandBase{
     public boolean isFinished(){ 
         return false;
     }
-
 }

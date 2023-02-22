@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// ----- IMPORTS ----- \\
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -30,7 +28,9 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.utilities.vision.estimation.CameraProperties;
 import frc.robot.utilities.vision.estimation.OpenCVHelp;
 import frc.robot.utilities.vision.estimation.PNPResults;
@@ -43,8 +43,6 @@ import frc.robot.utilities.vision.estimation.TargetModel;
  * OdometryUtility holds the cameras that we use for our aiming.
  */
 public class OdometryUtility {
-
-    // ----- CONSTANTS ----- \\
     // Used for simulation Must have photovision camera running network server (enable it)
     // IMPORTANT can not have turned on when on robot
     public static final boolean CONNECTED_PHOTOVISION_CAMERA = false;
@@ -59,6 +57,7 @@ public class OdometryUtility {
      * Position and rotation are accounting for the difference between the camera and the center of the robot
      * 
      */
+
     // Back camera constants
     private static final String BACK_CAMERA_NAME = "Camera5"; 
     private static final String BACK_CAMERA_IP_NAME = "10.9.30.35";
@@ -104,9 +103,8 @@ public class OdometryUtility {
     private static final double RIGHT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(0.0);
 
-    // ----- VARIABLES ----- \\
     // Three cameras on the robot, 2 in the front, 1 on the back
-    private final CameraOnRobot m_backCamera;
+    // private final CameraOnRobot m_backCamera;
     // private final CameraOnRobot m_rightCamera;
     // private final CameraOnRobot m_leftCamera;
 
@@ -118,36 +116,38 @@ public class OdometryUtility {
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
     //TODO Bumped up to 0.5 for testing, please put back down
     private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(0.5));
+    // Confidence level, 0 means that we have 100% confidence in the camera values and it won't trust odometry positions
     private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(45));
 
     private AprilTagFieldLayout tagLayout;
 
     private List<CameraOnRobot> cameras;
 
-    // ----- CONSTRUCTOR ----- \\
     /**
      * <h3>OdometryUtility</h3>
      * 
      * This contstructs an april tag version of the photonvision
      * 
-     * Parameters used for the pose estimator
      * @param swerveDriveKinematics class used to convert the velocity of the robot chassis to module states like speed and angle
      * @param rotation used to represent a rotation of the robot for the pose estimator
      * @param swerveModulePositions used to represent the states of the swerve modules
      * @param position used to represent a Pose2D of the robot for the pose estimator
      */
-    public OdometryUtility(SwerveDriveKinematics swerveDriveKinematics, Rotation2d rotation, SwerveModulePosition[] swerveModulePositions, Pose2d position) {
+    public OdometryUtility(SwerveDriveKinematics swerveDriveKinematics, Rotation2d rotation, 
+                           SwerveModulePosition[] swerveModulePositions, Pose2d position) {
 
         m_swerveDriveKinematics = swerveDriveKinematics;
         m_rotation = rotation;
         m_swerveModulePositions = swerveModulePositions;
         m_position = position;
+
         try {
             tagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
         } catch (IOException e) {
             DriverStation.reportWarning("Unable to load ChargedUp AprilTag resource file" + 
                                         AprilTagFields.k2023ChargedUp.m_resourceFile, e.getStackTrace());
         }
+
         m_PoseEstimator = new SwerveDrivePoseEstimator(
             m_swerveDriveKinematics,
             m_rotation,
@@ -158,20 +158,20 @@ public class OdometryUtility {
         );
 
         // Creates the cameras
-        m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
-                                        BACK_CAMERA_IP_NAME, 
-                                        BACK_CAMERA_PIPELINE, 
-                                        BACK_CAMERA_PORT_TO_FORWARD,
-                                        BACK_CAMERA_CONFIG_FILE,
-                                        BACK_CAMERA_RESOLUTION_WIDTH,
-                                        BACK_CAMERA_RESOLUTION_HEIGHT,
-                                        BACK_CAMERA_POSITION_X,
-                                        BACK_CAMERA_POSITION_Y,
-                                        BACK_CAMERA_POSITION_Z,
-                                        BACK_CAMERA_ROTATION_ROLL,
-                                        BACK_CAMERA_ROTATION_PITCH,
-                                        BACK_CAMERA_ROTATION_YAW
-                                        );
+        // m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
+        //                                 BACK_CAMERA_IP_NAME, 
+        //                                 BACK_CAMERA_PIPELINE, 
+        //                                 BACK_CAMERA_PORT_TO_FORWARD,
+        //                                 BACK_CAMERA_CONFIG_FILE,
+        //                                 BACK_CAMERA_RESOLUTION_WIDTH,
+        //                                 BACK_CAMERA_RESOLUTION_HEIGHT,
+        //                                 BACK_CAMERA_POSITION_X,
+        //                                 BACK_CAMERA_POSITION_Y,
+        //                                 BACK_CAMERA_POSITION_Z,
+        //                                 BACK_CAMERA_ROTATION_ROLL,
+        //                                 BACK_CAMERA_ROTATION_PITCH,
+        //                                 BACK_CAMERA_ROTATION_YAW
+        //                                 );
         // m_leftCamera = new CameraOnRobot(LEFT_CAMERA_NAME, 
         //                                 LEFT_CAMERA_IP_NAME, 
         //                                 LEFT_CAMERA_PIPELINE, 
@@ -201,11 +201,39 @@ public class OdometryUtility {
         //                                 RIGHT_CAMERA_ROTATION_YAW
         //                                 );
 
-        cameras = List.of(m_backCamera);//, m_leftCamera, m_rightCamera);
-    }
-    
+        // cameras = List.of(m_backCamera);//, m_leftCamera, m_rightCamera);
+        cameras = List.of();
 
-    // ------ METHODS ------ \\
+       // Adjusts AprilTag position based on 0,0 based on alliance selection
+       setOriginBasedOnAlliance();
+    }
+
+    public void setOriginBasedOnAlliance() {
+
+        for(int i=1; i<9;i++) {
+            Optional<Pose3d> pose = tagLayout.getTagPose(i);
+            if(pose != null && !pose.isEmpty() )
+            {
+              SmartDashboard.putNumberArray("AprilTags/Before/"+i, LogUtil.toPoseArray3d(pose.get()));
+            }
+        }
+
+        AprilTagFieldLayout.OriginPosition originPos;
+        if(DriverStation.getAlliance() == Alliance.Blue) {
+            originPos = AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide;
+        } else {
+            originPos = AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide;
+        }
+        tagLayout.setOrigin(originPos);
+
+        for(int i=1; i<9;i++) {
+          Optional<Pose3d> pose = tagLayout.getTagPose(i);
+          if(pose != null && !pose.isEmpty() )
+          {
+            SmartDashboard.putNumberArray("AprilTags/After/"+i, LogUtil.toPoseArray3d(pose.get()));
+          }
+        }
+    }
 
     /**
      * <h3>getBackCamera</h3>
@@ -213,10 +241,10 @@ public class OdometryUtility {
      * Returns the PhotonCamera representing the back camera
      * 
      * @return a reference to the back camera
-     */
-    public PhotonCamera getBackCamera() { 
-        return m_backCamera.getPhotonCamera();
-    }
+    //  */
+    // public PhotonCamera getBackCamera() { 
+    //     return m_backCamera.getPhotonCamera();
+    // }
 
     /**
      * <h3>getLeftCamera</h3>
@@ -244,10 +272,10 @@ public class OdometryUtility {
      * <h3>updateCameraPos</h3>
      * 
      * Updates the position of the robot based on the april tag position
-     * @param pose2d
-     * @param swerveModulePositions
-     * @param rotation2d
      * 
+     * @param rotation2d Rotation of the camera in relation to the April Tag
+     * @param swerveModulePositions Positions of the swerve modules
+     * @param pose2d X and Y in relation to the April Tag
      */
     public void updateCameraPos(Rotation2d rotation2d, SwerveModulePosition[] swerveModulePositions, Pose2d pose2d) {
         m_PoseEstimator.update(rotation2d, swerveModulePositions);
@@ -255,6 +283,8 @@ public class OdometryUtility {
     }
     
    /**
+    * <h3>estimateCamPosePNP</h3>
+
      * Performs solvePNP using 3d-2d point correspondences to estimate the field-to-camera transformation.
      * If only one tag is visible, the result may have an alternate solution.
      * 
@@ -266,36 +296,38 @@ public class OdometryUtility {
      * @return The transformation that maps the field origin to the camera pose
      */
     public static PNPResults estimateCamPosePNP(
-            CameraProperties prop, List<TargetCorner> corners, List<AprilTag> knownTags) {
-        if(knownTags == null || corners == null ||
-                corners.size() != knownTags.size()*4 || knownTags.size() == 0) {
-            return new PNPResults();
-        }
-        // single-tag pnp
-        if(corners.size() == 4) {
-            var camToTag = OpenCVHelp.solvePNP_SQUARE(prop, TargetModel.kTag16h5.vertices, corners);
-            var bestPose = knownTags.get(0).pose.transformBy(camToTag.best.inverse());
-            var altPose = new Pose3d();
-            if(camToTag.ambiguity != 0) altPose = knownTags.get(0).pose.transformBy(camToTag.alt.inverse());
-            var o = new Pose3d();
-            return new PNPResults(
-                new Transform3d(o, bestPose),
-                new Transform3d(o, altPose),
-                camToTag.ambiguity, camToTag.bestReprojErr, camToTag.altReprojErr
-            );
-        }
-        // multi-tag pnp
-        else {
-            var objectTrls = new ArrayList<Translation3d>();
-            for(var tag : knownTags) objectTrls.addAll(TargetModel.kTag16h5.getFieldVertices(tag.pose));
-            var camToOrigin = OpenCVHelp.solvePNP_SQPNP(prop, objectTrls, corners);
-            // var camToOrigin = OpenCVHelp.solveTagsPNPRansac(prop, objectTrls, corners);
-            return new PNPResults(
-                camToOrigin.best.inverse(),
-                camToOrigin.alt.inverse(),
-                camToOrigin.ambiguity, camToOrigin.bestReprojErr, camToOrigin.altReprojErr);
-        }
+        CameraProperties prop, List<TargetCorner> corners, List<AprilTag> knownTags) {
+            if(knownTags == null || corners == null || corners.size() != knownTags.size()*4 || knownTags.size() == 0) {
+                return new PNPResults();
+            }
+
+            // single-tag pnp
+            if(corners.size() == 4) {
+                var camToTag = OpenCVHelp.solvePNP_SQUARE(prop, TargetModel.kTag16h5.vertices, corners);
+                var bestPose = knownTags.get(0).pose.transformBy(camToTag.best.inverse());
+                var altPose = new Pose3d();
+                if(camToTag.ambiguity != 0) altPose = knownTags.get(0).pose.transformBy(camToTag.alt.inverse());
+                var o = new Pose3d();
+                return new PNPResults(
+                    new Transform3d(o, bestPose),
+                    new Transform3d(o, altPose),
+                    camToTag.ambiguity, camToTag.bestReprojErr, camToTag.altReprojErr
+                );
+            }
+
+            // multi-tag pnp
+            else {
+                var objectTrls = new ArrayList<Translation3d>();
+                for(var tag : knownTags) objectTrls.addAll(TargetModel.kTag16h5.getFieldVertices(tag.pose));
+                var camToOrigin = OpenCVHelp.solvePNP_SQPNP(prop, objectTrls, corners);
+                // var camToOrigin = OpenCVHelp.solveTagsPNPRansac(prop, objectTrls, corners);
+                return new PNPResults(
+                    camToOrigin.best.inverse(),
+                    camToOrigin.alt.inverse(),
+                    camToOrigin.ambiguity, camToOrigin.bestReprojErr, camToOrigin.altReprojErr);
+            }
     }   
+
     /**
      * <h3>getPose</h3>
      * 
@@ -306,9 +338,11 @@ public class OdometryUtility {
     public Pose2d getPose() {
         return m_PoseEstimator.getEstimatedPosition();
     }
+
     /**
      * <h3> updateCameraPositions </h3>
-     *  Updates the swerve estimated pose based on the position camera detections of April Tags
+     * 
+     * Updates the swerve estimated pose based on the position camera detections of April Tags
      */
     public void updateCameraPositions() {
         SmartDashboard.putNumberArray("RobotPose", LogUtil.toPoseArray2d(getPose()));
@@ -331,20 +365,20 @@ public class OdometryUtility {
   
                 Optional<Pose3d> unknownTag = this.tagLayout.getTagPose(fiducialId); 
 
-            if(!unknownTag.isEmpty()){
-                corners.addAll(target.getDetectedCorners());
-                foundTags.add(new AprilTag(
-                    fiducialId,
-                    unknownTag.get()
-                ));
-            }
-        });
+                if(!unknownTag.isEmpty()){
+                    corners.addAll(target.getDetectedCorners());
+                    foundTags.add(new AprilTag(
+                        fiducialId,
+                        unknownTag.get()
+                    ));
+                }
+            });
     
             if (targets.size() > 0) {
     
+                final Transform3d robotToCameraPose = cameras.get(i).getRobotToCameraPose();
                 CameraProperties cameraProp = cameras.get(i).getCameraProp();
                 PNPResults pnpResults = OdometryUtility.estimateCamPosePNP(cameraProp, corners, foundTags);;
-                final Transform3d robotToCameraPose = cameras.get(i).getRobotToCameraPose();
     
                 SmartDashboard.putNumber(camera.getName() + "/multi/ambiguity", pnpResults.ambiguity);
                 SmartDashboard.putNumber(camera.getName() + "/multi/bestErr", pnpResults.bestReprojErr);
@@ -366,7 +400,8 @@ public class OdometryUtility {
     /**
      * <h3>addVisionMeasurement</h3>
      * 
-     * Updates the swerve pose estimator based on the vision latency 
+     * Updates the swerve pose estimator based on the vision latency
+     *  
      * @param measurement the estimated Pose2d
      * @param latencySeconds time the camera lags
      */

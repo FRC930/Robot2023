@@ -5,22 +5,32 @@ import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class RunManipulatorRollerCommand extends CommandBase{
 
-    private double ROLLER_SPEED = 0.1;
+    private double m_rollerSpeed;
 
-    private ManipulatorSubsystem manipulator;
+    private ManipulatorSubsystem m_manipulator;
 
     /**
-     * Runs the rollers on the manipulator until voltage spikes.
+     * <h3>RunManipulatorRollerCommand</h3>
      * 
+     * Runs the rollers on the manipulator until voltage spikes.
      * @param manipulatorSubsystem The manipulator subsystem
+     * @param speed Desired speed of roller
      */
-    public RunManipulatorRollerCommand(ManipulatorSubsystem manipulatorSubsystem, double ROLLER_SPEED) {
-        manipulator = manipulatorSubsystem;
-        this.ROLLER_SPEED = ROLLER_SPEED;
+    public RunManipulatorRollerCommand(ManipulatorSubsystem manipulatorSubsystem, double speed) {
+        m_manipulator = manipulatorSubsystem;
+        m_rollerSpeed = speed;
+        addRequirements(manipulatorSubsystem);
     }
 
     @Override
     public void initialize() {
-        manipulator.setRollerSpeed(ROLLER_SPEED);
+       m_manipulator.setRollerSpeed(m_rollerSpeed);
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
+    
 }

@@ -9,33 +9,41 @@ import frc.robot.subsystems.SwerveDrive;
 // TODO why keeping (swervedrive)
 public class RotationMathUtility {
     private SwerveDrive m_swerveDrive;
-    private double turningSpeed;
-    private double turningAngle;
+    private double m_turningSpeed;
+    private double m_turningAngle;
     private double m_angleOffset;
     
-    public double rotationSpeed(Pose2d currentPose2D, Pose2d m_targetPose2d, double robotHeading){
-        turningSpeed = 0.0;
+    /**
+     * Determines a desired spot on the field based on a given coordinate.
+     * 
+     * @param currentPose2D - Current location on the field
+     * @param targetPose2d - Desired location on the field
+     * @param robotHeading - Current heading of the robot
+     * @return Speed at which to rotate
+     */
+    public double rotationSpeed(Pose2d currentPose2D, Pose2d targetPose2d, double robotHeading){
+        m_turningSpeed = 0.0;
         m_angleOffset = currentPose2D.getRotation().getRadians();
         //Finds the turning speed
         double cx = currentPose2D.getX();
         double cy = currentPose2D.getY();
-        double x = m_targetPose2d.getX();
-        double y = m_targetPose2d.getY();
+        double x = targetPose2d.getX();
+        double y = targetPose2d.getY();
 
         //Calculates the angle using atan2 and adjusting using the robots current position
         double calculatedheading = Math.atan2(y - cy, x - cx);
-        turningAngle = (calculatedheading - m_angleOffset);
+        m_turningAngle = (calculatedheading - m_angleOffset);
 
-        Logger.getInstance().recordOutput("RotateCommand/Angle1", turningAngle);
+        Logger.getInstance().recordOutput("RotateCommand/Angle1", m_turningAngle);
         //If turningAngle wants to turn to the right more than 180 degrees, it will turn that distance to the left
-        if (turningAngle > Math.PI) {
-            turningAngle = -1.0 * (Math.PI - (turningAngle - Math.PI));
+        if (m_turningAngle > Math.PI) {
+            m_turningAngle = -1.0 * (Math.PI - (m_turningAngle - Math.PI));
         }
-        Logger.getInstance().recordOutput("RotateCommand/Angle2", turningAngle);
+        Logger.getInstance().recordOutput("RotateCommand/Angle2", m_turningAngle);
         //Finds the turning speed
-        turningSpeed = -1.0 * MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(turningAngle, 0)), -1, 1);
+        m_turningSpeed = -1.0 * MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(m_turningAngle, 0)), -1, 1);
 
-        return turningSpeed;
+        return m_turningSpeed;
     }
     
 }

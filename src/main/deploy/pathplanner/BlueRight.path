@@ -16,9 +16,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "ScoreCube"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -41,9 +39,11 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreCone"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -116,9 +116,11 @@
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "intakeCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -126,16 +128,16 @@
     },
     {
       "anchorPoint": {
-        "x": 4.314118284174416,
-        "y": 1.05
+        "x": 4.382200832875275,
+        "y": 0.7089983937457166
       },
       "prevControl": {
-        "x": 5.11645819085032,
-        "y": 1.05
+        "x": 5.184540739551179,
+        "y": 0.7089983937457166
       },
       "nextControl": {
-        "x": 3.5117783774985103,
-        "y": 1.05
+        "x": 3.579860926199369,
+        "y": 0.7089983937457166
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -165,7 +167,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -175,18 +179,5 @@
   "maxVelocity": 4.41,
   "maxAcceleration": 2.2,
   "isReversed": null,
-  "markers": [
-    {
-      "position": 1.0472727272727171,
-      "names": [
-        "scoreCone"
-      ]
-    },
-    {
-      "position": 3.9709090909088927,
-      "names": [
-        "intakeCube"
-      ]
-    }
-  ]
+  "markers": []
 }

@@ -3,31 +3,27 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
 
 /**
-     * <h3>AutoBalanceCommand</h3>
-     * 
-     * Balances the robot on the Charging Station
-     * 
-     */
+ * <h3>AutoBalanceCommand</h3>
+ * 
+ * Balances the robot on the Charging Station
+ * 
+ */
 public class AutoBalanceCommand extends CommandBase {
     
-    private final double maxSpeed = 0.2;
+    private final double MAX_SPEED = 0.2;
+    private final double STRAFE = 0.0;
+    private final double ROTATION = 0.0;
+    private final boolean IS_FIELD_RELATIVE = true;
+    private final boolean IS_OPEN_LOOP = true;
 
     private SwerveDrive m_swerveDrive;
 
-    private Rotation2d robotPitch;
-    
-    private double robotPitchInDegrees;
-
-    private double throttle;
-    private double strafe;
-    private double rotation;
-    private boolean isFieldRelative;
-    private boolean isOpenLoop;
+    private double m_robotPitchInDegrees;
+    private double m_throttle;
 
     /**
      * <h3>AutoBalanceCommand</h3>
@@ -39,38 +35,31 @@ public class AutoBalanceCommand extends CommandBase {
     public AutoBalanceCommand(SwerveDrive swerveDrive) {
         m_swerveDrive = swerveDrive;
         addRequirements(m_swerveDrive);
-        robotPitchInDegrees = 0.0;
-        throttle = 0.0;
-        strafe = 0.0;
-        rotation = 0.0;
-        isFieldRelative = true;
-        isOpenLoop = true;
-    }
-
-    @Override
-    public void initialize() {
-        
+        m_robotPitchInDegrees = 0.0;
+        m_throttle = 0.0;
     }
 
     @Override
     public void execute() {
-        robotPitch = m_swerveDrive.getPitch();
-        robotPitchInDegrees = robotPitch.getDegrees();
+        // Get pitch in degrees from swerve drive subsystem
+        m_robotPitchInDegrees = m_swerveDrive.getPitch().getDegrees();
 
+        // Gets percentage of max speed to set swerve drive to
         double tempSpeed = 0.0;
-        tempSpeed = MathUtil.clamp(m_swerveDrive.getAutoPitchController().calculate(robotPitchInDegrees/15, 0), -1, 1);
+        tempSpeed = MathUtil.clamp(m_swerveDrive.getAutoPitchController().calculate(m_robotPitchInDegrees/15, 0), -1, 1);
 
-        Logger.getInstance().recordOutput("AutoBalanceCommand/robotPitch", robotPitchInDegrees);
-        Logger.getInstance().recordOutput("AutoBalanceCommand/speed", tempSpeed);
+        // Logs values to advantage kit
+        Logger.getInstance().recordOutput("AutoBalanceCommand/RobotPitch", m_robotPitchInDegrees);
+        Logger.getInstance().recordOutput("AutoBalanceCommand/Speed", tempSpeed);
         
-        throttle = tempSpeed * maxSpeed;
-
-        m_swerveDrive.drive(throttle, strafe, rotation, isFieldRelative, isOpenLoop);
+        // Sets drive to throttle
+        m_throttle = tempSpeed * MAX_SPEED;
+        m_swerveDrive.drive(m_throttle, STRAFE, ROTATION, IS_FIELD_RELATIVE, IS_OPEN_LOOP);
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return false; // Shouldn't end until switched to teleop
     }
 
 }

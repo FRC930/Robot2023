@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCommand {
 
 
-    //TODO tune the value
+    // TODO tune the value
     private static final double DELTA_X = Units.inchesToMeters(3.15);
     private static final double DELTA_Y = Units.inchesToMeters(3.15);
 
@@ -65,19 +65,25 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
     @Override
     public void initialize() {
         Pose2d currentPose = super.poseSupplier.get();
-        Rotation2d curRotation = currentPose.getRotation();
+        double x1 = currentPose.getX();
+        double y1 = currentPose.getY();
+        double x2 = m_targetPose.getX();
+        double y2 = m_targetPose.getY();
+        Rotation2d angle = Rotation2d.fromDegrees(Math.atan2( y2 - y1, x2 - x1 ) * ( 180 / Math.PI ));
 
         // The pathpoint is the starting and ending positions of the robot
-        PathPoint currentPathPoint = new PathPoint(currentPose.getTranslation(),curRotation);
-        PathPoint targetPathPoint = new PathPoint(m_targetPose.getTranslation(),m_targetPose.getRotation());
-
+        PathPoint currentPathPoint = new PathPoint(currentPose.getTranslation(),angle);
+        PathPoint targetPathPoint = new PathPoint(m_targetPose.getTranslation(),angle, m_targetPose.getRotation());
+        
+        //TODO May want to add a midpoint to avoid charging station (one to the left or right) 
         PathConstraints pathConstraints = new PathConstraints(MAX_SPEED, MAX_ACCELERATION);
         super.trajectory = PathPlanner.generatePath(pathConstraints, false, currentPathPoint, targetPathPoint);        
         super.initialize();
     }
 
-    /*
-     * <h3> isFinished <h3>
+    /**
+     * <h3>isFinished<h3>
+     * 
      * Stopping the command if the robot is within a range of the target
      * 
      */
@@ -88,10 +94,9 @@ public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCom
         Pose2d currentPose = super.poseSupplier.get();
         if(currentPose != null) {
             Transform2d deltaPose = currentPose.minus(m_targetPose);
-            //If the robot is within a range of the target only using X and Y coordinates
+            // If the robot is within a range of the target only using X and Y coordinates the command finishes
             if(Math.abs(deltaPose.getX())<= DELTA_X 
-                && Math.abs(deltaPose.getY())<= DELTA_Y 
-            ) {
+                && Math.abs(deltaPose.getY())<= DELTA_Y) {
                 isfinish = true;
             }  
         }
