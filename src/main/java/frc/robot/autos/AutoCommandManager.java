@@ -143,7 +143,7 @@ public class AutoCommandManager {
     * @param defaultValue
     * @return pidValue
     */
-    private static double usePIDValueOrTune(String key, double defaultValue) {
+    public static double usePIDValueOrTune(String key, double defaultValue) {
         double pidValue;
         if(TUNE_PID) {
             pidValue = Preferences.getDouble(key, defaultValue);
