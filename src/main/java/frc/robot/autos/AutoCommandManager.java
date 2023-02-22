@@ -114,6 +114,8 @@ public class AutoCommandManager {
         Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
         Command ScoreHighCone = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
         Command ScoreMidCone = new PathPlannerCommand(s_SwerveDrive, "ScoreMidCone", eventCommandMap);
+        Command TwoConeEngageBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeEngageBump", eventCommandMap);
+        Command ThreeConeBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeBump", eventCommandMap);
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
@@ -123,6 +125,8 @@ public class AutoCommandManager {
         m_chooser.addOption("score cone grab cone balance", BlueLeftBalanceCommand);
         m_chooser.addOption("Engage Charging Station", ChargeStationcommand);
         m_chooser.addOption("MiddleCubeEngagecommand", MiddleCubeEngagecommand);
+        m_chooser.addOption("TwoConeEngageBump", TwoConeEngageBumpCommand);
+        m_chooser.addOption("ThreeConeBump", ThreeConeBumpCommand);
 
         m_chooser.addOption(isBlue ? "BlueRightCommand" : "RedLeftCommand", BlueRightCommand);
         m_chooser.addOption(isBlue ? "BlueLeftCone" : "RedRightCone", BlueLeftCone);
@@ -143,7 +147,7 @@ public class AutoCommandManager {
     * @param defaultValue
     * @return pidValue
     */
-    private static double usePIDValueOrTune(String key, double defaultValue) {
+    public static double usePIDValueOrTune(String key, double defaultValue) {
         double pidValue;
         if(TUNE_PID) {
             pidValue = Preferences.getDouble(key, defaultValue);
