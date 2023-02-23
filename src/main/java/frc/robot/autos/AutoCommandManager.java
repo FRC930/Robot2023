@@ -106,33 +106,50 @@ public class AutoCommandManager {
         //Autonomous Commands
         TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
         Command taxiOneBallAutoBuildCommand = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
-        Command BlueLeftBalanceCommand = new PathPlannerCommand(s_SwerveDrive, "BlueLeftConeBalance", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
-        Command ChargeStationcommand = new PathPlannerCommand(s_SwerveDrive, "ChargingStation", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
-        Command MiddleCubeEngagecommand = new PathPlannerCommand(s_SwerveDrive, "MiddleCubeEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
-        Command BlueRightCommand = new PathPlannerCommand(s_SwerveDrive, "BlueRight", eventCommandMap);
-        Command BlueLeftCone = new PathPlannerCommand(s_SwerveDrive, "BlueLeftCone", eventCommandMap);
-        Command BlueLeft = new PathPlannerCommand(s_SwerveDrive, "BlueLeft", eventCommandMap);
-        Command ScoreHighCone = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
-        Command ScoreMidCone = new PathPlannerCommand(s_SwerveDrive, "ScoreMidCone", eventCommandMap);
-        Command TwoConeEngageBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeEngageBump", eventCommandMap);
-        Command ThreeConeBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeBump", eventCommandMap);
+        Command MidScoreEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command BumpSide1ConeCommand = new PathPlannerCommand(s_SwerveDrive, "BumpSide1Cone", eventCommandMap);
+        Command BumpSide2ConeCommand = new PathPlannerCommand(s_SwerveDrive, "BumpSide2Cone", eventCommandMap);
+        Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command NoBump1ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump1Cone", eventCommandMap);
+        Command NoBump2ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump2Cone", eventCommandMap);
+        Command MidPickUpEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidPickUpEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command ScoreHighConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
+        Command ScoreMidConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreMidCone", eventCommandMap);
+        Command ThreeConeNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeNoBump", eventCommandMap);
+        Command ThreeConeBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command TwoConeBalanceNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeBalanceNoBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));   
+        Command TwoConeEngageBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeEngageBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        
+    
+
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
         m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
-        m_chooser.addOption("score cone grab cone balance", BlueLeftBalanceCommand);
-        m_chooser.addOption("Engage Charging Station", ChargeStationcommand);
-        m_chooser.addOption("MiddleCubeEngagecommand", MiddleCubeEngagecommand);
+        m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
+        m_chooser.addOption("ScoreMidCone", ScoreMidConeCommand);
+
         m_chooser.addOption("TwoConeEngageBump", TwoConeEngageBumpCommand);
         m_chooser.addOption("ThreeConeBump", ThreeConeBumpCommand);
+        m_chooser.addOption("twoConeEngageNoBump",TwoConeBalanceNoBumpCommand);
+        m_chooser.addOption("TwoConeBalanceNoBump", TwoConeBalanceNoBumpCommand);
+        m_chooser.addOption("MidScoreEngage", MidScoreEngageCommand);
+        m_chooser.addOption("BumpSide1Cone", BumpSide1ConeCommand);
+        m_chooser.addOption("BumpSide2Cone", BumpSide2ConeCommand);
+        m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
+        m_chooser.addOption("NoBump1Cone", NoBump1ConeCommand);
+        m_chooser.addOption("NoBump2Cone", NoBump2ConeCommand);
+        m_chooser.addOption("MidPickUpEngage",MidPickUpEngageCommand);
+        m_chooser.addOption("ThreeConeNoBump",ThreeConeNoBumpCommand);
+        m_chooser.addOption("MidScoreTwoEngage", MidScoreTwoEngageCommand);
 
-        m_chooser.addOption(isBlue ? "BlueRightCommand" : "RedLeftCommand", BlueRightCommand);
-        m_chooser.addOption(isBlue ? "BlueLeftCone" : "RedRightCone", BlueLeftCone);
-        m_chooser.addOption(isBlue ? "BlueLeft" : "RedRight", BlueLeft);
-        m_chooser.addOption("ScoreHighCone", ScoreHighCone);
-        m_chooser.addOption("ScoreMidCone", ScoreMidCone);
+
+
+
+        
         
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
