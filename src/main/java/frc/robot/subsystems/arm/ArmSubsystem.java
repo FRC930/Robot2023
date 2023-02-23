@@ -7,6 +7,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -38,7 +40,7 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO armIO) {
 
         // Sets up PID controller
-        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(90, 360));
+        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(225, 360));
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 
@@ -98,6 +100,10 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double getPosition(){
         return m_armIO.getCurrentAngleDegrees();
+    }
+
+    public Command setArmPositionCommand(double degrees) {
+        return new InstantCommand(() -> setPosition(degrees), this);
     }
 
 }

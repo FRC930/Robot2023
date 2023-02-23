@@ -7,6 +7,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -33,7 +35,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         // Sets up PID controller TODO: Change these values
         //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
-        controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(180, 720));
+        controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
 
         // Sets up Feetforward TODO: Change these values
@@ -67,7 +69,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
 
             effort += feedforward;
-            effort = MathUtil.clamp(effort, -6, 6);
+            effort = MathUtil.clamp(effort, -8, 8);
 
             m_io.setVoltage(effort);
             
@@ -97,6 +99,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public double getPosition(){
         return m_io.getCurrentAngleDegrees();
     }
+
     /**<h3>getRollerVoltage</h3>
      * Gets the voltage of the roller
      * @return getRollerVolate
@@ -104,6 +107,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public double getRollerVoltage() {
         return m_io.getRollerVoltage();
     }
+
     /**<h3>getRollerSpeed</h3>
      * Sets the roller speed
      * @return setRollerSpeed
@@ -112,4 +116,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
         m_io.setRollerSpeed(speed);
     }
 
+    public Command setWristPositionCommand(double degrees) {
+        return new InstantCommand(() -> setPosition(degrees), this);
+    }
 }
