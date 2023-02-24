@@ -13,6 +13,7 @@ public class LEDCommand extends CommandBase {
 
     private LedPatterns m_pattern;
     private LEDsubsystem m_LEDSubsystem;
+    private boolean m_canRunDisabled = false;
 
     public static enum LedPatterns{
         CONEREQUEST,
@@ -36,7 +37,11 @@ public class LEDCommand extends CommandBase {
     public LEDCommand(LEDsubsystem ledSubsystem, LedPatterns pattern){
         m_pattern = pattern;
         m_LEDSubsystem = ledSubsystem;
-        addRequirements (m_LEDSubsystem);
+        addRequirements(m_LEDSubsystem);
+
+        if(pattern == LedPatterns.DISABLED){
+            m_canRunDisabled = true;
+        }
     }
     /**
      * <h3>end</h3>
@@ -86,6 +91,12 @@ public class LEDCommand extends CommandBase {
                 break;
 
         }
+    }
+
+    
+    @Override
+    public boolean runsWhenDisabled() {
+        return m_canRunDisabled;
     }
     /**
      * <h3>isFinished</h3>

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.utilities.TargetScorePositionUtility;
@@ -19,9 +20,11 @@ import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -254,8 +257,8 @@ public class RobotContainer {
     m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.60));
     m_fieldSim.initSim();
-    m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
-    m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
+    //m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
+    //m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
     //stow arm position as default
   }
 
@@ -300,8 +303,7 @@ public class RobotContainer {
     m_codriverController.povDown().toggleOnTrue(m_GroundArmPosition);
   
     //Cube and Cone selector
-    m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
-    m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
+    
   }
 
   /**
@@ -320,6 +322,8 @@ public class RobotContainer {
   }
 
   public void disabledInit() {
+    CommandScheduler.getInstance().schedule(m_RunDisabledLEDPattern);
+    SmartDashboard.putData(m_RunDisabledLEDPattern);
   }
  
   private void configureButtonBindings_backup() {
@@ -414,6 +418,12 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings_sussex() {
+
+    m_driverController.x().whileTrue(m_RunConeAquiredLEDPattern);
+    m_driverController.b().whileTrue(m_RunConeRequestLEDPattern);
+    m_driverController.y().whileTrue(m_RunDisabledLEDPattern);
+    m_driverController.a().whileTrue(m_RunRandomLEDPattern);
+
     // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
     //                         // .onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
     //                         .onFalse(m_StowArmPosition);
