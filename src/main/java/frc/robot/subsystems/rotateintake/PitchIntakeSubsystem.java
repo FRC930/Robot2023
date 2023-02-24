@@ -61,5 +61,6 @@ public class PitchIntakeSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         this.m_RotateIntakerollerMotorIO.updateInputs();
+        Logger.getInstance().recordOutput("AutoBalanceCommand/currentPosition", getEncoderPosition());
     }
 }
