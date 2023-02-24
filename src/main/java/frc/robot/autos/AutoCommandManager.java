@@ -119,7 +119,7 @@ public class AutoCommandManager {
         Command ThreeConeBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
         Command TwoConeBalanceNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeBalanceNoBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));   
         Command TwoConeEngageBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeEngageBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
-        Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        //Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
         
     
 
@@ -144,7 +144,7 @@ public class AutoCommandManager {
         m_chooser.addOption("NoBump2Cone", NoBump2ConeCommand);
         m_chooser.addOption("MidPickUpEngage",MidPickUpEngageCommand);
         m_chooser.addOption("ThreeConeNoBump",ThreeConeNoBumpCommand);
-        m_chooser.addOption("MidScoreTwoEngage", MidScoreTwoEngageCommand);
+        //m_chooser.addOption("MidScoreTwoEngage", MidScoreTwoEngageCommand);
 
 
 
