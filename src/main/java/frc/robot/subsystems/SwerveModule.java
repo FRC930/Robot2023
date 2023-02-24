@@ -4,10 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
-
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -41,17 +37,14 @@ public class SwerveModule extends SubsystemBase {
   public static final double kMaxModuleAngularSpeedRadiansPerSecond = 180; // 2 * Math.PI; last year 930 used 180
   public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 180; // 2 * Math.PI; last year 930
                                                                                          // used 180
-  public static final double ksDriveVoltSecondsPerMeter = 0.667 / 12; // TODO
-  public static final double kvDriveVoltSecondsSquaredPerMeter = 2.44 / 12; // TODO
-  public static final double kaDriveVoltSecondsSquaredPerMeter = 0.27 / 12; // TODO
-  public static final double kvTurnVoltSecondsPerRadian = 1.47; // originally 1.5 //TODO REMOVE
-  public static final double kaTurnVoltSecondsSquaredPerRadian = 0.348; // originally 0.3 //TODO REMOVEE
+  
   // Verified Values
   // https://www.swervedrivespecialties.com/collections/kits/products/mk4i-swerve-module?variant=39598777303153
   public static final double kDriveMotorGearRatio = 6.75; // MK4i L2 Neo
   public static final double kTurningMotorGearRatio = 150.0 / 7.0; // MK4i turning ratio MK4i Neo
   public static final int kNeoCPR = 42;
   public static final int kNeoRPM = 5676;
+
   public static final double kDriveRevToMeters = ((kWheelDiameterMeters * Math.PI) / kDriveMotorGearRatio);
   public static final double kDriveRpmToMetersPerSecond = kDriveRevToMeters / 60.0;
   public static final double kTurnRotationsToDegrees = 360.0 / kTurningMotorGearRatio;
@@ -78,17 +71,12 @@ public class SwerveModule extends SubsystemBase {
   private double m_simAngleDifference;
   private double m_simTurnAngleIncrement;
   private int m_moduleNumber;
-  private Pose2d m_pose;
+  // private Pose2d m_pose;
 
   /**
    * Constructs a SwerveModule.
    *
-   * @param driveMotorChannel      The channel of the drive motor.
-   * @param turningMotorChannel    The channel of the turning motor.
-   * @param driveEncoderChannels   The channels of the drive encoder.
-   * @param turningEncoderChannels The channels of the turning encoder.
-   * @param driveEncoderReversed   Whether the drive encoder is reversed.
-   * @param turningEncoderReversed Whether the turning encoder is reversed.
+   * @param swerveModuleConstants     Swerve modules constants to setup swerve module
    */
   public SwerveModule(SwerveModuleConstants swerveModuleConstants) {
     m_driveMotor = new CANSparkMax(swerveModuleConstants.driveMotorChannel, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -201,27 +189,12 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-    // TODO re-enable optimize once swerve module is working
     desiredState = RevUtils.optimize(desiredState, getHeadingRotation2d());
-
-    // Logs information about the robot with AdvantageScope
-    double velocityRadPerSec = desiredState.speedMetersPerSecond
-        / ((kWheelDiameterMeters / 2) * kDriveMotorGearRatio * (2 * Math.PI));
-    Logger.getInstance().recordOutput(
-        "SwerveSetPointValue/DriveRadSec/" + Integer.toString(getModuleNumber()),
-        velocityRadPerSec);
-    Logger.getInstance().recordOutput(
-        "SwerveSetPointValue/DriveRadMin/" + Integer.toString(getModuleNumber()),
-        velocityRadPerSec * 60.0);
-    Logger.getInstance().recordOutput(
-        "SwerveSetPointValue/DriveM/" + Integer.toString(getModuleNumber()),
-        desiredState.speedMetersPerSecond);
 
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / kMaxSpeedMetersPerSecond;
       m_driveMotor.set(percentOutput);
     } else {
-      // TODO currently doesn't work
       int DRIVE_PID_SLOT = RobotBase.isReal() ? VEL_SLOT : SIM_SLOT;
       m_driveController.setReference(
           desiredState.speedMetersPerSecond,
@@ -234,20 +207,8 @@ public class SwerveModule extends SubsystemBase {
         : desiredState.angle.getDegrees(); // Prevent rotating module if speed is less than 1%. Prevents Jittering.
     angle = desiredState.angle.getDegrees();
     m_turnController.setReference(angle, CANSparkMax.ControlType.kPosition, POS_SLOT);
-    // TODO REVExample was missing this line (m_angle did not make sense
-    // otherwise)!!!
+    // REVExample was missing this line (m_angle did not make sense otherwise)!!!
     m_lastAngle = angle;
-    Logger.getInstance().recordOutput(
-        "SwerveSetPointValue/TurnD/" + Integer.toString(getModuleNumber()),
-        (angle));
-    Logger.getInstance().recordOutput(
-        "SwerveSetPointValue/TurnDC/" + Integer.toString(getModuleNumber()),
-        (m_angleEncoder.getAbsolutePosition()));
-
-    // Logs information about the robot with AdvantageScope
-    Logger.getInstance().recordOutput(
-        "SwerveSetPointValue/Turn/" + Integer.toString(getModuleNumber()),
-        Units.degreesToRadians(angle));
 
     if (RobotBase.isSimulation()) {
       simUpdateDrivePosition(desiredState);
@@ -289,15 +250,15 @@ public class SwerveModule extends SubsystemBase {
     return SwerveDrive.kDriveKinematics;
   }
 
-  // TODO NOT SURE WHAT FOR m_pose never gotten
-  public void setModulePose(Pose2d pose) {
-    m_pose = pose;
-  }
+  // // TODO NOT SURE WHAT FOR m_pose never gotten
+  // public void setModulePose(Pose2d pose) {
+  //   m_pose = pose;
+  // }
 
-  // TODO NOT SURE WHAT FOR
-  public Pose2d getModulePose() {
-    return m_pose;
-  }
+  // // TODO NOT SURE WHAT FOR
+  // public Pose2d getModulePose() {
+  //   return m_pose;
+  // }
 
   @Override
   public void simulationPeriodic() {

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
@@ -34,6 +35,8 @@ public class RotateCommand extends CommandBase {
     private double m_x;
     private double m_y;
 
+    private PIDController m_thetaController;
+
     /**
      * <h3>RotateCommand</h3>
      * 
@@ -56,6 +59,10 @@ public class RotateCommand extends CommandBase {
         m_angleOffset = 0.0;
         m_turningAngle = 0.0;
         m_calculatedHeading = 0.0;
+
+        // TODO: determine PID values
+        m_thetaController = new PIDController(0.0, 0.0, 0.0);
+
     }
 
     @Override
@@ -83,7 +90,7 @@ public class RotateCommand extends CommandBase {
         Logger.getInstance().recordOutput("RotateCommand/Angle2", m_turningAngle);
 
         // Finds the turning speed
-        m_turningSpeed = -1.0 * MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(m_turningAngle, 0.0)), -1.0, 1.0);
+        m_turningSpeed = -1.0 * MathUtil.clamp((m_thetaController.calculate(m_turningAngle, 0.0)), -1.0, 1.0);
 
         // Logs information regarding the command
         Logger.getInstance().recordOutput("RotateCommand/cx", m_cx);

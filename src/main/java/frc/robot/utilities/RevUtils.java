@@ -8,15 +8,26 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.autos.AutoCommandManager;
 
 // TODO Move used code to swerve module
 public final class RevUtils {
+  public static final double kFFDrive = AutoCommandManager.usePIDValueOrTune("kDriveFF", 0.0);
+  public static final double kPDrive = AutoCommandManager.usePIDValueOrTune("kDriveP", 0.01);
+  public static final double kIDrive = AutoCommandManager.usePIDValueOrTune("kDriveI", 0.0);
+  public static final double kDDrive = AutoCommandManager.usePIDValueOrTune("kDriveD", 0.0);
+
+  public static final double kFFTurn = AutoCommandManager.usePIDValueOrTune("kTurnFF", 0.0);
+  public static final double kPTurn = AutoCommandManager.usePIDValueOrTune("kTurnP", 0.032);
+  public static final double kITurn = AutoCommandManager.usePIDValueOrTune("kTurnI", 0.0);
+  public static final double kDTurn = AutoCommandManager.usePIDValueOrTune("kTurnD", 0.02);
+
   public static void setTurnMotorConfig(CANSparkMax motorController) {
     // TODO Tune Manually
-    motorController.getPIDController().setFF(0.0);
-    motorController.getPIDController().setP(0.032);
-    motorController.getPIDController().setI(0.0);
-    // motorController.getPIDController().setD(0.02);
+    motorController.getPIDController().setFF(kFFTurn);
+    motorController.getPIDController().setP(kDTurn);
+    motorController.getPIDController().setI(kITurn);
+    motorController.getPIDController().setD(kDTurn);
 
     // TODO Help reduce CAN utilization
     motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
@@ -28,10 +39,10 @@ public final class RevUtils {
 
   public static void setDriveMotorConfig(CANSparkMax motorController) {
     // TODO TUNE
-    motorController.getPIDController().setFF(0.0);
-    motorController.getPIDController().setP(0.1);
-    motorController.getPIDController().setI(0.0);
-    motorController.getPIDController().setD(0.0);
+    motorController.getPIDController().setFF(kFFDrive);
+    motorController.getPIDController().setP(kPDrive);
+    motorController.getPIDController().setI(kIDrive);
+    motorController.getPIDController().setD(kDDrive);
 
     // TODO Help reduce CAN utilization
     motorController.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 10);

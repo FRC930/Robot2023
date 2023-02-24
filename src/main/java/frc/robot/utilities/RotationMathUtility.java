@@ -3,6 +3,7 @@ package frc.robot.utilities;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.SwerveDrive;
 
@@ -12,6 +13,12 @@ public class RotationMathUtility {
     private double m_turningSpeed;
     private double m_turningAngle;
     private double m_angleOffset;
+    private PIDController m_thetaController;
+
+    public RotationMathUtility() {
+        // TODO: Determine PID values
+        m_thetaController = new PIDController(0.0, 0.0, 0.0);
+    }
     
     /**
      * Determines a desired spot on the field based on a given coordinate.
@@ -41,7 +48,7 @@ public class RotationMathUtility {
         }
         Logger.getInstance().recordOutput("RotateCommand/Angle2", m_turningAngle);
         //Finds the turning speed
-        m_turningSpeed = -1.0 * MathUtil.clamp((m_swerveDrive.getAutoThetaController().calculate(m_turningAngle, 0)), -1, 1);
+        m_turningSpeed = -1.0 * MathUtil.clamp((m_thetaController.calculate(m_turningAngle, 0)), -1, 1);
 
         return m_turningSpeed;
     }
