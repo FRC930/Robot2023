@@ -6,6 +6,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,7 +40,6 @@ public class ElevatorSubsystem extends SubsystemBase{
         this.controller = new ProfiledPIDController(45, 0, 0, 
                  new Constraints(Units.inchesToMeters(110), Units.inchesToMeters(175))); //This is in meters
         this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
-
         this.topff = new ElevatorFeedforward(0, 0.45, 0, 0);
 
 
@@ -68,10 +69,9 @@ public class ElevatorSubsystem extends SubsystemBase{
      */
     @Override
     public void periodic() {
-
+        m_io.updateInputs();
         //Checks if the robot is a simulation
         if (DriverStation.isEnabled() || !Robot.isReal()) {
-            m_io.updateInputs();
             double currentheight = m_io.getCurrentHeight();
 
             double voltage = controller.calculate(currentheight, targetElevatorPosition);
@@ -96,6 +96,15 @@ public class ElevatorSubsystem extends SubsystemBase{
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetElevatorPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getElevatorPosition());
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue(Inches)", Units.metersToInches(getElevatorPosition()));
+    }
+    private Boolean pastHeight(double meters) {
+        double height = getElevatorPosition();
+        System.out.println("height: " + height + " target: " + meters);
+        return height > meters;
+    }
+
+    public Command waitUntilPastHeightCommand(double meters) {
+        return Commands.waitUntil(() -> this.pastHeight(meters));
     }
 
     public Command setElevatorPositionCommand(double meters) {

@@ -70,16 +70,16 @@ public class ArmSubsystem extends SubsystemBase {
 
             m_armIO.setVoltage(effort);
 
-            SmartDashboard.putNumber("ARM FEED FORWARD", feedforward);
-            SmartDashboard.putNumber("ARM EFFORT", effort);
-            SmartDashboard.putNumber("ARM ERROR", controller.getPositionError());
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Feed Forward", feedforward);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Effort", effort);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Error", controller.getPositionError());
         }
         else{
             controller.reset(m_armIO.getCurrentAngleDegrees());
         }
         
-        SmartDashboard.putNumber("ARM TARGET POSITION", targetPosition);
-        SmartDashboard.putNumber("Arm Encoder Value", getPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Target Position", targetPosition);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Encoder Value", getPosition());
     }
 
     /**
