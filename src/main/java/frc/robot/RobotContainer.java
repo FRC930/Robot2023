@@ -310,6 +310,11 @@ public class RobotContainer {
     m_mechanismSimulator.periodic();
   }
 
+  /** 
+   * Allow robot to run DisabledLEDPattern when in disabled mode
+   * Uses command scheduler in order to determine what should run during disabled
+   **/
+  
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(m_RunDisabledLEDPattern);
     SmartDashboard.putData(m_RunDisabledLEDPattern);

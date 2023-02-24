@@ -31,6 +31,7 @@ public class LEDCommand extends CommandBase {
     /**
      * <h3>LEDCommand</h3>
      * Create LED command and pattern and assign variables to values
+     * Sets m_canRunDisabled to True when the Disabled LED pattern is active in order to let it run when it disabled
      * @param ledSubsystem
      * @param pattern
      */
@@ -45,7 +46,7 @@ public class LEDCommand extends CommandBase {
     }
     /**
      * <h3>end</h3>
-     * Ends LED patterns
+     * Interrupts LED Patterns
      * @param interrupted
      */
     @Override
@@ -54,7 +55,7 @@ public class LEDCommand extends CommandBase {
     }
     /**
      * <h3>initalize</h3>
-     * Intialize all the LED commands and set up thier correct DIO pins
+     * Intialize all the LED commands and set up thier correct DIO pins (1 = true, 0 = false)
      */
     @Override
     public void initialize(){
@@ -93,6 +94,11 @@ public class LEDCommand extends CommandBase {
         }
     }
 
+    /**
+     * <h3>isFinished</h3>
+     * Ensures that the disabled pattern can run when the robot is disabled
+     * @return m_canRunDisabled
+     */
     
     @Override
     public boolean runsWhenDisabled() {
