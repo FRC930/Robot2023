@@ -213,6 +213,8 @@ public class RobotContainer {
         new PrintCommand("********************************************************endscoreCone")
       )
     );
+    //TODO remove
+    eventCommandMap = eventCommandMap = new HashMap<>();
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
