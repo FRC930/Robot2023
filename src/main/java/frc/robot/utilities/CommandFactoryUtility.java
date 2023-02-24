@@ -26,7 +26,7 @@ public class CommandFactoryUtility {
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem,
         double elevatorHeight,
-        double waitSecondAlterElevator,
+        double waitSecondAfterElevator,
         double armPosition,
         double manipulatorPosition,
         double waitSecondArm) {
@@ -34,16 +34,26 @@ public class CommandFactoryUtility {
         //TODO remove old method
         // command = new SequentialCommandGroup(
         //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight)),
-        //     new WaitCommand(waitSecondAlterElevator),
+        //     new WaitCommand(waitSecondAfterElevator),
         //     new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition),
         //     new WaitCommand(waitSecondArm),
         //     new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED)
         // );
 
         command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
-            .andThen(new WaitCommand(waitSecondAlterElevator))
+            .andThen(new WaitCommand(waitSecondAfterElevator))
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition))
             .andThen(new WaitCommand(waitSecondArm))
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
+            
+        command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
+            .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
+                .withTimeout(waitSecondAfterElevator))
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition))
+            .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
+                .withTimeout(waitSecondArm/2.0))
+            .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
+                .withTimeout(waitSecondArm/2.0))
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
 
         return command;

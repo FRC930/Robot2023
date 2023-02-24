@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -37,6 +38,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
         //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
         controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
+        controller.enableContinuousInput(0, 360);
 
         // Sets up Feetforward TODO: Change these values
         ff = new ArmFeedforward(0.0, 0.7, 0);
@@ -61,8 +63,6 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
             // Set up PID controller
             double effort = controller.calculate(currentDegrees, targetPosition);
-            controller.setTolerance(1, 1);
-            controller.enableContinuousInput(0, 360);
             
             //Set up Feed Forward
             double feedforward = ff.calculate(Units.degreesToRadians(currentDegrees), Units.degreesToRadians(m_io.getVelocityDegreesPerSecond()));
@@ -118,5 +118,13 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public Command setWristPositionCommand(double degrees) {
         return new InstantCommand(() -> setPosition(degrees), this);
+    }
+
+    private boolean atSetPoint() {
+        return this.controller.atSetpoint();
+    }
+
+    public Command createWaitUntilAtAngleCommand() {
+        return Commands.waitUntil(() -> this.atSetPoint());
     }
 }

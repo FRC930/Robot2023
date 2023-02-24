@@ -21,7 +21,7 @@ public class ElevatorMoveCommand extends CommandBase {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         m_elevatorSubsystem.setTargetElevatorPosition(m_desiredPosition);
     }
     
