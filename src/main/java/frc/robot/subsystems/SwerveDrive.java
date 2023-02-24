@@ -42,7 +42,6 @@ public class SwerveDrive extends SubsystemBase {
 
   private SwerveDriveOdometry m_odometry;
 
-  // private AprilVisionUtility m_aprilCameraOne;
   private OdometryUtility m_aprilCameraOne;
 
   private double m_simYaw;
@@ -91,7 +90,6 @@ public class SwerveDrive extends SubsystemBase {
         autoThetaController = new PIDController(AutoCommandManager.kPThetaController, AutoCommandManager.kIThetaController, AutoCommandManager.kDThetaController);
         autoPitchController = new PIDController(1, 0, 0);
         
-    // m_aprilCameraOne = new AprilVisionUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
     m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
   }
 
@@ -169,17 +167,17 @@ public class SwerveDrive extends SubsystemBase {
   public void updateOdometry() {
     m_odometry.update(getHeadingRotation2d(), getModulePositions());
 
-    for (int i = 0; i < mSwerveMods.length; i++) {
-      SwerveModule module = mSwerveMods[i];
-      var modulePositionFromChassis = kModuleTranslations[i]
-          .rotateBy(getHeadingRotation2d())
-          .plus(getPoseMeters().getTranslation());
-      // TODO WHAT IS THIS FOR
-      module.setModulePose(
-          new Pose2d(
-              modulePositionFromChassis,
-              module.getHeadingRotation2d().plus(getHeadingRotation2d())));
-    }
+    // for (int i = 0; i < mSwerveMods.length; i++) {
+    //   SwerveModule module = mSwerveMods[i];
+    //   var modulePositionFromChassis = kModuleTranslations[i]
+    //       .rotateBy(getHeadingRotation2d())
+    //       .plus(getPoseMeters().getTranslation());
+    //   // TODO WHAT IS THIS FOR
+    //   module.setModulePose(
+    //       new Pose2d(
+    //           modulePositionFromChassis,
+    //           module.getHeadingRotation2d().plus(getHeadingRotation2d())));
+    // }
     // Logs information about the robot with AdvantageScope
     Logger.getInstance().recordOutput("SwerveModuleStates/Measured",
         getModuleStates());
