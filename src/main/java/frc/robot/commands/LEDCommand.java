@@ -13,6 +13,7 @@ public class LEDCommand extends CommandBase {
 
     private LedPatterns m_pattern;
     private LEDsubsystem m_LEDSubsystem;
+    private boolean m_canRunDisabled = false;
 
     public static enum LedPatterns{
         CONEREQUEST,
@@ -30,17 +31,22 @@ public class LEDCommand extends CommandBase {
     /**
      * <h3>LEDCommand</h3>
      * Create LED command and pattern and assign variables to values
+     * Sets m_canRunDisabled to True when the Disabled LED pattern is active in order to let it run when it disabled
      * @param ledSubsystem
      * @param pattern
      */
     public LEDCommand(LEDsubsystem ledSubsystem, LedPatterns pattern){
         m_pattern = pattern;
         m_LEDSubsystem = ledSubsystem;
-        addRequirements (m_LEDSubsystem);
+        addRequirements(m_LEDSubsystem);
+
+        if(pattern == LedPatterns.DISABLED){
+            m_canRunDisabled = true;
+        }
     }
     /**
      * <h3>end</h3>
-     * Ends LED patterns
+     * Interrupts LED Patterns
      * @param interrupted
      */
     @Override
@@ -49,7 +55,7 @@ public class LEDCommand extends CommandBase {
     }
     /**
      * <h3>initalize</h3>
-     * Intialize all the LED commands and set up thier correct DIO pins
+     * Intialize all the LED commands and set up thier correct DIO pins (1 = true, 0 = false)
      */
     @Override
     public void initialize(){
@@ -86,6 +92,17 @@ public class LEDCommand extends CommandBase {
                 break;
 
         }
+    }
+
+    /**
+     * <h3>isFinished</h3>
+     * Ensures that the disabled pattern can run when the robot is disabled
+     * @return m_canRunDisabled
+     */
+    
+    @Override
+    public boolean runsWhenDisabled() {
+        return m_canRunDisabled;
     }
     /**
      * <h3>isFinished</h3>

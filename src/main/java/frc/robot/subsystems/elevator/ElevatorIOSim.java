@@ -11,9 +11,9 @@ public class ElevatorIOSim implements ElevatorIO {
             DCMotor.getNEO(1),
             4.0,
             Units.lbsToKilograms(9.8),
-            Units.inchesToMeters(1),
+            Units.inchesToMeters(1.756),
             Units.inchesToMeters(0),
-            Units.inchesToMeters(22.64),
+            Units.inchesToMeters(52),
             true
         );
 
@@ -35,7 +35,7 @@ public class ElevatorIOSim implements ElevatorIO {
      */
     @Override
     public double getCurrentVelocity() {
-        return Units.metersToInches(sim.getVelocityMetersPerSecond());
+        return sim.getVelocityMetersPerSecond();
     }
 
     /**
@@ -46,7 +46,7 @@ public class ElevatorIOSim implements ElevatorIO {
      */
     @Override
     public double getCurrentHeight() {
-        return Units.metersToInches(sim.getPositionMeters());
+        return sim.getPositionMeters();
     }
 
     /**
