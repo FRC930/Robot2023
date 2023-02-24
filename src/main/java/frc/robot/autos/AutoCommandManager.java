@@ -112,7 +112,7 @@ public class AutoCommandManager {
         Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
         Command NoBump1ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump1Cone", eventCommandMap);
         Command NoBump2ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump2Cone", eventCommandMap);
-        Command MidPickUpEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidPickUpEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+       // Command MidPickUpEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidPickUpEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
         Command ScoreHighConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
         Command ScoreMidConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreMidCone", eventCommandMap);
         Command ThreeConeNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeNoBump", eventCommandMap);
@@ -142,7 +142,7 @@ public class AutoCommandManager {
         m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
         m_chooser.addOption("NoBump1Cone", NoBump1ConeCommand);
         m_chooser.addOption("NoBump2Cone", NoBump2ConeCommand);
-        m_chooser.addOption("MidPickUpEngage",MidPickUpEngageCommand);
+       // m_chooser.addOption("MidPickUpEngage",MidPickUpEngageCommand);
         m_chooser.addOption("ThreeConeNoBump",ThreeConeNoBumpCommand);
         m_chooser.addOption("MidScoreTwoEngage", MidScoreTwoEngageCommand);
 
