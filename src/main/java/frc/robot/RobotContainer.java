@@ -458,6 +458,10 @@ public class RobotContainer {
       .onFalse(
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
       );
+
+      m_codriverController.a().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(0)));
+      m_codriverController.x().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(20)));
+      m_codriverController.y().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(55)));
     //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
       //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
     // m_codriverController.x()
