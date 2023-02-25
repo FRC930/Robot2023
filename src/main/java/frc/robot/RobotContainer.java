@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.utilities.TargetScorePositionUtility;
@@ -77,7 +78,7 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     //Intake Motors
-    private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(12);
+    private final ExtendIntakeMotorSubsystem m_ExtendIntakeMotorSubsystem = new ExtendIntakeMotorSubsystem(16);
     private final IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem = new IntakeRollerMotorSubsystem(7);
     private final WhichRobot whichRobot = RobotInformation.queryWhichRobotUsingPreferences();
 
@@ -126,53 +127,34 @@ public class RobotContainer {
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim());
   private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15) : new ManipulatorIOSim());
-  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6) : new ElevatorIOSim());
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6, 12)  : new ElevatorIOSim());
   private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
   private final LEDsubsystem m_LEDsubsystem = new LEDsubsystem(0, 1,2,3 );
   
   // Commands \\
-  private Command m_AutohighTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55))
-  .andThen(new WaitCommand(2))
-  .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
-  .andThen(new WaitCommand(1))
-  .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED))
-  .andThen(new WaitCommand(3)) //pause after scoring
-  .andThen( //release cone and retract
-    new ParallelCommandGroup(
-      new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-      new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
-  private Command m_AutoMidTargetCommand =  new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22))
-  .andThen(new WaitCommand(1))
-  .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
-  .andThen(new WaitCommand(1))
-  .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED))
-  .andThen(new WaitCommand(3)) //pause after scoring
-  .andThen( //release cone and retract
-    new ParallelCommandGroup(
-      new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-      new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-      new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15))); // TODO constant) ;
-  private Command m_highTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55))
-  .andThen(new WaitCommand(2))
-  .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
-  .andThen(new WaitCommand(1))
-  .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED)) ;
-  private Command m_mediumTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22))
-  .andThen(new WaitCommand(1))
-  .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0))
-  .andThen(new WaitCommand(1))
-  .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED));
-  private Command m_lowTargetCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(12))
-  .andThen(new WaitCommand(1))
-  .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,-25, 25))
-  .andThen(new WaitCommand(1.5))
-  .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
+  private Command m_AutohighTargetCommand = 
+    CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+    .andThen(new WaitCommand(0.5)) //pause after scoring
+    .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+  private Command m_AutoMidTargetCommand =
+    CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+    .andThen(new WaitCommand(3)) //pause after scoring
+    .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+  private Command m_highTargetCommand = 
+    CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+
+  private Command m_mediumTargetCommand =
+    CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+  
+  private Command m_lowTargetCommand = 
+    CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
   
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-6, m_ExtendIntakeMotorSubsystem);
-  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(6, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-3, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(0, m_ExtendIntakeMotorSubsystem);
   private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
   private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
@@ -217,33 +199,14 @@ public class RobotContainer {
 
     // TODO Add markers for real commands/paths
     eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
-    eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
-    eventCommandMap.put("marker1", new PrintCommand("Marker1Start********************"));
-    eventCommandMap.put("marker2", new PrintCommand("Marker1End********************"));
-    eventCommandMap.put("intakeCube", new SequentialCommandGroup( 
-        new PrintCommand("***********intakeCube"), 
-        //new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false, false), m_robotDrive),
-        new WaitCommand(5.0),
-        new PrintCommand("***********intakeCubeEnd")));
-    eventCommandMap.put("scoreCube", new SequentialCommandGroup(
-        new PrintCommand("******************************scoreCube"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************scoreCubeEnd")
-      )
-    );
-    eventCommandMap.put("intakeCone", new SequentialCommandGroup(
-        new PrintCommand("******************************intakeCone"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************endintakeCone")
-      )
-    );
-    eventCommandMap.put("scoreCone", new SequentialCommandGroup(
-        new PrintCommand("******************************scoreCone"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************endscoreCone")
-      )
-    );
-    eventCommandMap.put("Change of velocity", new PrintCommand("Need command to change velocity"));
+    // eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
+    // eventCommandMap.put("armIntakeCone", 
+      // CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+      //.andThen(new WaitCommand(2))
+      //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+    // eventCommandMap.put("stowArm" , new WaitCommand(0.5).andThen( CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+    //TODO remove
+    //eventCommandMap = eventCommandMap = new HashMap<>();
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
@@ -253,7 +216,7 @@ public class RobotContainer {
     
     // Configure default commands
     m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
-    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 0.60));
+    m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, TeleopSwerve.NORMAL_SPEED));
     m_fieldSim.initSim();
     m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
     m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
@@ -271,13 +234,32 @@ public class RobotContainer {
     //Final Button Bindings
     //--DRIVER CONTROLLER--//
     //.and() makes it so both buttons must be held in order to run the command
+    // TODO how are we planning on moving the arm based on the target score position utility
+    // m_driverController.rightTrigger()
+    // .onTrue(
+    //   new ConditionalCommand(m_highTargetCommand, 
+    //     new ConditionalCommand(
+    //       m_mediumTargetCommand, 
+    //       m_lowTargetCommand, 
+    //       m_targetScorePositionUtility::isMedium), 
+    //     m_targetScorePositionUtility::isHigh)
+    // )
+    // .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     m_driverController.rightBumper()
       .and(m_driverController.rightTrigger()).whileTrue(m_ManipulatorRollerReleaseCommand);
     m_driverController.leftBumper().whileTrue(
-      new ParallelCommandGroup(m_IntakeArmPosition, m_ManipulatorRollerCommand));  
+      CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));  
     
     //Turbo boost
-    m_driverController.leftTrigger().whileTrue(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, 1.0));
+    m_driverController.leftTrigger().whileTrue(new TeleopSwerve(
+      m_robotDrive, 
+      m_driverController, 
+      translationAxis, 
+      strafeAxis, 
+      rotationAxis, 
+      true, 
+      true, 
+      TeleopSwerve.TURBO_SPEED));
     
     //Auto balance
     m_driverController.start().whileTrue(m_autoBalanceCommand);
@@ -286,7 +268,7 @@ public class RobotContainer {
     //--CODRIVER CONTROLLER--//
     //Intake buttons
     m_codriverController.leftBumper().whileTrue(m_EjectRoller);
-    m_codriverController.rightTrigger().whileTrue((m_ExtendIntakeCommand.andThen(m_IntakeRoller)));
+    m_codriverController.rightTrigger().whileTrue((CommandFactoryUtility.createExtendIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem))); //Figure out how to not run when y or a is pressed lines see lines below
     m_codriverController.y()
       .and(m_codriverController.rightTrigger())
       .whileTrue(m_HighPitchIntakeCommand); 
@@ -295,10 +277,10 @@ public class RobotContainer {
       .whileTrue(m_LowPitchIntakeCommand); 
   
     //Arm positions
-    m_codriverController.povUp().toggleOnTrue(m_HighArmPosition);
-    m_codriverController.povLeft().toggleOnTrue(m_MediumArmPosition);
-    m_codriverController.povRight().toggleOnTrue(m_MediumArmPosition);
-    m_codriverController.povDown().toggleOnTrue(m_GroundArmPosition);
+    m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
+    m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
+    m_codriverController.povRight().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
+    m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
   
     //Cube and Cone selector
     m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
@@ -340,6 +322,17 @@ public class RobotContainer {
   public void disabledInit() {
   }
  
+  private void configureButtonBindings_Intake(){
+    m_codriverController.leftBumper().whileTrue(m_EjectRoller);
+    m_codriverController.rightTrigger().whileTrue((m_ExtendIntakeCommand.andThen(m_IntakeRoller)));
+    m_codriverController.y()
+      .and(m_codriverController.rightTrigger())
+      .whileTrue(m_HighPitchIntakeCommand); 
+    m_codriverController.a()
+      .and(m_codriverController.rightTrigger())
+      .whileTrue(m_LowPitchIntakeCommand); 
+  
+  }
   private void configureButtonBindings_backup() {
     // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
     //                         // .onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
@@ -347,68 +340,23 @@ public class RobotContainer {
 
     //High score
     m_codriverController.y()
-    .onTrue(
-      new SequentialCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(55)),
-        new WaitCommand(2),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0),
-        new WaitCommand(1),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED) // TODO constant)
-      ))
-    .onFalse(
-      new ParallelCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
-      ));
-  //Medium score
-   m_codriverController.b()
-    .onTrue(
-      new SequentialCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(22)),
-        new WaitCommand(1),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,35, 0),
-        new WaitCommand(1),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem,  ManipulatorSubsystem.RELEASE_SPEED) // TODO constant)
-      ))
-    .onFalse(
-      new ParallelCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
-      ));
-  //Low score
-   m_codriverController.a()
-    .onTrue(
-      new SequentialCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(12)),
-        new WaitCommand(1),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,-25, 25), // -40
-        new WaitCommand(1.5),
-        m_ManipulatorRollerReleaseCommand)
-      )
-    .onFalse(
-      new ParallelCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
-      ));
-  //Arm Intake
-  m_codriverController.x()
-    .onTrue(
-      new SequentialCommandGroup(
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED), // TODO constant
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(12)),
-        new WaitCommand(1),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,-30, 25) // -40
-        )
-      )
-    .onFalse(
-      new ParallelCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
-      ));
+    .onTrue(CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+    //Medium score
+    m_codriverController.b()
+      .onTrue(CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+    //Low score
+    m_codriverController.a()
+      .onTrue(CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+    //Arm Intake
+    m_codriverController.x()
+      .onTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     
   // m_codriverController.x()
   // .onTrue(
@@ -432,38 +380,28 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings_sussex() {
+
+  
     // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
     //                         // .onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
     //                         .onFalse(m_StowArmPosition);
 
-    //High score
+    //Score based on codrive selection
     m_driverController.rightTrigger()
     .onTrue(
-      new ConditionalCommand(m_highTargetCommand, new ConditionalCommand(m_mediumTargetCommand, m_lowTargetCommand, m_targetScorePositionUtility::isMedium),m_targetScorePositionUtility::isHigh)
+      new ConditionalCommand(m_highTargetCommand, 
+        new ConditionalCommand(
+          m_mediumTargetCommand, 
+          m_lowTargetCommand, 
+          m_targetScorePositionUtility::isMedium), 
+        m_targetScorePositionUtility::isHigh)
     )
-    .onFalse(
-      new ParallelCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
-      ));
+    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
   //Arm Intake
   m_codriverController.leftBumper()
-    .onTrue(
-      new SequentialCommandGroup(
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED), // TODO constant
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(12)),
-        new WaitCommand(1),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,-33, 25) // -40
-        )
-      )
-    .onFalse(
-      new ParallelCommandGroup(
-        new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, ArmSubsystem.STOW_POSITION, ManipulatorSubsystem.STOW_POSITION),
-        new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
-      ));
+    .onTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
       m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
       m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
@@ -477,9 +415,10 @@ public class RobotContainer {
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
       );
 
-      m_codriverController.a().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(0)));
-      m_codriverController.x().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(20)));
-      m_codriverController.y().onTrue(m_elevatorSubsystem.setElevatorPositionCommand(Units.inchesToMeters(55)));
+        //Cube and Cone selector
+      //Cube and Cone selector
+      m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
+      m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
     //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
       //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
     // m_codriverController.x()

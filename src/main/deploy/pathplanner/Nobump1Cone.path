@@ -1,0 +1,67 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.7384923658736207,
+        "y": 4.362122228517961
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7487180817592052,
+        "y": 4.798329026586795
+      },
+      "holonomicAngle": -179.76216702375456,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "scoreCone"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.7582385758595755,
+        "y": 5.007779896794949
+      },
+      "prevControl": {
+        "x": 1.701115611257352,
+        "y": 4.617439638679753
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 4.41,
+  "maxAcceleration": 2.2,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "ScoreCone"
+      ]
+    },
+    {
+      "position": 0.9745454545454024,
+      "names": [
+        "scoreHighCone"
+      ]
+    }
+  ]
+}

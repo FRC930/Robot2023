@@ -373,7 +373,8 @@ public class OdometryUtility {
                     ));
                 }
             });
-    
+            
+            // TODO make 0 greater than 1
             if (targets.size() > 0) {
     
                 final Transform3d robotToCameraPose = cameras.get(i).getRobotToCameraPose();

@@ -10,24 +10,26 @@ import edu.wpi.first.math.util.Units;
 public class ElevatorIORobot implements ElevatorIO {
     private CANSparkMax rightElevatorMaster;
     private RelativeEncoder rightElevatorEncoder;
+    private CANSparkMax leftElevatorFollower;
     double circumference = Units.inchesToMeters(1.756) * Math.PI; //1.128 is diameter of pulley
     double gearRatio = 4.0; //4.0 is the gear ratio of motor to belt
 
-    public ElevatorIORobot(int rightMotorID){//int leftMotorID, int rightMotorID){
+    public ElevatorIORobot(int rightMotorID,int leftMotorID){//int leftMotorID, int rightMotorID){
 
         // TODO refollower methods  (look at last year)
         // Competition robot will require two motors
-        //LeftElevatorFollower = new CANSparkMax(leftMotorID, MotorType.kBrushless);
+        leftElevatorFollower = new CANSparkMax(leftMotorID, MotorType.kBrushless);
         rightElevatorMaster = new CANSparkMax(rightMotorID, MotorType.kBrushless);
 
         rightElevatorEncoder = rightElevatorMaster.getEncoder();
     
-        //LeftElevatorFollower.restoreFactoryDefaults();
+        leftElevatorFollower.restoreFactoryDefaults();
         rightElevatorMaster.restoreFactoryDefaults();
         rightElevatorMaster.setIdleMode(IdleMode.kBrake);
+        leftElevatorFollower.setIdleMode(IdleMode.kBrake);
         rightElevatorMaster.setInverted(true);
         rightElevatorEncoder.setPositionConversionFactor(circumference / gearRatio);
-        //LeftElevatorFollower.follow(RightElevatorMaster, true);
+        leftElevatorFollower.follow(rightElevatorMaster, true);
 
     }
 

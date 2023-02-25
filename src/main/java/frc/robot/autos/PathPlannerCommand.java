@@ -12,7 +12,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -47,17 +46,15 @@ public class PathPlannerCommand extends SequentialCommandGroup {
         // Load Path Group trajectory to follow.  All units in meters.
         List<PathPlannerTrajectory> loadPathGroup = PathPlanner.loadPathGroup(pathName, 
              false, pathConstraints);
-        
-        var thetaController = s_Swerve.getAutoThetaController();
-        thetaController.enableContinuousInput(-180.0, 180.0); //-Math.PI, Math.PI);
 
         SwerveAutoBuilder autoBuilder = 
             new SwerveAutoBuilder(
                 s_Swerve::getPose, //Using Pose Swerve estimator
                 s_Swerve::resetOdometry, //pose2D consumer, used to reset odometry at beginning of zero
                 SwerveDrive.getSwerveKinematics(),
-                getPIDConstants(s_Swerve.getAutoXController()), //PID constants to correct for translation error (X and Y)
-                getPIDConstants(thetaController), //PID constants to correct for rotation error (used to create the rotation controller)
+                new PIDConstants(1.4, 0.0, 0.0), //PID constants to correct for translation error (X and Y)
+                //new PIDConstants(1.0, 0.0, 0.0), //PID constants to correct for rotation error (used to create the rotation controller)
+                new PIDConstants(1.9, 0.0, 0.0), //PID constants to correct for rotation error (used to create the rotation controller)
                 s_Swerve::setSwerveModuleStates,
                 eventCommandMap, 
                 true, // TODO Should the path be automatically mirrored depending on alliance color
@@ -85,17 +82,5 @@ public class PathPlannerCommand extends SequentialCommandGroup {
      */
     public PathPlannerCommand(SwerveDrive s_Swerve, String pathName, Map<String, Command> eventCommandMap) {
         this(s_Swerve, pathName, eventCommandMap, null);
-    }
-    
-    /**
-     * <h3>getPIDConstants</h3>
-     * 
-     * gets the PID constants from the PID controller
-     * 
-     * @param pidController 
-     * @return returns the PID constants
-     */
-    private PIDConstants getPIDConstants(PIDController pidController) {
-        return new PIDConstants(pidController.getP(), pidController.getI(), pidController.getD());
     }
 }
