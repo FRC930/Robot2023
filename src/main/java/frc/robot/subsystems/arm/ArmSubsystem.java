@@ -29,7 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
     public static double GROUND_POSITION = 46.8; //at ground elevator position
     public static double STOW_POSITION = 70.0;//-60.0; //at ground elevator position
     public static double INTAKE_POSITION = 50.0; // TODO: Find an actual intake value
-    public static final double SUBSTATION_POSITION = 120;// TODO:find acutal position
+    public static final double SUBSTATION_POSITION = 115;// TODO:find acutal position
 
     public static double ARM_LENGTH = 27.12;
 

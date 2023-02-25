@@ -172,7 +172,7 @@ public class CommandFactoryUtility {
                 ))
                 .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()).withTimeout(0.5)
                 .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()).withTimeout(0.5)
-            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); //TODO constant
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)); //TODO constant
 
         return command;
     }
