@@ -18,7 +18,7 @@ public final class RevUtils {
   public static final double kDDrive = AutoCommandManager.usePIDValueOrTune("kDriveD", 0.0);
 
   public static final double kFFTurn = AutoCommandManager.usePIDValueOrTune("kTurnFF", 0.0);
-  public static final double kPTurn = AutoCommandManager.usePIDValueOrTune("kTurnP", 1.2);
+  public static final double kPTurn = AutoCommandManager.usePIDValueOrTune("kTurnP", 1.0);
   public static final double kITurn = AutoCommandManager.usePIDValueOrTune("kTurnI", 0.0);
   public static final double kDTurn = AutoCommandManager.usePIDValueOrTune("kTurnD", 0.1);
 

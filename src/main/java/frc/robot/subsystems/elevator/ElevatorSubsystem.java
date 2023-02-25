@@ -39,7 +39,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         //new Constraints(1.0, 2.0)); //This is in meters
         //our p is in terms of meters, meaning you are multiplying a decmal by p
         this.controller = new ProfiledPIDController(45, 0, 0, 
-                 new Constraints(Units.inchesToMeters(110), Units.inchesToMeters(175))); //This is in meters
+                 new Constraints(Units.inchesToMeters(55), Units.inchesToMeters(90))); //This is in meters //110 175
         this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
         this.topff = new ElevatorFeedforward(0, 0.45, 0, 0);
         // TODO set tolerance

@@ -198,24 +198,12 @@ public class RobotContainer {
 
     // TODO Add markers for real commands/paths
     eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
-    eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
-    eventCommandMap.put("armIntakeCone", 
-      CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+    // eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
+    // eventCommandMap.put("armIntakeCone", 
+      // CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
       //.andThen(new WaitCommand(2))
       //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
-    eventCommandMap.put("stowArm" , new WaitCommand(0.5).andThen( CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
-    eventCommandMap.put("intakeCone", new SequentialCommandGroup( //TODO remove
-        new PrintCommand("******************************intakeCone"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************endintakeCone")
-      )
-    );
-    eventCommandMap.put("scoreCone", new SequentialCommandGroup( //TODO remove
-        new PrintCommand("******************************scoreCone"),
-        new WaitCommand(5.0),
-        new PrintCommand("********************************************************endscoreCone")
-      )
-    );
+    // eventCommandMap.put("stowArm" , new WaitCommand(0.5).andThen( CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
     //TODO remove
     //eventCommandMap = eventCommandMap = new HashMap<>();
     m_autoManager = new AutoCommandManager();

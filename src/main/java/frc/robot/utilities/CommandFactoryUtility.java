@@ -46,15 +46,15 @@ public class CommandFactoryUtility {
             .andThen(new WaitCommand(waitSecondArm))
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
             
-        command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
-            .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
-                .withTimeout(waitSecondAfterElevator))
-            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition))
-            .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
-                .withTimeout(waitSecondArm/2.0))
-            .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
-                .withTimeout(waitSecondArm/2.0))
-            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
+        // command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
+        //     .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
+        //         .withTimeout(waitSecondAfterElevator))
+        //     .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition))
+        //     .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
+        //         .withTimeout(waitSecondArm/2.0))
+        //     .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
+        //         .withTimeout(waitSecondArm/2.0))
+        //     .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
 
         return command;
     }
