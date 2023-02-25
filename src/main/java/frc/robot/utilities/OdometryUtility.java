@@ -59,11 +59,11 @@ public class OdometryUtility {
      */
 
     // Back camera constants
-    private static final String BACK_CAMERA_NAME = "Camera5"; 
-    private static final String BACK_CAMERA_IP_NAME = "10.9.30.35";
+    private static final String BACK_CAMERA_NAME = "Camera1"; 
+    private static final String BACK_CAMERA_IP_NAME = "10.9.30.31`";
     private static final int BACK_CAMERA_PIPELINE = 0;
-    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5805;
-    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera5/config.json";
+    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5801;
+    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
     private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
     private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(13.0);
@@ -104,9 +104,9 @@ public class OdometryUtility {
     private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(0.0);
 
     // Three cameras on the robot, 2 in the front, 1 on the back
-    // private final CameraOnRobot m_backCamera;
+    private final CameraOnRobot m_backCamera;
     // private final CameraOnRobot m_rightCamera;
-    // private final CameraOnRobot m_leftCamera;
+    private final CameraOnRobot m_leftCamera;
 
     private SwerveDriveKinematics m_swerveDriveKinematics;
     private Rotation2d m_rotation;
@@ -158,34 +158,34 @@ public class OdometryUtility {
         );
 
         // Creates the cameras
-        // m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
-        //                                 BACK_CAMERA_IP_NAME, 
-        //                                 BACK_CAMERA_PIPELINE, 
-        //                                 BACK_CAMERA_PORT_TO_FORWARD,
-        //                                 BACK_CAMERA_CONFIG_FILE,
-        //                                 BACK_CAMERA_RESOLUTION_WIDTH,
-        //                                 BACK_CAMERA_RESOLUTION_HEIGHT,
-        //                                 BACK_CAMERA_POSITION_X,
-        //                                 BACK_CAMERA_POSITION_Y,
-        //                                 BACK_CAMERA_POSITION_Z,
-        //                                 BACK_CAMERA_ROTATION_ROLL,
-        //                                 BACK_CAMERA_ROTATION_PITCH,
-        //                                 BACK_CAMERA_ROTATION_YAW
-        //                                 );
-        // m_leftCamera = new CameraOnRobot(LEFT_CAMERA_NAME, 
-        //                                 LEFT_CAMERA_IP_NAME, 
-        //                                 LEFT_CAMERA_PIPELINE, 
-        //                                 LEFT_CAMERA_PORT_TO_FORWARD,
-        //                                 LEFT_CAMERA_CONFIG_FILE,
-        //                                 LEFT_CAMERA_RESOLUTION_WIDTH,
-        //                                 LEFT_CAMERA_RESOLUTION_HEIGHT,
-        //                                 LEFT_CAMERA_POSITION_X,
-        //                                 LEFT_CAMERA_POSITION_Y,
-        //                                 LEFT_CAMERA_POSITION_Z,
-        //                                 LEFT_CAMERA_ROTATION_ROLL,
-        //                                 LEFT_CAMERA_ROTATION_PITCH,
-        //                                 LEFT_CAMERA_ROTATION_YAW
-        //                                 );
+        m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
+                                        BACK_CAMERA_IP_NAME, 
+                                        BACK_CAMERA_PIPELINE, 
+                                        BACK_CAMERA_PORT_TO_FORWARD,
+                                        BACK_CAMERA_CONFIG_FILE,
+                                        BACK_CAMERA_RESOLUTION_WIDTH,
+                                        BACK_CAMERA_RESOLUTION_HEIGHT,
+                                        BACK_CAMERA_POSITION_X,
+                                        BACK_CAMERA_POSITION_Y,
+                                        BACK_CAMERA_POSITION_Z,
+                                        BACK_CAMERA_ROTATION_ROLL,
+                                        BACK_CAMERA_ROTATION_PITCH,
+                                        BACK_CAMERA_ROTATION_YAW
+                                        );
+        m_leftCamera = new CameraOnRobot(LEFT_CAMERA_NAME, 
+                                        LEFT_CAMERA_IP_NAME, 
+                                        LEFT_CAMERA_PIPELINE, 
+                                        LEFT_CAMERA_PORT_TO_FORWARD,
+                                        LEFT_CAMERA_CONFIG_FILE,
+                                        LEFT_CAMERA_RESOLUTION_WIDTH,
+                                        LEFT_CAMERA_RESOLUTION_HEIGHT,
+                                        LEFT_CAMERA_POSITION_X,
+                                        LEFT_CAMERA_POSITION_Y,
+                                        LEFT_CAMERA_POSITION_Z,
+                                        LEFT_CAMERA_ROTATION_ROLL,
+                                        LEFT_CAMERA_ROTATION_PITCH,
+                                        LEFT_CAMERA_ROTATION_YAW
+                                        );
         // m_rightCamera = new CameraOnRobot(RIGHT_CAMERA_NAME, 
         //                                 RIGHT_CAMERA_IP_NAME, 
         //                                 RIGHT_CAMERA_PIPELINE, 
@@ -201,7 +201,7 @@ public class OdometryUtility {
         //                                 RIGHT_CAMERA_ROTATION_YAW
         //                                 );
 
-        // cameras = List.of(m_backCamera);//, m_leftCamera, m_rightCamera);
+         cameras = List.of(m_backCamera, m_leftCamera); // m_rightCamera);
         cameras = List.of();
 
        // Adjusts AprilTag position based on 0,0 based on alliance selection
@@ -242,9 +242,9 @@ public class OdometryUtility {
      * 
      * @return a reference to the back camera
     //  */
-    // public PhotonCamera getBackCamera() { 
-    //     return m_backCamera.getPhotonCamera();
-    // }
+    public PhotonCamera getBackCamera() { 
+        return m_backCamera.getPhotonCamera();
+    }
 
     /**
      * <h3>getLeftCamera</h3>
@@ -253,9 +253,9 @@ public class OdometryUtility {
      * 
      * @return a reference to the left camera
      */
-    // public PhotonCamera getLeftCamera() { 
-    //     return m_leftCamera.getPhotonCamera();
-    // }
+    public PhotonCamera getLeftCamera() { 
+        return m_leftCamera.getPhotonCamera();
+    }
 
     /**
      * <h3>getRightCamera</h3>
