@@ -158,6 +158,19 @@ public class CommandFactoryUtility {
         return new IntakeRollerCommand(2, 
         m_IntakeRollerMotorSubsystem);
     }
+    public static Command createSingleSubstationCommand(
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        final Command command = 
+            new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0))
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
+                ArmSubsystem.SUBSTATION_POSITION, 
+                ManipulatorSubsystem.SUBSTATION_POSITION
+                ))
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); //TODO constant
 
+        return command;
+    }
     //Create command for pitch intake
 }

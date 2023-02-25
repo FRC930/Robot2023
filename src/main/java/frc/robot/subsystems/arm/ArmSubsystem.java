@@ -15,6 +15,7 @@ import frc.robot.Robot;
 
 public class ArmSubsystem extends SubsystemBase {
 
+    
     private final ProfiledPIDController controller;
     private final ArmFeedforward ff;
 
@@ -28,6 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
     public static double GROUND_POSITION = 46.8; //at ground elevator position
     public static double STOW_POSITION = 70.0;//-60.0; //at ground elevator position
     public static double INTAKE_POSITION = 50.0; // TODO: Find an actual intake value
+    public static final double SUBSTATION_POSITION = 0;// TODO:find acutal position
 
     public static double ARM_LENGTH = 27.12;
 

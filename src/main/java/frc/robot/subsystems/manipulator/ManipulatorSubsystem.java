@@ -27,6 +27,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public static final double ROLLER_INTAKE_SPEED = 0.8;
     public static final double RELEASE_SPEED = -0.3;
+    public static final double SUBSTATION_POSITION = 0;
 
     /**<h3>ManipulatorSubsystem</h3>
      * Decides desired output, in volts, for the manipulator.
