@@ -194,7 +194,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreHighCone"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -202,14 +204,7 @@
     }
   ],
   "maxVelocity": 4.41,
-  "maxAcceleration": 2.2,
+  "maxAcceleration": 2.9,
   "isReversed": null,
-  "markers": [
-    {
-      "position": 6.974545454545337,
-      "names": [
-        "scoreHighCone"
-      ]
-    }
-  ]
+  "markers": []
 }

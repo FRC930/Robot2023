@@ -38,22 +38,17 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreHighCone"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "maxVelocity": 2.0,
-  "maxAcceleration": 2.2,
+  "maxVelocity": 4.41,
+  "maxAcceleration": 2.9,
   "isReversed": null,
-  "markers": [
-    {
-      "position": 1.0,
-      "names": [
-        "scoreHighCone"
-      ]
-    }
-  ]
+  "markers": []
 }
