@@ -66,9 +66,9 @@ public class OdometryUtility {
     private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
     private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
-    private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(13.0);
-    private static final double BACK_CAMERA_POSITION_Y = Units.inchesToMeters(19.0);
-    private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(12.0);
+    private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(12.5);
+    private static final double BACK_CAMERA_POSITION_Y = Units.inchesToMeters(12.875);
+    private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(24.0);
     private static final double BACK_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);
     private static final double BACK_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);
     private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(0.0);
@@ -81,9 +81,9 @@ public class OdometryUtility {
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
     private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 480;
-    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(10.0);
-    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(10.0);
-    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(25.0);
+    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(12.5);
+    private static final double LEFT_CAMERA_POSITION_Y = -Units.inchesToMeters(15.0);
+    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(24.0);
     private static final double LEFT_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
     private static final double LEFT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
     private static final double LEFT_CAMERA_ROTATION_YAW = Math.toRadians(0.0);;
@@ -201,8 +201,7 @@ public class OdometryUtility {
         //                                 RIGHT_CAMERA_ROTATION_YAW
         //                                 );
 
-         cameras = List.of(m_backCamera, m_leftCamera); // m_rightCamera);
-        cameras = List.of();
+        cameras = List.of(m_backCamera, m_leftCamera); // m_rightCamera);
 
        // Adjusts AprilTag position based on 0,0 based on alliance selection
        setOriginBasedOnAlliance();
@@ -380,13 +379,13 @@ public class OdometryUtility {
                 final Transform3d robotToCameraPose = cameras.get(i).getRobotToCameraPose();
                 CameraProperties cameraProp = cameras.get(i).getCameraProp();
                 PNPResults pnpResults = OdometryUtility.estimateCamPosePNP(cameraProp, corners, foundTags);;
-    
+                SmartDashboard.putNumber("OdometryUtility/bestRepojErr", pnpResults.bestReprojErr);
+
                 SmartDashboard.putNumber(camera.getName() + "/multi/ambiguity", pnpResults.ambiguity);
                 SmartDashboard.putNumber(camera.getName() + "/multi/bestErr", pnpResults.bestReprojErr);
                 SmartDashboard.putNumber(camera.getName() + "/multi/altErr", pnpResults.altReprojErr);
-    
-                // TODO reduce back to .15
-                if(pnpResults != null && pnpResults.bestReprojErr < 0.95) {
+
+                if(pnpResults != null && pnpResults.bestReprojErr < 0.15) {
                     final Pose3d pose = new Pose3d()
                         .plus(pnpResults.best)
                         .plus(robotToCameraPose.inverse());

@@ -91,7 +91,7 @@ public class RobotContainer {
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
     RobotInformation robotInfo = 
-      (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
+     (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
         // Competition robot attributes
         new RobotInformation(whichRobot,
           new SwerveModuleConstants(8, 9, 9, 200.479),

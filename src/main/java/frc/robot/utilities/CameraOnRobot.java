@@ -56,6 +56,7 @@ public class CameraOnRobot {
                         double cameraRotationYaw) {
 
         m_PhotonCamera = new PhotonCamera(cameraName);
+        m_PhotonCamera.setDriverMode(false);
         m_CameraIpName = cameraIpName;
         PortForwarder.add(portToForward, cameraIpName, 5800);
         m_PhotonCamera.setPipelineIndex(pipelineIndex);
