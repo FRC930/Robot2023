@@ -2,7 +2,9 @@ package frc.robot.subsystems.rotateintake;
 
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -18,7 +20,8 @@ import edu.wpi.first.math.MathUtil;
 public class PitchIntakeIORobot implements IntakeMotorIO {
 
     private CANSparkMax m_RotateIntakeRollerMotor;
-    private AbsoluteEncoder m_RotateIntakeRollerEncoder;
+    //private AbsoluteEncoder m_RotateIntakeRollerEncoder;
+    private RelativeEncoder m_RotateIntakeRollerEncoder;
 
     // TODO find actual values
     private final int m_freeLimit = 20;
@@ -43,7 +46,10 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
         m_RotateIntakeRollerMotor.setIdleMode(IdleMode.kBrake);
 
         //Creates the encoder
-        m_RotateIntakeRollerEncoder = m_RotateIntakeRollerMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        //TODO change to absolute encoder
+        m_RotateIntakeRollerEncoder = m_RotateIntakeRollerMotor.getEncoder();//getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        m_RotateIntakeRollerEncoder.setPosition(0);
+
         m_RotateIntakeRollerEncoder.setPositionConversionFactor(360);
         
         // TODO Figure out what number the factor has to be
@@ -51,7 +57,7 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
         
         // m_RotateIntakeRollerMotor.setSmartCurrentLimit(m_stallLimit, m_freeLimit);
         m_RotateIntakeRollerMotor.setInverted(false);
-        m_RotateIntakeRollerEncoder.setZeroOffset(flipperOffset);
+        //m_RotateIntakeRollerEncoder.setZeroOffset(flipperOffset);
     }
 
     /**
@@ -74,7 +80,7 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
      */
     @Override
     public double getCurrentAngleDegrees() {
-        return m_RotateIntakeRollerEncoder.getPosition();
+        return (m_RotateIntakeRollerEncoder.getPosition() / 25) / 3;
     }
 
     /**

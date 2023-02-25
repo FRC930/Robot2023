@@ -152,8 +152,8 @@ public class RobotContainer {
   
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-1, m_ExtendIntakeMotorSubsystem);
-  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(1, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-2, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(2, m_ExtendIntakeMotorSubsystem);
   private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
   private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
@@ -308,12 +308,11 @@ public class RobotContainer {
     m_codriverController.leftBumper().whileTrue(m_EjectRoller);
     // will only run after it checks that a and y is not pressed on the codrivercontroller.
     m_codriverController.a().negate().and(m_codriverController.y().negate()).and(m_codriverController.rightTrigger()).whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
-    m_codriverController.y()
-      .and(m_codriverController.rightTrigger())
-      .whileTrue(m_HighPitchIntakeCommand); 
+    m_codriverController.y().and(m_codriverController.rightTrigger())
+      .whileTrue(m_HighPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
     m_codriverController.a()
       .and(m_codriverController.rightTrigger())
-      .whileTrue(m_LowPitchIntakeCommand); 
+      .whileTrue(m_LowPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
   }
   private void configureButtonBindings_backup() {
     // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
