@@ -28,7 +28,7 @@ public class SetArmDegreesCommand extends CommandBase{
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         m_manipulator.setPosition(m_manipulatorPos);
         m_arm.setPosition(m_armPos);
     }

@@ -12,15 +12,15 @@ import frc.robot.autos.AutoCommandManager;
 
 // TODO Move used code to swerve module
 public final class RevUtils {
-  public static final double kFFDrive = AutoCommandManager.usePIDValueOrTune("kDriveFF", 0.0);
+  public static final double kFFDrive = AutoCommandManager.usePIDValueOrTune("kDriveFF", 0.18881);
   public static final double kPDrive = AutoCommandManager.usePIDValueOrTune("kDriveP", 0.01);
   public static final double kIDrive = AutoCommandManager.usePIDValueOrTune("kDriveI", 0.0);
   public static final double kDDrive = AutoCommandManager.usePIDValueOrTune("kDriveD", 0.0);
 
   public static final double kFFTurn = AutoCommandManager.usePIDValueOrTune("kTurnFF", 0.0);
-  public static final double kPTurn = AutoCommandManager.usePIDValueOrTune("kTurnP", 0.032);
+  public static final double kPTurn = AutoCommandManager.usePIDValueOrTune("kTurnP", 1.0);
   public static final double kITurn = AutoCommandManager.usePIDValueOrTune("kTurnI", 0.0);
-  public static final double kDTurn = AutoCommandManager.usePIDValueOrTune("kTurnD", 0.02);
+  public static final double kDTurn = AutoCommandManager.usePIDValueOrTune("kTurnD", 0.1);
 
   public static void setTurnMotorConfig(CANSparkMax motorController) {
     // TODO Tune Manually

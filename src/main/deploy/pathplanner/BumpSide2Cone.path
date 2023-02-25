@@ -119,7 +119,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "intakeCone"
+          "armIntakeCone"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",

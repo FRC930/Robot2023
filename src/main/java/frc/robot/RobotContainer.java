@@ -133,7 +133,7 @@ public class RobotContainer {
   // Commands \\
   private Command m_AutohighTargetCommand = 
     CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
-    .andThen(new WaitCommand(3)) //pause after scoring
+    .andThen(new WaitCommand(0.5)) //pause after scoring
     .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
   private Command m_AutoMidTargetCommand =
@@ -200,7 +200,9 @@ public class RobotContainer {
     eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
     eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
     eventCommandMap.put("armIntakeCone", 
-      CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+      CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+      .andThen(new WaitCommand(2))
+      .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
     eventCommandMap.put("intakeCone", new SequentialCommandGroup( //TODO remove
         new PrintCommand("******************************intakeCone"),
         new WaitCommand(5.0),
@@ -213,6 +215,8 @@ public class RobotContainer {
         new PrintCommand("********************************************************endscoreCone")
       )
     );
+    //TODO remove
+    eventCommandMap = eventCommandMap = new HashMap<>();
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
