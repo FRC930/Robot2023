@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.7201565994580932,
-        "y": 5.0363413790960605
+        "x": 1.7499115340111024,
+        "y": 5.047272316766856
       },
       "prevControl": {
-        "x": 1.6950621020113297,
-        "y": 5.046107886210477
+        "x": 1.724817036564339,
+        "y": 5.057038823881272
       },
       "nextControl": {
-        "x": 3.4814480080266623,
-        "y": 4.350865803869376
+        "x": 3.5112029425796702,
+        "y": 4.3617967415401715
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -41,8 +41,10 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "scoreHighCone"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -66,8 +68,10 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "stowArm"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -91,8 +95,10 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "scoreHighCone"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -116,8 +122,10 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "stowArm"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -138,8 +146,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "scoreHighCone"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -148,5 +158,24 @@
   "maxVelocity": 4.41,
   "maxAcceleration": 2.9,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 1.6363636363636058,
+      "names": [
+        "armIntakeCone"
+      ]
+    },
+    {
+      "position": 3.8181818181818086,
+      "names": [
+        "armIntakeCone"
+      ]
+    }
+  ]
 }
