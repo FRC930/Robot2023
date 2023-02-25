@@ -54,7 +54,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
                 SwerveDrive.getSwerveKinematics(),
                 new PIDConstants(1.4, 0.0, 0.0), //PID constants to correct for translation error (X and Y)
                 //new PIDConstants(1.0, 0.0, 0.0), //PID constants to correct for rotation error (used to create the rotation controller)
-                new PIDConstants(1.0, 0.0, 0.0), //PID constants to correct for rotation error (used to create the rotation controller)
+                new PIDConstants(1.9, 0.0, 0.0), //PID constants to correct for rotation error (used to create the rotation controller)
                 s_Swerve::setSwerveModuleStates,
                 eventCommandMap, 
                 true, // TODO Should the path be automatically mirrored depending on alliance color

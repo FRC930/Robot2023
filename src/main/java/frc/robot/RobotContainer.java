@@ -223,7 +223,7 @@ public class RobotContainer {
     m_autoManager.initCommands(eventCommandMap);
 
     // Configure the button bindings
-    configureButtonBindings_Intake();
+    configureButtonBindings_sussex();
     
     // Configure default commands
     m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
