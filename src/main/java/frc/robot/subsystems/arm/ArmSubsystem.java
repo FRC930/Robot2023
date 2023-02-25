@@ -110,7 +110,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private boolean atSetPoint() {
-        return this.controller.atSetpoint();
+        return this.controller.atGoal();
     }
 
     public Command createWaitUntilAtAngleCommand() {

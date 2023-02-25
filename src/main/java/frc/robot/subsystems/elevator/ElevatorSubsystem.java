@@ -113,6 +113,6 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public Command createWaitUntilAtHeightCommand() {
-        return Commands.waitUntil(() -> this.controller.atSetpoint());
+        return Commands.waitUntil(() -> this.controller.atGoal());
     }
 }

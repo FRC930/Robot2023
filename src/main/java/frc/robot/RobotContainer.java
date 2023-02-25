@@ -178,7 +178,7 @@ public class RobotContainer {
 
   private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.5);
   private final RunManipulatorRollerCommand m_ManipulatorRollerStopCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15);
-  private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED);
+  private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED);
   private final RunManipulatorRollerCommand m_ManipulatorRollerShootCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, -1);
 
   private final LEDCommand m_RunDisabledLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
@@ -369,6 +369,8 @@ public class RobotContainer {
     //                         .onFalse(m_StowArmPosition);
 
     //Score based on codrive selection
+    m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
+      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); // TODO cpnstant);
     m_driverController.rightTrigger()
     .onTrue(
       new ConditionalCommand(m_highTargetCommand, 
