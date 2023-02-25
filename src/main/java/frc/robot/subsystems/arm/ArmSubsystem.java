@@ -43,7 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO armIO) {
 
         // Sets up PID controller
-        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(225, 360));
+        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(225, 270));
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 
