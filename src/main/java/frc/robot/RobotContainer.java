@@ -258,7 +258,7 @@ public class RobotContainer {
       rotationAxis, 
       true, 
       true, 
-      TeleopSwerve.TURBO_SPEED));
+      TeleopSwerve.SLOW_SPEED));
     
     //Auto balance
     m_driverController.start().whileTrue(m_autoBalanceCommand);
@@ -369,6 +369,16 @@ public class RobotContainer {
     //                         .onFalse(m_StowArmPosition);
 
     //Score based on codrive selection
+    m_driverController.leftTrigger().whileTrue(new TeleopSwerve(
+      m_robotDrive, 
+      m_driverController, 
+      translationAxis, 
+      strafeAxis, 
+      rotationAxis, 
+      true, 
+      true, 
+      TeleopSwerve.SLOW_SPEED));
+
     m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
       .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); // TODO cpnstant);
     m_driverController.rightTrigger()
@@ -393,7 +403,7 @@ public class RobotContainer {
       m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
       m_codriverController.rightBumper()
       .onTrue(
-          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED) //TODO: Constant
+          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED) //TODO: Constant
         )
       .onFalse(
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
