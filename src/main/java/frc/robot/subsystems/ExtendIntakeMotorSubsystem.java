@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import edu.wpi.first.math.MathUtil;
@@ -57,5 +60,10 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
     @Override
     public void simulationPeriodic() {
       REVPhysicsSim.getInstance().run();
+    }
+
+    @Override
+    public void periodic() {
+        Logger.getInstance().recordOutput("ExtendIntakeMotorSubsystem/OutputVoltage", m_intakeMotor.getOutputCurrent());
     }
 }
