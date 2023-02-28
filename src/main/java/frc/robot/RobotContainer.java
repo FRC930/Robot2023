@@ -96,10 +96,10 @@ public class RobotContainer {
       (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
         // Competition robot attributes
         new RobotInformation(whichRobot,
-          new SwerveModuleConstants(8, 9, 9, 200.479),
-          new SwerveModuleConstants(11, 10, 10, 11.338),
-          new SwerveModuleConstants(1, 3, 3, 108.193  ),
-          new SwerveModuleConstants(18, 19, 19, 117.158  ))
+          new SwerveModuleConstants(8, 9, 9, 198.896),
+          new SwerveModuleConstants(11, 10, 10, 9.141),
+          new SwerveModuleConstants(1, 3, 3, 119.180),
+          new SwerveModuleConstants(18, 19, 19, 207.773))
         :
         // Non-Competition robot attributes
         new RobotInformation(whichRobot,
