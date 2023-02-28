@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.utilities.RotatePositions;
+import frc.robot.utilities.RotationMathUtility;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -17,10 +19,14 @@ public class TeleopSwerve extends CommandBase {
     public final static double NORMAL_SPEED = 0.8;
     private final double STICK_DEAD_BAND = 0.1;
 
+    private SwerveDrive m_swerveDrive;
+
     public double m_percentSpeed;
 
     private SwerveDrive m_Swerve;
+    private RotatePositions m_rotatePositions;
     private CommandXboxController m_controller;
+    private RotationMathUtility m_rotationMathUtility;
     private int m_translationAxis;
     private int m_strafeAxis;
     private int m_rotationAxis;
@@ -55,14 +61,22 @@ public class TeleopSwerve extends CommandBase {
 
         m_percentSpeed = percentSpeed;
         Logger.getInstance().recordOutput("TeleopSwerve/percentSpeed", m_percentSpeed);
+        m_rotatePositions = new RotatePositions();
+        m_rotationMathUtility = new RotationMathUtility();
     }
 
     @Override
     public void execute() {
+        double rAxis;
         // Gets the inputs from the joysticks
         double yAxis = -m_controller.getHID().getRawAxis(m_translationAxis);
         double xAxis = -m_controller.getHID().getRawAxis(m_strafeAxis);
-        double rAxis = -m_controller.getHID().getRawAxis(m_rotationAxis);
+        if (m_controller.getHID().getYButton()) {
+            rAxis = m_rotationMathUtility.rotationSpeed(m_swerveDrive.getPose(), m_rotatePositions.getPose2dForRotation(), m_swerveDrive.getHeadingDegrees());
+        }
+        else{
+            rAxis = -m_controller.getHID().getRawAxis(m_rotationAxis);
+        }
 
         // Applies a deadband to the values
         yAxis = MathUtil.applyDeadband(yAxis, STICK_DEAD_BAND);
@@ -73,6 +87,8 @@ public class TeleopSwerve extends CommandBase {
         double m_throttle = yAxis * m_percentSpeed;
         double m_strafe = xAxis * m_percentSpeed;
         double m_rotation = rAxis * m_percentSpeed;
+
+        
 
         m_Swerve.drive(m_throttle, m_strafe, m_rotation, m_fieldRelative, m_openLoop);
     }
