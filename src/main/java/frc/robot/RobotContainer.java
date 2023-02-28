@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -94,10 +96,10 @@ public class RobotContainer {
      (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
         // Competition robot attributes
         new RobotInformation(whichRobot,
-          new SwerveModuleConstants(8, 9, 9, 200.479),
-          new SwerveModuleConstants(11, 10, 10, 11.338),
-          new SwerveModuleConstants(1, 3, 3, 108.193  ),
-          new SwerveModuleConstants(18, 19, 19, 117.158  ))
+          new SwerveModuleConstants(8, 9, 9, 198.896),
+          new SwerveModuleConstants(11, 10, 10, 9.141),
+          new SwerveModuleConstants(1, 3, 3, 119.180),
+          new SwerveModuleConstants(18, 19, 19, 207.773))
         :
         // Non-Competition robot attributes
         new RobotInformation(whichRobot,
@@ -153,8 +155,8 @@ public class RobotContainer {
   
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-3, m_ExtendIntakeMotorSubsystem);
-  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(0, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-2, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(2, m_ExtendIntakeMotorSubsystem);
   private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
   private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
@@ -179,7 +181,7 @@ public class RobotContainer {
 
   private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.5);
   private final RunManipulatorRollerCommand m_ManipulatorRollerStopCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15);
-  private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED);
+  private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED);
   private final RunManipulatorRollerCommand m_ManipulatorRollerShootCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, -1);
 
   private final LEDCommand m_RunDisabledLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
@@ -187,8 +189,7 @@ public class RobotContainer {
   private final LEDCommand m_RunCubeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CUBEREQUEST);
   private final LEDCommand m_RunConeAquiredLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CONEAQUIRED);
   private final LEDCommand m_RunCubeAquiredLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CUBEAQUIRED);
-  private final LEDCommand m_RunBlueAllianceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.BLUEALLIANCE);
-  private final LEDCommand m_RunRedAllianceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.REDALLIANCE);
+  private final LEDCommand m_RunAllianceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.ALLIANCE);
   private final LEDCommand m_RunTeamColorsLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.TEAMCOLORS);
   private final LEDCommand m_RunRandomLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.RANDOMLED);
   private final LEDCommand m_RunAutoBalanceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.AUTOBALANCE);
@@ -215,7 +216,7 @@ public class RobotContainer {
     configureButtonBindings_sussex();
     
     // Configure default commands
-    m_LEDsubsystem.setDefaultCommand(m_RunTeamColorsLEDPattern);
+    m_LEDsubsystem.setDefaultCommand(m_RunAllianceLEDPattern);
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, TeleopSwerve.NORMAL_SPEED));
     m_fieldSim.initSim();
     m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
@@ -259,7 +260,7 @@ public class RobotContainer {
       rotationAxis, 
       true, 
       true, 
-      TeleopSwerve.TURBO_SPEED));
+      TeleopSwerve.SLOW_SPEED));
     
     //Auto balance
     m_driverController.start().whileTrue(m_autoBalanceCommand);
@@ -324,14 +325,13 @@ public class RobotContainer {
  
   private void configureButtonBindings_Intake(){
     m_codriverController.leftBumper().whileTrue(m_EjectRoller);
-    m_codriverController.rightTrigger().whileTrue((m_ExtendIntakeCommand.andThen(m_IntakeRoller)));
-    m_codriverController.y()
-      .and(m_codriverController.rightTrigger())
-      .whileTrue(m_HighPitchIntakeCommand); 
+    // will only run after it checks that a and y is not pressed on the codrivercontroller.
+    m_codriverController.a().negate().and(m_codriverController.y().negate()).and(m_codriverController.rightTrigger()).whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
+    m_codriverController.y().and(m_codriverController.rightTrigger())
+      .whileTrue(m_HighPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
     m_codriverController.a()
       .and(m_codriverController.rightTrigger())
-      .whileTrue(m_LowPitchIntakeCommand); 
-  
+      .whileTrue(m_LowPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
   }
   private void configureButtonBindings_backup() {
     // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
@@ -387,6 +387,18 @@ public class RobotContainer {
     //                         .onFalse(m_StowArmPosition);
 
     //Score based on codrive selection
+    m_driverController.leftTrigger().whileTrue(new TeleopSwerve(
+      m_robotDrive, 
+      m_driverController, 
+      translationAxis, 
+      strafeAxis, 
+      rotationAxis, 
+      true, 
+      true, 
+      TeleopSwerve.SLOW_SPEED));
+
+    m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
+      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); // TODO cpnstant);
     m_driverController.rightTrigger()
     .onTrue(
       new ConditionalCommand(m_highTargetCommand, 
@@ -402,6 +414,9 @@ public class RobotContainer {
   m_codriverController.leftBumper()
     .onTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
     .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+  //substation Intake
+  m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
       m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
       m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
@@ -409,7 +424,7 @@ public class RobotContainer {
       m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
       m_codriverController.rightBumper()
       .onTrue(
-          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED) //TODO: Constant
+          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED) //TODO: Constant
         )
       .onFalse(
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
@@ -419,6 +434,7 @@ public class RobotContainer {
       //Cube and Cone selector
       m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
       m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
+    
     //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
       //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
     // m_codriverController.x()
