@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class TeleopSwerve extends CommandBase {
 
-    public final static double TURBO_SPEED = 1.0;
-    public final static double NORMAL_SPEED = 0.6;
+    public final static double SLOW_SPEED = 0.4;
+    public final static double NORMAL_SPEED = 0.8;
     private final double STICK_DEAD_BAND = 0.1;
 
     private SwerveDrive m_swerveDrive;
