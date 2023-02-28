@@ -28,6 +28,8 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
     private final int m_stallLimit = 10;
 
     private static double flipperOffset = 0;
+
+    private static double gearRatio = (25 * 2.67);
     
     /**
      * 
@@ -80,7 +82,7 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
      */
     @Override
     public double getCurrentAngleDegrees() {
-        return (m_RotateIntakeRollerEncoder.getPosition() / 25) / 3;
+        return m_RotateIntakeRollerEncoder.getPosition() / gearRatio;
     }
 
     /**
