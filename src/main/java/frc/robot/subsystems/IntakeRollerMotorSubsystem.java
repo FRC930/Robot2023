@@ -14,6 +14,7 @@ import frc.robot.utilities.SparkMaxWrapper;
 public class IntakeRollerMotorSubsystem extends SubsystemBase{
     
     private SparkMaxWrapper m_IntakerollerMotor;
+    private int currentLimit = 2;
 
     /**
      * 
@@ -26,6 +27,8 @@ public class IntakeRollerMotorSubsystem extends SubsystemBase{
     public IntakeRollerMotorSubsystem(int rollerID) {
         //Creates the motor
         m_IntakerollerMotor = new SparkMaxWrapper(rollerID, MotorType.kBrushless);
+        m_IntakerollerMotor.setSmartCurrentLimit(currentLimit);
+
         m_IntakerollerMotor.restoreFactoryDefaults();
     }
 
@@ -38,7 +41,7 @@ public class IntakeRollerMotorSubsystem extends SubsystemBase{
      * @param speed
      */
     public void setRollerVoltage(double voltage) {
-        m_IntakerollerMotor.setVoltage(voltage);
+        m_IntakerollerMotor.setVoltage(-voltage);
     }
 
     /**

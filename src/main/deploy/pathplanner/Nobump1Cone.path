@@ -47,21 +47,5 @@
       }
     }
   ],
-  "maxVelocity": 4.41,
-  "maxAcceleration": 2.2,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "ScoreCone"
-      ]
-    },
-    {
-      "position": 0.9745454545454024,
-      "names": [
-        "scoreHighCone"
-      ]
-    }
-  ]
+  "markers": []
 }

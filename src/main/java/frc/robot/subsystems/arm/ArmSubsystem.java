@@ -29,7 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
     public static double GROUND_POSITION = 46.8; //at ground elevator position
     public static double STOW_POSITION = 70.0;//-60.0; //at ground elevator position
     public static double INTAKE_POSITION = 50.0; // TODO: Find an actual intake value
-    public static final double SUBSTATION_POSITION = 0;// TODO:find acutal position
+    public static final double SUBSTATION_POSITION = 115;// TODO:find acutal position
 
     public static double ARM_LENGTH = 27.12;
 
@@ -43,7 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO armIO) {
 
         // Sets up PID controller
-        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(225, 360));
+        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(225, 270));
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 
@@ -110,7 +110,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private boolean atSetPoint() {
-        return this.controller.atSetpoint();
+        return this.controller.atGoal();
     }
 
     public Command createWaitUntilAtAngleCommand() {

@@ -165,11 +165,14 @@ public class CommandFactoryUtility {
         ManipulatorSubsystem m_manipulatorSubsystem) {
         final Command command = 
             new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0))
+                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()).withTimeout(0.5)
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
                 ArmSubsystem.SUBSTATION_POSITION, 
                 ManipulatorSubsystem.SUBSTATION_POSITION
                 ))
-            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); //TODO constant
+                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()).withTimeout(0.5)
+                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()).withTimeout(0.5)
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)); //TODO constant
 
         return command;
     }

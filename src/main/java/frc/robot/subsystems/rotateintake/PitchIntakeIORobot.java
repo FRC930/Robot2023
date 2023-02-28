@@ -1,8 +1,11 @@
 package frc.robot.subsystems.rotateintake;
 
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
@@ -17,11 +20,16 @@ import edu.wpi.first.math.MathUtil;
 public class PitchIntakeIORobot implements IntakeMotorIO {
 
     private CANSparkMax m_RotateIntakeRollerMotor;
+    //private AbsoluteEncoder m_RotateIntakeRollerEncoder;
     private RelativeEncoder m_RotateIntakeRollerEncoder;
 
     // TODO find actual values
     private final int m_freeLimit = 20;
     private final int m_stallLimit = 10;
+
+    private static double flipperOffset = 0;
+
+    private static double gearRatio = (25 * 2.67);
     
     /**
      * 
@@ -35,15 +43,23 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
     public PitchIntakeIORobot(int motorID) {
         //Creates the motor
         m_RotateIntakeRollerMotor = new CANSparkMax(motorID, MotorType.kBrushless);
+        
         m_RotateIntakeRollerMotor.restoreFactoryDefaults();
+        m_RotateIntakeRollerMotor.setIdleMode(IdleMode.kBrake);
 
         //Creates the encoder
-        m_RotateIntakeRollerEncoder = m_RotateIntakeRollerMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 42);
+        //TODO change to absolute encoder
+        m_RotateIntakeRollerEncoder = m_RotateIntakeRollerMotor.getEncoder();//getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        m_RotateIntakeRollerEncoder.setPosition(0);
+
         m_RotateIntakeRollerEncoder.setPositionConversionFactor(360);
+        
         // TODO Figure out what number the factor has to be
         m_RotateIntakeRollerEncoder.setVelocityConversionFactor(60);
         
-        m_RotateIntakeRollerMotor.setSmartCurrentLimit(m_stallLimit, m_freeLimit);
+        // m_RotateIntakeRollerMotor.setSmartCurrentLimit(m_stallLimit, m_freeLimit);
+        m_RotateIntakeRollerMotor.setInverted(false);
+        //m_RotateIntakeRollerEncoder.setZeroOffset(flipperOffset);
     }
 
     /**
@@ -66,7 +82,7 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
      */
     @Override
     public double getCurrentAngleDegrees() {
-        return m_RotateIntakeRollerEncoder.getPosition();
+        return m_RotateIntakeRollerEncoder.getPosition() / gearRatio;
     }
 
     /**

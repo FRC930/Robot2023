@@ -13,7 +13,7 @@ public class ArmIORobot implements ArmIO {
     
     private AbsoluteEncoder m_armEncoder;
 
-    private static double m_armOffset = 182.64+17.9;
+    private static double m_armOffset = 174.0;
 
     public ArmIORobot(int armMotorID) {
         m_armMotor = new CANSparkMax(armMotorID, MotorType.kBrushless);
@@ -31,7 +31,7 @@ public class ArmIORobot implements ArmIO {
         m_armEncoder.setPositionConversionFactor(360);
         m_armEncoder.setVelocityConversionFactor(60);
 
-        m_armEncoder.setInverted(true);
+        m_armEncoder.setInverted(false);
         m_armMotor.setInverted(true);
 
         m_armEncoder.setZeroOffset(m_armOffset);

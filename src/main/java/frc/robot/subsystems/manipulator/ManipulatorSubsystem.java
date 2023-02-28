@@ -26,8 +26,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static double INTAKE_POSITION = -225.0; //TODO: Find actual intake position value
 
     public static final double ROLLER_INTAKE_SPEED = 0.8;
+    public static final double SHOOT_SPEED = -1.0;
     public static final double RELEASE_SPEED = -0.3;
-    public static final double SUBSTATION_POSITION = 0;
+    public static final double SUBSTATION_POSITION = 235;//-125; want position to force long way if continuousinput commented out
+   
 
     /**<h3>ManipulatorSubsystem</h3>
      * Decides desired output, in volts, for the manipulator.
@@ -39,7 +41,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
         //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
         controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
-        controller.enableContinuousInput(0, 360);
+        //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!
 
         // Sets up Feetforward TODO: Change these values
         ff = new ArmFeedforward(0.0, 0.7, 0);
@@ -122,7 +124,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     }
 
     private boolean atSetPoint() {
-        return this.controller.atSetpoint();
+        return this.controller.atGoal();
     }
 
     public Command createWaitUntilAtAngleCommand() {

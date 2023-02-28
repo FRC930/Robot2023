@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LEDsubsystem;
 
@@ -20,8 +22,7 @@ public class LEDCommand extends CommandBase {
         CUBEREQUEST,
         CONEAQUIRED,
         CUBEAQUIRED,
-        BLUEALLIANCE,
-        REDALLIANCE,
+        ALLIANCE,
         DISABLED,
         TEAMCOLORS,
         RANDOMLED,
@@ -72,11 +73,15 @@ public class LEDCommand extends CommandBase {
             case CONEAQUIRED:
                 m_LEDSubsystem.setPins(false, false, false, true);
                 break;
-            case BLUEALLIANCE:
-                m_LEDSubsystem.setPins(true, true, false, false);
-                break;
-            case REDALLIANCE:
-                m_LEDSubsystem.setPins(true,true, true, false);
+            case ALLIANCE:
+                if(DriverStation.getAlliance() == Alliance.Blue){
+                    // Blue Pins
+                    m_LEDSubsystem.setPins(true, true, false, false);
+                }
+                else{
+                    // Red Pina
+                    m_LEDSubsystem.setPins(true,true, true, false);
+                }
                 break;
             case DISABLED:
                 m_LEDSubsystem.setPins(false, false, false, false);
