@@ -24,6 +24,33 @@
     },
     {
       "anchorPoint": {
+        "x": 1.7499115340111024,
+        "y": 0.4910242299117076
+      },
+      "prevControl": {
+        "x": 1.728189357027773,
+        "y": 0.5023575396421418
+      },
+      "nextControl": {
+        "x": 1.7716337109944316,
+        "y": 0.47969092018127324
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "scoreHighCone"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
         "x": 6.803623231306612,
         "y": 0.9342253270972722
       },
@@ -42,7 +69,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "armIntakeCone"
+          "stowArm"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -55,12 +82,12 @@
         "y": 1.607269379952295
       },
       "prevControl": {
-        "x": 1.0646276593404727,
-        "y": 1.3701489720969693
+        "x": 1.4073364898866554,
+        "y": 0.7422459289363023
       },
       "nextControl": {
-        "x": 2.1032050245918676,
-        "y": 1.7398919343293238
+        "x": 1.8691328019913507,
+        "y": 1.977667555185587
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -78,12 +105,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.8502657456442737,
-        "y": 1.9186778223180516
+        "x": 3.9081343119951195,
+        "y": 2.1353844417090553
       },
       "prevControl": {
-        "x": 2.586002262913617,
-        "y": 1.876532662156234
+        "x": 2.6438708292644626,
+        "y": 2.0932392815472376
       },
       "nextControl": null,
       "holonomicAngle": 179.71988189407895,
@@ -99,5 +126,15 @@
       }
     }
   ],
-  "markers": []
+  "maxVelocity": 4.41,
+  "maxAcceleration": 2.9,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 1.774545454545395,
+      "names": [
+        "armIntakeCone"
+      ]
+    }
+  ]
 }
