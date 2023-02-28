@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+
 import frc.robot.Robot;
 import frc.robot.utilities.vision.estimation.CameraProperties;
 
@@ -22,14 +23,16 @@ public class CameraOnRobot {
     private String m_CameraIpName;
     private String m_CameraName;  // TODO comment why keep
 
-    // ----- CONSTRUCTOR ----- \\
+    
     /**
      * <h3>CameraOnRobot</h3>
      * 
-     * @param cameraIpName ip adresse of the camera
-     * @param backCameraIpName
+     * Creates a new camera with all of its attributes
+     * 
+     * @param cameraName name of the camera ex: back camera
+     * @param cameraIpName ip address of the camera
      * @param pipelineIndex photon pipeline number
-     * @param portToForward 
+     * @param portToForward port number to access the camera, local is 5800, camera is 580x, x = camera number
      * @param configFile config file of the camera
      * @param cameraXPosition difference in x position between the camera and the center of the robot 
      * @param cameraYPosition difference in y position between the camera and the center of the robot 
@@ -39,25 +42,27 @@ public class CameraOnRobot {
      * @param cameraRotationYaw difference in yaw rotation between the camera and the center of the robot
      */
     public CameraOnRobot(String cameraName, 
-        String cameraIpName, int pipelineIndex,
-        int portToForward,
-        String configFile, 
-        int cameraResolutionWidth,
-        int cameraResolutionHeight,
-        double cameraXPosition,
-        double cameraYPosition,
-        double cameraZPosition,
-        double cameraRotationRoll,
-        double cameraRotationPitch,
-        double cameraRotationYaw) {
+                        String cameraIpName, 
+                        int pipelineIndex,
+                        int portToForward,
+                        String configFile, 
+                        int cameraResolutionWidth,
+                        int cameraResolutionHeight,
+                        double cameraXPosition,
+                        double cameraYPosition,
+                        double cameraZPosition,
+                        double cameraRotationRoll,
+                        double cameraRotationPitch,
+                        double cameraRotationYaw) {
 
-        m_CameraName = cameraName;
         m_PhotonCamera = new PhotonCamera(cameraName);
+        m_PhotonCamera.setDriverMode(false);
         m_CameraIpName = cameraIpName;
         PortForwarder.add(portToForward, cameraIpName, 5800);
         m_PhotonCamera.setPipelineIndex(pipelineIndex);
+
         if (Robot.isSimulation()) { 
-            //disable version check when running simulation 
+            // disable version check when running simulation 
             PhotonCamera.setVersionCheckEnabled(false); 
         }
 
@@ -66,9 +71,10 @@ public class CameraOnRobot {
         } catch (IOException e) {
             if(m_PhotonCamera == null) {
                 m_CameraProp = CameraProperties.LL2_640_480();
-            }
+            } 
             DriverStation.reportWarning("Unable to load configuration file for camera "+cameraIpName, e.getStackTrace());
         }
+       
         m_RobotToCameraPose = new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(cameraXPosition),

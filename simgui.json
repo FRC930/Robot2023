@@ -6,15 +6,8 @@
       }
     },
     "Other Devices": {
-      "SparkMax[16]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SparkMax[7]": {
-        "header": {
-          "open": true
-        }
+      "window": {
+        "visible": false
       }
     },
     "PowerDistributions": {
@@ -182,8 +175,7 @@
         },
         "OV5647": {
           "open": false
-        },
-        "open": false
+        }
       }
     }
   }

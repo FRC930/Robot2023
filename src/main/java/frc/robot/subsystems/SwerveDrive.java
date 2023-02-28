@@ -268,4 +268,11 @@ public class SwerveDrive extends SubsystemBase {
       mod.resetAngleToAbsolute();
     }
   }
+
+  /**
+   * Sets the origin for April Tags to be used by robot not using FMS ie practice or simulation
+   */
+  public void setOriginBasedOnAlliance() {
+    m_aprilCameraOne.setOriginBasedOnAlliance();
+  }
 }

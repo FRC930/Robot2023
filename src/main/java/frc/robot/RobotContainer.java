@@ -93,7 +93,7 @@ public class RobotContainer {
     //https://buildmedia.readthedocs.org/media/pdf/phoenix-documentation/latest/phoenix-documentation.pdf
     //page 100
     RobotInformation robotInfo = 
-      (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
+     (whichRobot == WhichRobot.COMPETITION_ROBOT) ?
         // Competition robot attributes
         new RobotInformation(whichRobot,
           new SwerveModuleConstants(8, 9, 9, 198.896),
@@ -294,9 +294,26 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+        // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    if(!DriverStation.isFMSAttached()) {
+      m_robotDrive.setOriginBasedOnAlliance();
+    }
     return m_autoManager.getAutonomousCommand();
     //TODO determine if autoManager needs to have andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
   }
+
+  /**
+   * Method to run before teleop starts, needed to help reset April Tag direction before teleop if operator does not do 
+   * autonomous first.
+   */
+  public void teleopInit() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    if(!DriverStation.isFMSAttached()) {
+      m_robotDrive.setOriginBasedOnAlliance();
+    }
+
+}
+  
 
   public void periodic() {
     m_fieldSim.periodic();
