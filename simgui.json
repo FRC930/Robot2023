@@ -6,8 +6,15 @@
       }
     },
     "Other Devices": {
-      "window": {
-        "visible": false
+      "SparkMax[16]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SparkMax[7]": {
+        "header": {
+          "open": true
+        }
       }
     },
     "PowerDistributions": {
