@@ -199,7 +199,7 @@ public class RobotContainer {
     // Auto Commands
 
     // TODO Add markers for real commands/paths
-    eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
+    //eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
     // eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
     eventCommandMap.put("armIntakeCone", 
        CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
@@ -207,7 +207,7 @@ public class RobotContainer {
       //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
     eventCommandMap.put("stowArm" , new WaitCommand(0.5).andThen( CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
     //TODO remove
-    //eventCommandMap = eventCommandMap = new HashMap<>();
+    eventCommandMap = eventCommandMap = new HashMap<>();
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);

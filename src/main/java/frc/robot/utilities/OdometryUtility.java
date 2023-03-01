@@ -241,9 +241,9 @@ public class OdometryUtility {
      * 
      * @return a reference to the back camera
     //  */
-    public PhotonCamera getBackCamera() { 
-        return m_backCamera.getPhotonCamera();
-    }
+    //public PhotonCamera getBackCamera() { 
+       // return m_backCamera.getPhotonCamera();
+    //}
 
     /**
      * <h3>getLeftCamera</h3>

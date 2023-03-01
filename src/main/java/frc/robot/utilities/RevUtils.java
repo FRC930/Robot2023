@@ -12,8 +12,8 @@ import frc.robot.autos.AutoCommandManager;
 
 // TODO Move used code to swerve module
 public final class RevUtils {
-  public static final double kFFDrive = AutoCommandManager.usePIDValueOrTune("kDriveFF", 0.19101); // 0.18881
-  public static final double kPDrive = AutoCommandManager.usePIDValueOrTune("kDriveP", 0.073095); // 0.01
+  public static final double kFFDrive = AutoCommandManager.usePIDValueOrTune("kDriveFF", 0.19181); // 0.19101, 0.18881
+  public static final double kPDrive = AutoCommandManager.usePIDValueOrTune("kDriveP", 0.20176); // 0.073095, 0.01
   public static final double kIDrive = AutoCommandManager.usePIDValueOrTune("kDriveI", 0.0);
   public static final double kDDrive = AutoCommandManager.usePIDValueOrTune("kDriveD", 0.0);
 
