@@ -98,8 +98,8 @@ public class RobotContainer {
         new RobotInformation(whichRobot,
           new SwerveModuleConstants(8, 9, 9, 198.896),
           new SwerveModuleConstants(11, 10, 10, 9.141),
-          new SwerveModuleConstants(1, 3, 3, 119.180),
-          new SwerveModuleConstants(18, 19, 19, 207.773))
+          new SwerveModuleConstants(1, 3, 3, 102.217),
+          new SwerveModuleConstants(18, 19, 19, 209.180))
         :
         // Non-Competition robot attributes
         new RobotInformation(whichRobot,
