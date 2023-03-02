@@ -201,7 +201,7 @@ public class OdometryUtility {
                                         RIGHT_CAMERA_ROTATION_YAW
                                         );
 
-        cameras = List.of(m_rightCamera, m_leftCamera); //m_backCamera );
+        cameras = List.of();//m_rightCamera, m_leftCamera); //m_backCamera );
 
        // Adjusts AprilTag position based on 0,0 based on alliance selection
        setOriginBasedOnAlliance();

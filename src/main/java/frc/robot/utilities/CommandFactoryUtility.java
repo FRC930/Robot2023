@@ -156,9 +156,9 @@ public class CommandFactoryUtility {
         ManipulatorSubsystem m_manipulatorSubsystem) {
 
         return createArmIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
-            17.0, 
+            17.4, 
             1.0, 
-            -20.0, 
+            -22.0, 
             4.5);
     }
 

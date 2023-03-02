@@ -14,7 +14,7 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class AutoBalanceCommand extends CommandBase {
     
-    private final double MAX_SPEED = 0.2;
+    private final double MAX_SPEED = 0.15;
     private final double STRAFE = 0.0;
     private final double ROTATION = 0.0;
     private final boolean IS_FIELD_RELATIVE = true;
@@ -41,16 +41,21 @@ public class AutoBalanceCommand extends CommandBase {
 
     @Override
     public void execute() {
+        double degrees;
         // Get pitch in degrees from swerve drive subsystem
-        m_robotPitchInDegrees = m_swerveDrive.getPitch().getDegrees();
+        m_robotPitchInDegrees =m_swerveDrive.getPitch().getDegrees();
+        degrees = m_robotPitchInDegrees;
+        m_robotPitchInDegrees = MathUtil.applyDeadband(m_robotPitchInDegrees, 3.0, 15.0);
 
         // Gets percentage of max speed to set swerve drive to
         double tempSpeed = 0.0;
-        tempSpeed = MathUtil.clamp(m_swerveDrive.getAutoPitchController().calculate(m_robotPitchInDegrees/15, 0), -1, 1);
+        tempSpeed = MathUtil.clamp(m_swerveDrive.getAutoPitchController().calculate(m_robotPitchInDegrees, 0.0), -1.0, 1.0);
 
         // Logs values to advantage kit
         Logger.getInstance().recordOutput("AutoBalanceCommand/RobotPitch", m_robotPitchInDegrees);
+        Logger.getInstance().recordOutput("AutoBalanceCommand/degrees", degrees);
         Logger.getInstance().recordOutput("AutoBalanceCommand/Speed", tempSpeed);
+        
         
         // Sets drive to throttle
         m_throttle = tempSpeed * MAX_SPEED;

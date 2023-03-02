@@ -187,10 +187,10 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Auto Commands
-    // CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighCone", 
-    //     m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
-    // CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreMidCone", 
-    //     m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighCone", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreMidCone", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "armIntakeCone", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "stowArm", 
