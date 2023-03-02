@@ -14,6 +14,11 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class AutoBalanceCommand extends CommandBase {
     
+    /**
+     *
+     */
+    private static final double INVERTED_DEADBAND = 7.5;
+    private static final double NON_INVERTED_DEADBAND = 7.0;
     private final double MAX_SPEED = 0.15;
     private final double STRAFE = 0.0;
     private final double ROTATION = 0.0;
@@ -24,6 +29,7 @@ public class AutoBalanceCommand extends CommandBase {
 
     private double m_robotPitchInDegrees;
     private double m_throttle;
+    private boolean m_inverted;
 
     /**
      * <h3>AutoBalanceCommand</h3>
@@ -32,11 +38,15 @@ public class AutoBalanceCommand extends CommandBase {
      * 
      * @param swerveDrive Drive subsystem
      */
-    public AutoBalanceCommand(SwerveDrive swerveDrive) {
+    public AutoBalanceCommand(SwerveDrive swerveDrive, boolean inverted) {
         m_swerveDrive = swerveDrive;
         addRequirements(m_swerveDrive);
         m_robotPitchInDegrees = 0.0;
         m_throttle = 0.0;
+        m_inverted = inverted;
+    }
+    public AutoBalanceCommand(SwerveDrive swerveDrive) {
+        this(swerveDrive, false);
     }
 
     @Override
@@ -45,7 +55,9 @@ public class AutoBalanceCommand extends CommandBase {
         // Get pitch in degrees from swerve drive subsystem
         m_robotPitchInDegrees =m_swerveDrive.getPitch().getDegrees();
         degrees = m_robotPitchInDegrees;
-        m_robotPitchInDegrees = MathUtil.applyDeadband(m_robotPitchInDegrees, 3.0, 15.0);
+        m_robotPitchInDegrees = MathUtil.applyDeadband(m_robotPitchInDegrees, 
+            m_inverted?INVERTED_DEADBAND:NON_INVERTED_DEADBAND, // TODO TUNE deadband to balance
+            15.0); 
 
         // Gets percentage of max speed to set swerve drive to
         double tempSpeed = 0.0;
@@ -58,7 +70,7 @@ public class AutoBalanceCommand extends CommandBase {
         
         
         // Sets drive to throttle
-        m_throttle = tempSpeed * MAX_SPEED;
+        m_throttle = ((m_inverted)?-1.0:1.0) *tempSpeed * MAX_SPEED;
         m_swerveDrive.drive(m_throttle, STRAFE, ROTATION, IS_FIELD_RELATIVE, IS_OPEN_LOOP);
     }
 
