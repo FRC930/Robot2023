@@ -149,6 +149,19 @@ public class CommandFactoryUtility {
             25.0);
     }
 
+    public static Command createArmIntakeUpRightCommand(
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+
+        return createArmIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
+            17.0, 
+            1.0, 
+            -20.0, 
+            4.5);
+    }
+
     public static Command createExtendIntakeCommand(
         ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem, 
         IntakeRollerMotorSubsystem intakeRollerMotorSubsystem) {
@@ -213,6 +226,11 @@ public class CommandFactoryUtility {
             break;
             case "armIntakeCone":
                 autoCommand = CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+                                //.andThen(new WaitCommand(2))
+                                //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+            // break;
+            case "armIntakeUprightCone":
+                autoCommand = CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
                                 //.andThen(new WaitCommand(2))
                                 //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
             break;

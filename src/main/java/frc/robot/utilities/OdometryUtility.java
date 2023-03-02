@@ -86,7 +86,7 @@ public class OdometryUtility {
     private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
     private static final double LEFT_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);
     private static final double LEFT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);
-    private static final double LEFT_CAMERA_ROTATION_YAW = Math.toRadians(-30.0);
+    private static final double LEFT_CAMERA_ROTATION_YAW = Math.toRadians(22.0);
 
     // Right camera constants
     private static final String RIGHT_CAMERA_NAME = "Camera2"; 
@@ -101,7 +101,7 @@ public class OdometryUtility {
     private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
     private static final double RIGHT_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
-    private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(30.0);;
+    private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(-22.0);;
 
     // Three cameras on the robot, 2 in the front, 1 on the back
     //private final CameraOnRobot m_backCamera;
@@ -201,7 +201,7 @@ public class OdometryUtility {
                                         RIGHT_CAMERA_ROTATION_YAW
                                         );
 
-        cameras = List.of(); //m_rightCamera, m_leftCamera); //m_backCamera );
+        cameras = List.of(m_rightCamera, m_leftCamera); //m_backCamera );
 
        // Adjusts AprilTag position based on 0,0 based on alliance selection
        setOriginBasedOnAlliance();
