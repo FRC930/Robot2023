@@ -24,11 +24,12 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static double GROUND_POSITION = 5.2; //at ground elevator position
     public static double STOW_POSITION = 45.0; //at ground elevator position
     public static double INTAKE_POSITION = -225.0; //TODO: Find actual intake position value
+    public static final double SUBSTATION_POSITION = 235;//-125; want position to force long way if continuousinput commented out
 
     public static final double ROLLER_INTAKE_SPEED = 0.8;
     public static final double SHOOT_SPEED = -1.0;
     public static final double RELEASE_SPEED = -0.3;
-    public static final double SUBSTATION_POSITION = 235;//-125; want position to force long way if continuousinput commented out
+    public static final double HOLD_SPEED = 0.15;
    
 
     /**<h3>ManipulatorSubsystem</h3>

@@ -1,6 +1,9 @@
 package frc.robot.utilities;
 
+import java.util.Map;
+
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -54,7 +57,7 @@ public class CommandFactoryUtility {
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
-            .andThen(new WaitCommand(0.5))
+            .andThen(new WaitCommand(0.5)) // TODO WHY waiting
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
 
         return command;
@@ -107,7 +110,7 @@ public class CommandFactoryUtility {
                 ArmSubsystem.STOW_POSITION, 
                 ManipulatorSubsystem.STOW_POSITION
                 ),
-            new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); //TODO constant
+            new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)); //TODO constant
 
         return command;
     }
@@ -127,7 +130,7 @@ public class CommandFactoryUtility {
                 ManipulatorSubsystem.ROLLER_INTAKE_SPEED),
             new ElevatorMoveCommand(m_elevatorSubsystem, 
                 Units.inchesToMeters(elevatorHeight)),
-            new WaitCommand(waitSecond),
+            m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(waitSecond),
             new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, 
                 manipulatorPosition));
 
@@ -159,22 +162,76 @@ public class CommandFactoryUtility {
         return new IntakeRollerCommand(2, 
         m_IntakeRollerMotorSubsystem);
     }
+
     public static Command createSingleSubstationCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem) {
         final Command command = 
             new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0))
-                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()).withTimeout(0.5)
+                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(0.5))
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
                 ArmSubsystem.SUBSTATION_POSITION, 
                 ManipulatorSubsystem.SUBSTATION_POSITION
                 ))
-                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()).withTimeout(0.5)
-                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()).withTimeout(0.5)
+                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)); //TODO constant
 
         return command;
     }
     //Create command for pitch intake
+
+
+    /**
+     * addAutoCommandEvent
+     *  Add event command to event map for autonomous paths
+     * 
+     * @param eventCommandMap
+     * @param eventName
+     * @param m_elevatorSubsystem
+     * @param m_armSubsystem
+     * @param m_manipulatorSubsystem
+     */
+    public static void addAutoCommandEvent( Map<String, Command> eventCommandMap, 
+                                            String eventName, 
+                                            ElevatorSubsystem m_elevatorSubsystem, 
+                                            ArmSubsystem m_armSubsystem, 
+                                            ManipulatorSubsystem m_manipulatorSubsystem) {
+        Command autoCommand = null;
+        switch(eventName) {
+            case "scoreHighCone":
+                autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                                .andThen(new WaitCommand(0.5)) //pause after scoring
+                                .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+                        
+            break;
+            case "scoreMidCone":
+                autoCommand = CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                                .andThen(new WaitCommand(3)) //pause after scoring
+                                .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+            break;
+            case "armIntakeCone":
+                autoCommand = CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+                                //.andThen(new WaitCommand(2))
+                                //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+            break;
+            case "stowArm":
+                autoCommand = new WaitCommand(0.5) // TODO why not check distance (low intake) versus a wait
+                    .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+                    .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))   
+                    .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+                break;
+        }
+
+        if(autoCommand != null) {
+            eventCommandMap.put(eventName, autoCommand);
+        } else {
+            DriverStation.reportWarning("Unable to add event name"+eventName+" given not declared!", 
+                Thread.currentThread().getStackTrace());
+        }
+     
+    }
+
+
 }
