@@ -51,16 +51,43 @@
     },
     {
       "anchorPoint": {
+        "x": 5.883650399779431,
+        "y": 4.624763095680038
+      },
+      "prevControl": {
+        "x": 5.472560346830096,
+        "y": 4.693278104504927
+      },
+      "nextControl": {
+        "x": 6.108079986305582,
+        "y": 4.587358164592346
+      },
+      "holonomicAngle": -6.709836807756911,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "waitTilArmDown"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
         "x": 6.774083603661104,
         "y": 4.457897794818897
       },
       "prevControl": {
-        "x": 5.773801829931517,
-        "y": 4.6932582121670325
+        "x": 6.328997957141214,
+        "y": 4.5905055912675925
       },
       "nextControl": {
-        "x": 7.162335320335478,
-        "y": 4.366544449719045
+        "x": 6.886840714142524,
+        "y": 4.4243031999992795
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -105,16 +132,43 @@
     },
     {
       "anchorPoint": {
-        "x": 6.865873354388219,
-        "y": 3.3013469356572456
+        "x": 6.020680417429211,
+        "y": 3.8825171667437353
       },
       "prevControl": {
-        "x": 2.3464595438530216,
-        "y": 6.289670002666169
+        "x": 3.5266391891497495,
+        "y": 5.931193889973285
       },
       "nextControl": {
-        "x": 7.149161334806554,
-        "y": 3.114031491225696
+        "x": 6.340417125278695,
+        "y": 3.6198762995816596
+      },
+      "holonomicAngle": -27.47443162627701,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "waitTilArmDown"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.911375532152774,
+        "y": 3.2316245829072856
+      },
+      "prevControl": {
+        "x": 6.659979338342808,
+        "y": 3.3902855929069577
+      },
+      "nextControl": {
+        "x": 7.19857682618038,
+        "y": 3.0503662802534355
       },
       "holonomicAngle": -27.002087581903,
       "isReversal": false,
@@ -172,7 +226,7 @@
       ]
     },
     {
-      "position": 3.0109090909090925,
+      "position": 4.2,
       "names": [
         "armIntakeCone"
       ]

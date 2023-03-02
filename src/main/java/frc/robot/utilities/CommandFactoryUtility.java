@@ -216,10 +216,14 @@ public class CommandFactoryUtility {
                                 //.andThen(new WaitCommand(2))
                                 //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
             break;
+            case "waitTilArmDown":
+            autoCommand = m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5)
+                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5));   
+            break;
             case "stowArm":
                 autoCommand = new WaitCommand(0.5) // TODO why not check distance (low intake) versus a wait
-                    .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
-                    .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))   
+                    // .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+                    // .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))   
                     .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                 break;
         }

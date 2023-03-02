@@ -195,6 +195,8 @@ public class RobotContainer {
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "stowArm", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "waitTilArmDown", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     //TODO remove
     // eventCommandMap = eventCommandMap = new HashMap<>();
 
