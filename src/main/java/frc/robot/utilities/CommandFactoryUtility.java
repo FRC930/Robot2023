@@ -126,11 +126,11 @@ public class CommandFactoryUtility {
         ManipulatorSubsystem m_manipulatorSubsystem) {
         final Command command = new ParallelCommandGroup(
             new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-            new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
+            new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
                 ArmSubsystem.STOW_POSITION, 
-                ManipulatorSubsystem.STOW_POSITION
-                ),
-            new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)); //TODO constant
+                ManipulatorSubsystem.STOW_POSITION))
+            ); //TODO constant
 
         return command;
     }
