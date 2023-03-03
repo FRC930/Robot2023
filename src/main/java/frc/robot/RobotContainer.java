@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
@@ -25,13 +24,7 @@ import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
@@ -46,7 +39,6 @@ import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
 import frc.robot.subsystems.arm.ArmIORobot;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmSubsystem;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -349,11 +341,8 @@ public class RobotContainer {
       .and(m_codriverController.rightTrigger())
       .whileTrue(m_LowPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
   }
+  
   private void configureButtonBindings_backup() {
-    // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
-    //                         // .onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
-    //                         .onFalse(m_StowArmPosition);
-
     //High score
     m_codriverController.y()
     .onTrue(CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
@@ -373,34 +362,9 @@ public class RobotContainer {
     m_codriverController.x()
       .onTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
-    
-  // m_codriverController.x()
-  // .onTrue(
-  //     new RunManipulatorRollerCommand(m_manipulatorSubsystem, 1.0) //TODO: Constant
-  //   )
-  // .onFalse(
-  //       new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
-  //   );
-    //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
-      //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
-    // m_codriverController.x()
-    // .onTrue(
-    //   new ParallelCommandGroup(
-    //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(40)))
-    //   )
-    // .onFalse(
-    //   new ParallelCommandGroup(
-    //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
-    //   );
-    
   }
 
   private void configureButtonBindings_sussex() {
-
-  
-    // m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,110, 45))
-    //                         // .onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
-    //                         .onFalse(m_StowArmPosition);
 
     //Score based on codrive selection
     m_driverController.leftTrigger().whileTrue(new TeleopSwerve(
@@ -446,7 +410,6 @@ public class RobotContainer {
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
       );
 
-        //Cube and Cone selector
       //Cube and Cone selector
       m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
       m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);

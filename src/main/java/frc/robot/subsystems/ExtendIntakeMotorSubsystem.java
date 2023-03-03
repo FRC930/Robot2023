@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
-
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import edu.wpi.first.math.MathUtil;
