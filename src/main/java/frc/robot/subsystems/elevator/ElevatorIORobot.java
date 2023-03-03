@@ -30,7 +30,6 @@ public class ElevatorIORobot implements ElevatorIO {
         rightElevatorMaster.setInverted(true);
         rightElevatorEncoder.setPositionConversionFactor(circumference / gearRatio);
         leftElevatorFollower.follow(rightElevatorMaster, true);
-
     }
 
     /**
@@ -71,6 +70,7 @@ public class ElevatorIORobot implements ElevatorIO {
      */
     @Override
     public void setVoltage(double volts) {
+        leftElevatorFollower.follow(rightElevatorMaster, true);
         rightElevatorMaster.setVoltage(volts);
     }
 }
