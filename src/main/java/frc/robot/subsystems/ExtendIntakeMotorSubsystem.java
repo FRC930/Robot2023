@@ -66,6 +66,6 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber(this.getClass().getSimpleName()+"ExtendIntakeMotorSubsystem/OutputAmps", m_intakeMotor.getOutputCurrent());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/OutputAmps", m_intakeMotor.getOutputCurrent());
     }
 }
