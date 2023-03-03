@@ -19,7 +19,9 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int STALL_LIMIT = 10;
     private final int FREE_LIMIT = 20;
 
-    private static double manipulatorOffset = 66.0; // -45 needed to adjust to get angle back to where tested
+    public final static double SAFE_ZONE_OFFSET =15.0;//15.0;  // TRY to keep offset value away from
+
+    private static double manipulatorOffset = 66.0 - SAFE_ZONE_OFFSET; // -45 needed to adjust to get angle back to where tested
 
 
     //----------Constructor---------\\
@@ -66,7 +68,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
      */
     @Override
     public double getCurrentAngleDegrees() {
-        return manipulatorEncoder.getPosition();
+        return manipulatorEncoder.getPosition() - SAFE_ZONE_OFFSET;
     }
      /**
      * <h3>getVelocityDegreesPerSecond</h3>
