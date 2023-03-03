@@ -15,6 +15,7 @@ import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
 import frc.robot.utilities.TargetScorePositionUtility;
+import frc.robot.utilities.TimeOfFlightUtility;
 import frc.robot.utilities.RobotInformation.WhichRobot;
 import frc.robot.utilities.TargetScorePositionUtility.Target;
 import frc.robot.simulation.FieldSim;
@@ -132,6 +133,9 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6, 12)  : new ElevatorIOSim());
   private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
   private final LEDsubsystem m_LEDsubsystem = new LEDsubsystem(0, 1,2,3 );
+
+  // Utilities \\
+  private final TimeOfFlightUtility m_timeOfFlight = new TimeOfFlightUtility(1);
   
   // Commands \\
   private Command m_AutohighTargetCommand = 
@@ -161,6 +165,7 @@ public class RobotContainer {
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
   private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
   private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
+  private PitchIntakeCommand m_CurrentPitchIntakeCommand;
     
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
@@ -318,6 +323,13 @@ public class RobotContainer {
   public void periodic() {
     m_fieldSim.periodic();
     m_mechanismSimulator.periodic();
+
+    if(m_timeOfFlight.sensorDetected()){
+      m_CurrentPitchIntakeCommand = m_LowPitchIntakeCommand;
+    }
+    else{
+      m_CurrentPitchIntakeCommand = m_HighPitchIntakeCommand;
+    }
   }
 
   public void disabledInit() {
@@ -398,7 +410,7 @@ public class RobotContainer {
       TeleopSwerve.SLOW_SPEED));
 
     m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
-      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); // TODO cpnstant);
+      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); // TODO constant);
     m_driverController.rightTrigger()
     .onTrue(
       new ConditionalCommand(m_highTargetCommand, 
@@ -427,25 +439,18 @@ public class RobotContainer {
           new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED) //TODO: Constant
         )
       .onFalse(
-            new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO cpnstant
+            new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
       );
 
         //Cube and Cone selector
       //Cube and Cone selector
       m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
       m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
-    
-    //m_codriverController.y().onTrue(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 90))
-      //.onFalse(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,0, 0));
-    // m_codriverController.x()
-    // .onTrue(
-    //   new ParallelCommandGroup(
-    //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(40)))
-    //   )
-    // .onFalse(
-    //   new ParallelCommandGroup(
-    //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
-    //   );
-    
+
+      //Intake Buttons
+      // will only run after it checks that a and y is not pressed on the codrivercontroller.
+      m_codriverController.a().negate().and(m_codriverController.y().negate()).and(m_codriverController.rightTrigger()).whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
+      m_codriverController.y().and(m_codriverController.rightTrigger())
+        .whileTrue(m_CurrentPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
   }
 }
