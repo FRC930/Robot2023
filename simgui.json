@@ -115,8 +115,10 @@
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Auto choices": "String Chooser",
       "/SmartDashboard/Field2d": "Field2d",
+      "/SmartDashboard/FieldSimField2d": "Field2d",
       "/SmartDashboard/LEDCommand": "Command",
       "/SmartDashboard/Mech2d": "Mechanism2d",
+      "/SmartDashboard/MechanismSimulatorMech2d": "Mechanism2d",
       "/SmartDashboard/PP_Field": "Field2d"
     },
     "windows": {

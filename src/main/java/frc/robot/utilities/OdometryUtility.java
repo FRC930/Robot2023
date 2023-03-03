@@ -213,7 +213,7 @@ public class OdometryUtility {
             Optional<Pose3d> pose = tagLayout.getTagPose(i);
             if(pose != null && !pose.isEmpty() )
             {
-              SmartDashboard.putNumberArray("AprilTags/Before/"+i, LogUtil.toPoseArray3d(pose.get()));
+              SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"AprilTags/Before/"+i, LogUtil.toPoseArray3d(pose.get()));
             }
         }
 
@@ -229,7 +229,7 @@ public class OdometryUtility {
           Optional<Pose3d> pose = tagLayout.getTagPose(i);
           if(pose != null && !pose.isEmpty() )
           {
-            SmartDashboard.putNumberArray("AprilTags/After/"+i, LogUtil.toPoseArray3d(pose.get()));
+            SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"AprilTags/After/"+i, LogUtil.toPoseArray3d(pose.get()));
           }
         }
     }
@@ -344,7 +344,7 @@ public class OdometryUtility {
      * Updates the swerve estimated pose based on the position camera detections of April Tags
      */
     public void updateCameraPositions() {
-        SmartDashboard.putNumberArray("RobotPose", LogUtil.toPoseArray2d(getPose()));
+        SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"RobotPose", LogUtil.toPoseArray2d(getPose()));
     
         final List<TargetCorner> corners = new ArrayList<TargetCorner>();
         final List<AprilTag> foundTags = new ArrayList<AprilTag>();
@@ -382,11 +382,11 @@ public class OdometryUtility {
                 final Transform3d robotToCameraPose = cameras.get(i).getRobotToCameraPose();
                 CameraProperties cameraProp = cameras.get(i).getCameraProp();
                 PNPResults pnpResults = OdometryUtility.estimateCamPosePNP(cameraProp, corners, foundTags);;
-                SmartDashboard.putNumber("OdometryUtility/bestRepojErr", pnpResults.bestReprojErr);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+"OdometryUtility/bestRepojErr", pnpResults.bestReprojErr);
 
-                SmartDashboard.putNumber(camera.getName() + "/multi/ambiguity", pnpResults.ambiguity);
-                SmartDashboard.putNumber(camera.getName() + "/multi/bestErr", pnpResults.bestReprojErr);
-                SmartDashboard.putNumber(camera.getName() + "/multi/altErr", pnpResults.altReprojErr);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+ "/multi/ambiguity", pnpResults.ambiguity);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+ "/multi/bestErr", pnpResults.bestReprojErr);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+ "/multi/altErr", pnpResults.altReprojErr);
 
                 if(pnpResults != null && (pnpResults.bestReprojErr < 0.15 && targets.size() > 1) || (pnpResults.ambiguity < 0.2 && targets.size() == 1)) {
                     final Pose3d pose = new Pose3d()
@@ -394,7 +394,7 @@ public class OdometryUtility {
                         .plus(robotToCameraPose.inverse());
                     
                     addVisionMeasurement(pose.toPose2d(), result.getLatencyMillis() / 1000.0);
-                    SmartDashboard.putNumberArray("AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
+                    SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
                 }
             }
         }
