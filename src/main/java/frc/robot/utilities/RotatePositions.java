@@ -10,7 +10,9 @@ public class RotatePositions {
     private SendableChooser<Pose2d> m_chooser = new SendableChooser<>();
 
     public RotatePositions(){
-        m_chooser.addOption("Zero_Zero", zero_zero);
+        //m_chooser.addOption("Zero_Zero", zero_zero); 
+        // NEED to have default option or will crash robot when press button
+        m_chooser.setDefaultOption("Zero_Zero", zero_zero);
     }
 
     public Pose2d getPose2dForRotation() {
