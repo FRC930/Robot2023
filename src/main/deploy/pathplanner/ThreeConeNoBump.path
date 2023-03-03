@@ -42,7 +42,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighCone"
+          "scoreHighNoStow"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -174,9 +174,7 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [
-          "sdfa"
-        ],
+        "names": [],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -209,7 +207,7 @@
     }
   ],
   "maxVelocity": 4.41,
-  "maxAcceleration": 2.9,
+  "maxAcceleration": 1.1,
   "isReversed": null,
   "markers": [
     {

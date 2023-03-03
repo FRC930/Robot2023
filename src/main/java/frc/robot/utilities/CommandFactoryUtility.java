@@ -55,21 +55,7 @@ public class CommandFactoryUtility {
         double manipulatorPosition,
         double waitSecondArm) {
         Command command;
-        //TODO remove old method
-        // command = new SequentialCommandGroup(
-        //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight)),
-        //     new WaitCommand(waitSecondAfterElevator),
-        //     new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition),
-        //     new WaitCommand(waitSecondArm),
-        //     new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED)
-        // );
-
-        // command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
-        //     .andThen(new WaitCommand(waitSecondAfterElevator))
-        //     .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition))
-        //     .andThen(new WaitCommand(waitSecondArm))
-        //     .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
-            
+        
         command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
             .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
                 .withTimeout(waitSecondAfterElevator))
@@ -131,7 +117,7 @@ public class CommandFactoryUtility {
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
                 ArmSubsystem.STOW_POSITION, 
                 ManipulatorSubsystem.STOW_POSITION))
-            ); //TODO constant
+            ); 
 
         return command;
     }
