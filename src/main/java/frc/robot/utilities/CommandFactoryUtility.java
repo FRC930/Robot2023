@@ -22,6 +22,26 @@ import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class CommandFactoryUtility {
 
+    private static final double ELEVATOR_INTAKE_HEIGHT = 12.0;
+    private static final double ARM_INTAKE_ANGLE = -33.0;
+    private static final double MANIPULATOR_INTAKE = 25.0;
+
+    private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4;
+    private static final double ARM_UPRIGHT_INTAKE_ANGLE = -22.0;
+    private static final double MANIPULATOR_UPRIGHT_INTAKE = 4.5;
+
+    private static final double ELEVATOR_HIGH_SCORE_HEIGHT = 55.0;
+    private static final double ARM_HIGH_SCORE_ANGLE = 35.0;
+    private static final double MANIPULATOR_HIGH_SCORE = 1.0;
+
+    private static final double ELEVATOR_MID_SCORE_HEIGHT = 22.0;
+    private static final double ARM_MID_SCORE_ANGLE = 35.0;
+    private static final double MANIPULATOR_MID_SCORE = 0.0;
+
+    private static final double ELEVATOR_LOW_SCORE_HEIGHT = 12.0;
+    private static final double ARM_LOW_SCORE_ANGLE = -25.0;
+    private static final double MANIPULATOR_LOW_SCORE = 25.0;
+
     private CommandFactoryUtility() {}
 
     public static Command createScoreCommand(
@@ -57,7 +77,7 @@ public class CommandFactoryUtility {
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
-            .andThen(new WaitCommand(0.5)) // TODO WHY waiting
+            .andThen(new WaitCommand(0.1)) // TODO WHY waiting
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
 
         return command;
@@ -69,10 +89,10 @@ public class CommandFactoryUtility {
         ManipulatorSubsystem m_manipulatorSubsystem) {        
 
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
-            55.0, 
+            ELEVATOR_HIGH_SCORE_HEIGHT, 
             2.0, 
-            35.0, 
-            1.0, 
+            ARM_HIGH_SCORE_ANGLE, 
+            MANIPULATOR_HIGH_SCORE, 
             0.0);
     }
 
@@ -81,10 +101,10 @@ public class CommandFactoryUtility {
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem) {
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
-            22.0, 
+            ELEVATOR_MID_SCORE_HEIGHT, 
             1.0, 
-            35.0, 
-            0.0, 
+            ARM_MID_SCORE_ANGLE, 
+            MANIPULATOR_MID_SCORE, 
             1.0);
     }
 
@@ -93,10 +113,10 @@ public class CommandFactoryUtility {
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem) {
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
-            12.0, 
+            ELEVATOR_LOW_SCORE_HEIGHT, 
             1.0, 
-            -25.0, 
-            25.0, 
+            ARM_LOW_SCORE_ANGLE, 
+            MANIPULATOR_LOW_SCORE, 
             1.5);
     }
 
@@ -143,10 +163,10 @@ public class CommandFactoryUtility {
         ManipulatorSubsystem m_manipulatorSubsystem) {
 
         return createArmIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
-            12.0, 
+            ELEVATOR_INTAKE_HEIGHT, 
             1.0, 
-            -33.0, 
-            25.0);
+            ARM_INTAKE_ANGLE, 
+            MANIPULATOR_INTAKE);
     }
 
     public static Command createArmIntakeUpRightCommand(
@@ -156,10 +176,10 @@ public class CommandFactoryUtility {
         ManipulatorSubsystem m_manipulatorSubsystem) {
 
         return createArmIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
-            17.4, 
+            ELEVATOR_UPRIGHT_INTAKE_HEIGHT, 
             1.0, 
-            -22.0, 
-            4.5);
+            ARM_UPRIGHT_INTAKE_ANGLE, 
+            MANIPULATOR_UPRIGHT_INTAKE);
     }
 
     public static Command createExtendIntakeCommand(
@@ -218,31 +238,60 @@ public class CommandFactoryUtility {
                                 .andThen(new WaitCommand(0.5)) //pause after scoring
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                         
-            break;
+                break;
             case "scoreMidCone":
                 autoCommand = CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
                                 .andThen(new WaitCommand(3)) //pause after scoring
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
-            break;
+                break;
             case "armIntakeCone":
                 autoCommand = CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
                                 //.andThen(new WaitCommand(2))
                                 //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
-            // break;
+                break;
             case "armIntakeUprightCone":
                 autoCommand = CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
                                 //.andThen(new WaitCommand(2))
                                 //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
-            break;
+                break;
             case "waitTilArmDown":
-            autoCommand = m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5)
+                autoCommand = m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5)
                 .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5));   
-            break;
+                break;
             case "stowArm":
                 autoCommand = new WaitCommand(0.5) // TODO why not check distance (low intake) versus a wait
                     // .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
                     // .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))   
                     .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+                break;
+            case "scoreHighElevator":
+                autoCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_HIGH_SCORE_HEIGHT))
+                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
+                    .withTimeout(0.2)); // TODO do we need to use this
+                break;
+            case "scoreHighArm":
+                autoCommand = new SetArmDegreesCommand(m_armSubsystem,  ARM_HIGH_SCORE_ANGLE)
+                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
+                    .withTimeout(0.2)); // TODO do we need to use this
+                break;
+            case "scoreHighManipulator":
+                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem, MANIPULATOR_HIGH_SCORE)
+                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
+                    .withTimeout(0.2)) // TODO do we need to use this
+                .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
+                break;
+            case "intakeElevatorPos":
+                autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
+                .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_INTAKE_HEIGHT)));
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "intakeArmPos":
+                autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_INTAKE_ANGLE);
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "intakeManipulatorPos":
+                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_INTAKE);
+                // TODO why were we using waitUntil on intake commands
                 break;
         }
 
