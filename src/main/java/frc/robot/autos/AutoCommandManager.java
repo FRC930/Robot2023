@@ -171,6 +171,8 @@ public class AutoCommandManager {
         } else {
             pidValue = defaultValue;
         }
+        // Save Value so don't need tuning (so value is saved)
+        Preferences.setDouble(key, pidValue);     
         return pidValue;
     }
     
