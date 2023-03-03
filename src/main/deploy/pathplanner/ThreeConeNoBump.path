@@ -66,10 +66,10 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "waitTilArmDown"
+          "waitTilArmDownREMOVE"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -95,9 +95,7 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [
-          "stowArm"
-        ],
+        "names": [],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -123,7 +121,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighCone"
+          "scoreHighManipulator"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -147,10 +145,10 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "waitTilArmDown"
+          "waitTilArmDownREMOVE"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -177,7 +175,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "stowArm"
+          "sdfa"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -201,7 +199,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreHighCone"
+          "scoreHighManipulator",
+          "stowArm"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -216,19 +215,67 @@
     {
       "position": 0.0,
       "names": [
-        "event"
+        " event"
       ]
     },
     {
-      "position": 1.05,
+      "position": 1.1709090909091118,
       "names": [
-        "armIntakeCone"
+        "intakeElevatorPos"
       ]
     },
     {
-      "position": 4.2,
+      "position": 1.4763636363636685,
       "names": [
-        "armIntakeCone"
+        "intakeArmPos"
+      ]
+    },
+    {
+      "position": 1.8327272727272974,
+      "names": [
+        "intakeManipulatorPos"
+      ]
+    },
+    {
+      "position": 3.2072727272725614,
+      "names": [
+        "scoreHighElevator"
+      ]
+    },
+    {
+      "position": 3.5127272727271297,
+      "names": [
+        "scoreHighArm"
+      ]
+    },
+    {
+      "position": 4.327272727272727,
+      "names": [
+        "intakeElevatorPos"
+      ]
+    },
+    {
+      "position": 4.632727272727028,
+      "names": [
+        "intakeArmPos"
+      ]
+    },
+    {
+      "position": 4.887272727272428,
+      "names": [
+        "intakeManipulatorPos"
+      ]
+    },
+    {
+      "position": 6.210909090909085,
+      "names": [
+        "scoreHighElevator"
+      ]
+    },
+    {
+      "position": 6.516363636363343,
+      "names": [
+        "scoreHighArm"
       ]
     }
   ]
