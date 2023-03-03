@@ -77,7 +77,7 @@ public class PitchIntakeSubsystem extends SubsystemBase{
      */
     public double getEncoderPosition() {
         //Logger.getInstance().recordOutput("EncoderPosition", m_RotateIntakerollerMotorIO.getCurrentAngleDegrees());
-        SmartDashboard.putNumber("PitchIntakeEncoderPosition", m_RotateIntakerollerMotorIO.getCurrentAngleDegrees());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"PitchIntakeEncoderPosition", m_RotateIntakerollerMotorIO.getCurrentAngleDegrees());
         return m_RotateIntakerollerMotorIO.getCurrentAngleDegrees();
         // TODO should we be using set current limit
     }
@@ -119,6 +119,6 @@ public class PitchIntakeSubsystem extends SubsystemBase{
         } else {
             controller.reset(m_RotateIntakerollerMotorIO.getCurrentAngleDegrees());
         }
-        SmartDashboard.putNumber("PitchIntakeSubsystem/currentDegrees", getEncoderPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"PitchIntakeSubsystem/currentDegrees", getEncoderPosition());
     }
 }
