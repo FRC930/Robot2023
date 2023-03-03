@@ -23,6 +23,7 @@ import frc.robot.simulation.MechanismSimulator;
 import frc.robot.subsystems.LEDsubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -299,6 +300,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+
+    m_RunDisabledLEDPattern.schedule();
         // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
     if(!DriverStation.isFMSAttached()) {
       m_robotDrive.setOriginBasedOnAlliance();
@@ -333,6 +336,7 @@ public class RobotContainer {
   }
 
   public void disabledInit() {
+    CommandScheduler.getInstance().schedule(m_RunDisabledLEDPattern);
   }
  
   private void configureButtonBindings_Intake(){
