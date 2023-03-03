@@ -19,7 +19,8 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int STALL_LIMIT = 10;
     private final int FREE_LIMIT = 20;
 
-    public final static double SAFE_ZONE_OFFSET =15.0;//15.0;  // TRY to keep offset value away from
+    // TRY to keep offset value away from flipping around to 359 it would flip around in side
+    public final static double SAFE_ZONE_OFFSET =15.0; 
 
     private static double manipulatorOffset = 66.0 - SAFE_ZONE_OFFSET; // -45 needed to adjust to get angle back to where tested
 
