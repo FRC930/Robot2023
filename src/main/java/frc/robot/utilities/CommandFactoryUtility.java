@@ -265,19 +265,21 @@ public class CommandFactoryUtility {
                     .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                 break;
             case "scoreHighElevator":
-                autoCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_HIGH_SCORE_HEIGHT))
-                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
-                    .withTimeout(0.2)); // TODO do we need to use this
+                autoCommand = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_HIGH_SCORE_HEIGHT));
+                // No wait needed to spaced out in pathplanner 
                 break;
             case "scoreHighArm":
-                autoCommand = new SetArmDegreesCommand(m_armSubsystem,  ARM_HIGH_SCORE_ANGLE)
-                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
-                    .withTimeout(0.2)); // TODO do we need to use this
+                autoCommand = new SetArmDegreesCommand(m_armSubsystem,  ARM_HIGH_SCORE_ANGLE);
+                // No wait needed to spaced out in pathplanner
                 break;
             case "scoreHighManipulator":
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem, MANIPULATOR_HIGH_SCORE)
+                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
+                .withTimeout(0.2))
+                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
+                    .withTimeout(0.2))
                 .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
-                    .withTimeout(0.2)) // TODO do we need to use this
+                    .withTimeout(0.2))
                 .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
                 break;
             case "intakeElevatorPos":
@@ -292,6 +294,9 @@ public class CommandFactoryUtility {
             case "intakeManipulatorPos":
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_INTAKE);
                 // TODO why were we using waitUntil on intake commands
+                break;
+            case "scoreHighNoStow":
+                autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
                 break;
         }
 
