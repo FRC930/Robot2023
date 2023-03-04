@@ -63,9 +63,10 @@ public class CommandFactoryUtility {
             .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
-                .withTimeout(waitSecondArm/2.0))
-            .andThen(new WaitCommand(0.1)) // TODO WHY waiting
-            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
+                .withTimeout(waitSecondArm/2.0));
+            // Seperate button to release game object
+            // .andThen(new WaitCommand(0.1))
+            // .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
 
         return command;
     }
