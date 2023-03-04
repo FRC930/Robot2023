@@ -208,8 +208,8 @@ public class RobotContainer {
     m_LEDsubsystem.setDefaultCommand(m_RunAllianceLEDPattern);
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, TeleopSwerve.NORMAL_SPEED));
     m_fieldSim.initSim();
-    m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
-    m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
+    // m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
+    // m_PitchIntakeSubsystem.setDefaultCommand(new PitchIntakeCommand(m_PitchIntakeSubsystem, 0));
     //stow arm position as default
   }
 

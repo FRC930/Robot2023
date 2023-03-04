@@ -23,23 +23,24 @@ import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class CommandFactoryUtility {
 
-    private static final double ELEVATOR_INTAKE_HEIGHT = 7.7; //12.0 * .6423; // 1.28/1.756  ;
+    private static double FACTOR = .68;
+    private static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
     private static final double ARM_INTAKE_ANGLE = -33.0;
     private static final double MANIPULATOR_INTAKE = 25.0;
 
-    private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 11.18; // 17.4; * .6423; // 1.28/1.756  ;
+    private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
     private static final double ARM_UPRIGHT_INTAKE_ANGLE = -22.0;
     private static final double MANIPULATOR_UPRIGHT_INTAKE = 4.5;
 
-    private static final double ELEVATOR_HIGH_SCORE_HEIGHT = 35.32; // 55.0; * .6423; // 1.28/1.756  ;
+    private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  52.0 * FACTOR; // 1.28/1.756  ;
     private static final double ARM_HIGH_SCORE_ANGLE = 35.0;
     private static final double MANIPULATOR_HIGH_SCORE = 1.0;
 
-    private static final double ELEVATOR_MID_SCORE_HEIGHT = 14.13; // 22.0;  * .6423; // 1.28/1.756  ;
+    private static final double ELEVATOR_MID_SCORE_HEIGHT =  22.0  * FACTOR; // 1.28/1.756  ;
     private static final double ARM_MID_SCORE_ANGLE = 35.0;
     private static final double MANIPULATOR_MID_SCORE = 0.0;
 
-    private static final double ELEVATOR_LOW_SCORE_HEIGHT = 7.7; // 12.0 * .6423; // 1.28/1.756  ;
+    private static final double ELEVATOR_LOW_SCORE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
     private static final double ARM_LOW_SCORE_ANGLE = -25.0;
     private static final double MANIPULATOR_LOW_SCORE = 25.0;
 
@@ -65,7 +66,7 @@ public class CommandFactoryUtility {
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
-            .andThen(new WaitCommand(0.1)) // TODO WHY waiting
+            .andThen(new WaitCommand(0.3)) // TODO WHY waiting
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
 
         return command;
