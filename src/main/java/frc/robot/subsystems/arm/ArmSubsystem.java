@@ -45,7 +45,7 @@ public class ArmSubsystem extends SubsystemBase {
         // Sets up PID controller
         controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(225, 270));
         controller.setTolerance(1, 1);
-        controller.enableContinuousInput(0, 360);
+        // controller.enableContinuousInput(0, 360);
 
         // TODO Change values when manipulator is added
         ff = new ArmFeedforward(0, 0.85, 0);
