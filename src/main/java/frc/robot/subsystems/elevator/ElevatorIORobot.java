@@ -70,7 +70,6 @@ public class ElevatorIORobot implements ElevatorIO {
      */
     @Override
     public void setVoltage(double volts) {
-        leftElevatorFollower.follow(rightElevatorMaster, true);
         rightElevatorMaster.setVoltage(volts);
     }
 }
