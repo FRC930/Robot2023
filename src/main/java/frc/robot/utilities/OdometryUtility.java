@@ -79,14 +79,14 @@ public class OdometryUtility {
     private static final int LEFT_CAMERA_PIPELINE = 0;
     private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5801;
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
-    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 640;
-    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 480;
+    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 320;
+    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 240;
     private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
     private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(12.5);
     private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
-    private static final double LEFT_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);
-    private static final double LEFT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);
-    private static final double LEFT_CAMERA_ROTATION_YAW = Math.toRadians(-30.0);
+    private static final double LEFT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);
+    private static final double LEFT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);
+    private static final double LEFT_CAMERA_ROTATION_YAW = Units.degreesToRadians(30.0);
 
     // Right camera constants
     private static final String RIGHT_CAMERA_NAME = "Camera2"; 
@@ -94,14 +94,14 @@ public class OdometryUtility {
     private static final int RIGHT_CAMERA_PIPELINE = 0;
     private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5802;
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
-    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 640;
-    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 480;
+    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 320;
+    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 240;
     private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
     private static final double RIGHT_CAMERA_POSITION_Y = -Units.inchesToMeters(11.0);
     private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
-    private static final double RIGHT_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
-    private static final double RIGHT_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
-    private static final double RIGHT_CAMERA_ROTATION_YAW = Math.toRadians(30.0);;
+    private static final double RIGHT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);;
+    private static final double RIGHT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);;
+    private static final double RIGHT_CAMERA_ROTATION_YAW = Units.degreesToRadians(-30.0);;
 
     // Three cameras on the robot, 2 in the front, 1 on the back
     //private final CameraOnRobot m_backCamera;
@@ -115,9 +115,9 @@ public class OdometryUtility {
     private SwerveDrivePoseEstimator m_PoseEstimator;
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
     //TODO Bumped up to 0.5 for testing, please put back down
-    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(0.5));
+    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     // Confidence level, 0 means that we have 100% confidence in the camera values and it won't trust odometry positions
-    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(45));
+    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(90));
 
     private AprilTagFieldLayout tagLayout;
 
@@ -201,7 +201,7 @@ public class OdometryUtility {
                                         RIGHT_CAMERA_ROTATION_YAW
                                         );
 
-        cameras = List.of(m_rightCamera, m_leftCamera); //m_backCamera );
+        cameras = List.of();//m_rightCamera, m_leftCamera); //m_backCamera );
 
        // Adjusts AprilTag position based on 0,0 based on alliance selection
        setOriginBasedOnAlliance();
@@ -213,7 +213,7 @@ public class OdometryUtility {
             Optional<Pose3d> pose = tagLayout.getTagPose(i);
             if(pose != null && !pose.isEmpty() )
             {
-              SmartDashboard.putNumberArray("AprilTags/Before/"+i, LogUtil.toPoseArray3d(pose.get()));
+              SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AprilTags/Before/"+i, LogUtil.toPoseArray3d(pose.get()));
             }
         }
 
@@ -229,7 +229,7 @@ public class OdometryUtility {
           Optional<Pose3d> pose = tagLayout.getTagPose(i);
           if(pose != null && !pose.isEmpty() )
           {
-            SmartDashboard.putNumberArray("AprilTags/After/"+i, LogUtil.toPoseArray3d(pose.get()));
+            SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AprilTags/After/"+i, LogUtil.toPoseArray3d(pose.get()));
           }
         }
     }
@@ -344,7 +344,7 @@ public class OdometryUtility {
      * Updates the swerve estimated pose based on the position camera detections of April Tags
      */
     public void updateCameraPositions() {
-        SmartDashboard.putNumberArray("RobotPose", LogUtil.toPoseArray2d(getPose()));
+        SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/RobotPose", LogUtil.toPoseArray2d(getPose()));
     
         final List<TargetCorner> corners = new ArrayList<TargetCorner>();
         final List<AprilTag> foundTags = new ArrayList<AprilTag>();
@@ -364,34 +364,37 @@ public class OdometryUtility {
   
                 Optional<Pose3d> unknownTag = this.tagLayout.getTagPose(fiducialId); 
 
-                if(!unknownTag.isEmpty()){
+               // if(!unknownTag.isEmpty()){
                     corners.addAll(target.getDetectedCorners());
                     foundTags.add(new AprilTag(
                         fiducialId,
                         unknownTag.get()
                     ));
-                }
+                //}
             });
             
             // TODO make 0 greater than 1
-            if (targets.size() > 0) {
+            if (targets.size() > 1) {
+
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+"/NumberOfCorners", corners.size());
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+"/NumberOfTags", foundTags.size());
     
                 final Transform3d robotToCameraPose = cameras.get(i).getRobotToCameraPose();
                 CameraProperties cameraProp = cameras.get(i).getCameraProp();
                 PNPResults pnpResults = OdometryUtility.estimateCamPosePNP(cameraProp, corners, foundTags);;
-                SmartDashboard.putNumber("OdometryUtility/bestRepojErr", pnpResults.bestReprojErr);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+"/BestRepojErr", pnpResults.bestReprojErr);
 
-                SmartDashboard.putNumber(camera.getName() + "/multi/ambiguity", pnpResults.ambiguity);
-                SmartDashboard.putNumber(camera.getName() + "/multi/bestErr", pnpResults.bestReprojErr);
-                SmartDashboard.putNumber(camera.getName() + "/multi/altErr", pnpResults.altReprojErr);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+ "/Multi/Ambiguity", pnpResults.ambiguity);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+ "/Multi/BestErr", pnpResults.bestReprojErr);
+                SmartDashboard.putNumber(this.getClass().getSimpleName()+ "/Multi/AltErr", pnpResults.altReprojErr);
 
-                if(pnpResults != null && pnpResults.bestReprojErr < 0.15) {
+                if(pnpResults != null && (pnpResults.bestReprojErr < 0.15 && targets.size() > 1) || (pnpResults.ambiguity < 0.2 && targets.size() == 1)) {
                     final Pose3d pose = new Pose3d()
                         .plus(pnpResults.best)
                         .plus(robotToCameraPose.inverse());
                     
                     addVisionMeasurement(pose.toPose2d(), result.getLatencyMillis() / 1000.0);
-                    SmartDashboard.putNumberArray("AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
+                    SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
                 }
             }
         }

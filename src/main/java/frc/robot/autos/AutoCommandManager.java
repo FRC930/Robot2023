@@ -106,20 +106,26 @@ public class AutoCommandManager {
         //Autonomous Commands
         TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
         Command taxiOneBallAutoBuildCommand = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
-        Command MidScoreEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command MidScoreEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreEngage", eventCommandMap, 
+            new AutoBalanceCommand(s_SwerveDrive, true));
         Command BumpSide1ConeCommand = new PathPlannerCommand(s_SwerveDrive, "BumpSide1Cone", eventCommandMap);
         Command BumpSide2ConeCommand = new PathPlannerCommand(s_SwerveDrive, "BumpSide2Cone", eventCommandMap);
-        Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, 
+            new AutoBalanceCommand(s_SwerveDrive));
         Command NoBump1ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump1Cone", eventCommandMap);
         Command NoBump2ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump2Cone", eventCommandMap);
-        Command MidPickUpEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidPickUpEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command MidPickUpEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidPickUpEngage", eventCommandMap,
+             new AutoBalanceCommand(s_SwerveDrive));
         Command ScoreHighConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
         Command ScoreMidConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreMidCone", eventCommandMap);
         Command ThreeConeNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeNoBump", eventCommandMap);
-        Command ThreeConeBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
-        Command TwoConeBalanceNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeBalanceNoBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));   
-        Command TwoConeEngageBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeEngageBump", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
-        Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, new AutoBalanceCommand(s_SwerveDrive));
+        Command ThreeConeBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeBump", eventCommandMap);
+        Command TwoConeBalanceNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeBalanceNoBump", eventCommandMap,
+             new AutoBalanceCommand(s_SwerveDrive, true));   
+        Command TwoConeEngageBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeEngageBump", eventCommandMap, 
+            new AutoBalanceCommand(s_SwerveDrive, true));
+        Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, 
+            new AutoBalanceCommand(s_SwerveDrive, true));
         
     
 

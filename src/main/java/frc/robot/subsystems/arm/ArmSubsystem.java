@@ -73,7 +73,7 @@ public class ArmSubsystem extends SubsystemBase {
 
             m_armIO.setVoltage(effort);
 
-            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Feed Forward", feedforward);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/FeedForward", feedforward);
             SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Effort", effort);
             SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Error", controller.getPositionError());
         }
@@ -81,8 +81,8 @@ public class ArmSubsystem extends SubsystemBase {
             controller.reset(m_armIO.getCurrentAngleDegrees());
         }
         
-        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Target Position", targetPosition);
-        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Encoder Value", getPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
     }
 
     /**

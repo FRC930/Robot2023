@@ -113,7 +113,7 @@ public class MechanismSimulator {
             );
         
         // Sends system simulations to the smart dashboard
-        SmartDashboard.putData("Mech2d", mech);
+        SmartDashboard.putData(this.getClass().getSimpleName()+"/Mech2d", mech);
     }
     
     /**

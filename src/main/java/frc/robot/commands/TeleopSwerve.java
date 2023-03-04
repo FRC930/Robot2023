@@ -19,7 +19,6 @@ public class TeleopSwerve extends CommandBase {
     public final static double NORMAL_SPEED = 0.8;
     private final double STICK_DEAD_BAND = 0.1;
 
-    private SwerveDrive m_swerveDrive;
 
     public double m_percentSpeed;
 
@@ -72,7 +71,7 @@ public class TeleopSwerve extends CommandBase {
         double yAxis = -m_controller.getHID().getRawAxis(m_translationAxis);
         double xAxis = -m_controller.getHID().getRawAxis(m_strafeAxis);
         if (m_controller.getHID().getYButton()) {
-            rAxis = m_rotationMathUtility.rotationSpeed(m_swerveDrive.getPose(), m_rotatePositions.getPose2dForRotation(), m_swerveDrive.getHeadingDegrees());
+            rAxis = m_rotationMathUtility.rotationSpeed(m_Swerve.getPose(), m_rotatePositions.getPose2dForRotation(), m_Swerve.getHeadingDegrees());
         }
         else{
             rAxis = -m_controller.getHID().getRawAxis(m_rotationAxis);

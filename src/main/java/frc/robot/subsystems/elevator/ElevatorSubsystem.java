@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -38,10 +36,11 @@ public class ElevatorSubsystem extends SubsystemBase{
         //this.controller = new ProfiledPIDController(72, 0, 0, 
         //new Constraints(1.0, 2.0)); //This is in meters
         //our p is in terms of meters, meaning you are multiplying a decmal by p
-        this.controller = new ProfiledPIDController(45, 0, 0, 
-                 new Constraints(Units.inchesToMeters(110), Units.inchesToMeters(90))); //This is in meters //110 175
-        this.ff = new ElevatorFeedforward(0, 0.45, 0, 0);
-        this.topff = new ElevatorFeedforward(0, 0.45, 0, 0);
+
+        this.controller = new ProfiledPIDController(45, 0.0, 0.0, 
+                 new Constraints(Units.inchesToMeters(110.0), Units.inchesToMeters(90.0))); //This is in meters //110 175
+        this.ff = new ElevatorFeedforward(0.0, 0.2, 0.0, 0.0);
+        this.topff = new ElevatorFeedforward(0, 0.2, 0.0, 0.0);
         // TODO set tolerance
         this.controller.setTolerance(0.1, 0.1);
     }
