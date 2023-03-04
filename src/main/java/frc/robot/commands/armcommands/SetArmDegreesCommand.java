@@ -20,17 +20,35 @@ public class SetArmDegreesCommand extends CommandBase{
      * @param armPosition The desired arm position in degrees
      * @param manipulatorPosition The desired manipulator position in degrees
      */
+    public SetArmDegreesCommand(ArmSubsystem armSubsystem, double armPosition) {
+        m_arm = armSubsystem;
+        m_armPos = armPosition;
+        addRequirements(armSubsystem);
+    }
+
+    public SetArmDegreesCommand(ManipulatorSubsystem manipulatorSubsystem, double manipulatorPosition) {
+        m_manipulator = manipulatorSubsystem;
+        m_manipulatorPos = manipulatorPosition;      
+        addRequirements(manipulatorSubsystem);
+    }
+
     public SetArmDegreesCommand(ArmSubsystem armSubsystem, ManipulatorSubsystem manipulatorSubsystem, double armPosition, double manipulatorPosition) {
         m_arm = armSubsystem;
         m_manipulator = manipulatorSubsystem;
         m_manipulatorPos = manipulatorPosition;
         m_armPos = armPosition;
+        addRequirements(manipulatorSubsystem,armSubsystem);
     }
+
 
     @Override
     public void initialize() {
-        m_manipulator.setPosition(m_manipulatorPos);
-        m_arm.setPosition(m_armPos);
+        if(m_manipulator != null) {
+            m_manipulator.setPosition(m_manipulatorPos);
+        }
+        if(m_arm != null) {
+            m_arm.setPosition(m_armPos);
+        }
     }
 
     @Override
