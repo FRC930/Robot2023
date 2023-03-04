@@ -36,7 +36,7 @@ public class TimeOfFlightUtility {
             m_sensor = new TimeOfFlight(sensorID);
             m_sensor.setRangingMode(RangingMode.Medium, 20);
         } else {
-            m_sensorSim = new DigitalInput(sensorID);
+            m_sensorSim = new DigitalInput(6);// hardcoded number to not interfere with LEDs in simulation
         }
     }
 

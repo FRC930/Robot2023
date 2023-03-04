@@ -148,7 +148,7 @@ public class RobotContainer {
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
   private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
   private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
-  private PitchIntakeCommand m_CurrentPitchIntakeCommand;
+  //private PitchIntakeCommand m_CurrentPitchIntakeCommand;
     
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
@@ -326,12 +326,13 @@ public class RobotContainer {
     m_fieldSim.periodic();
     m_mechanismSimulator.periodic();
 
-    if(m_timeOfFlight.sensorDetected()){
-      m_CurrentPitchIntakeCommand = m_LowPitchIntakeCommand;
-    }
-    else{
-      m_CurrentPitchIntakeCommand = m_HighPitchIntakeCommand;
-    }
+    // TODO: Fix, This crashes code
+    // if(m_timeOfFlight.sensorDetected()){
+    //   m_CurrentPitchIntakeCommand = m_LowPitchIntakeCommand;
+    // }
+    // else{
+    //   m_CurrentPitchIntakeCommand = m_HighPitchIntakeCommand;
+    // }
   }
 
   public void disabledInit() {
@@ -427,8 +428,10 @@ public class RobotContainer {
 
       //Intake Buttons
       // will only run after it checks that a and y is not pressed on the codrivercontroller.
-      m_codriverController.a().negate().and(m_codriverController.y().negate()).and(m_codriverController.rightTrigger()).whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
-      m_codriverController.y().and(m_codriverController.rightTrigger())
-        .whileTrue(m_CurrentPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
+
+      // TODO: fix m_CurrentPitchIntakeCommand is not available
+      // m_codriverController.a().negate().and(m_codriverController.y().negate()).and(m_codriverController.rightTrigger()).whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
+      // m_codriverController.y().and(m_codriverController.rightTrigger())
+      //   .whileTrue(m_CurrentPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
   }
 }
