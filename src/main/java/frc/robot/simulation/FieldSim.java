@@ -61,7 +61,7 @@ public class FieldSim {
 
     if (RobotBase.isSimulation()) simulationPeriodic();
 
-    SmartDashboard.putData("Field2d", m_field2d);
+    SmartDashboard.putData(this.getClass().getSimpleName()+"/Field2d", m_field2d);
   }
 
   // TODO comment why keeping (from wpilib)

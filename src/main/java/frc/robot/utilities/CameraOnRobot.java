@@ -77,9 +77,9 @@ public class CameraOnRobot {
        
         m_RobotToCameraPose = new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(cameraXPosition),
-                Units.inchesToMeters(cameraYPosition),
-                Units.inchesToMeters(cameraZPosition)
+                cameraXPosition,
+                cameraYPosition,
+                cameraZPosition
             ),
             new Rotation3d(
                 cameraRotationRoll,

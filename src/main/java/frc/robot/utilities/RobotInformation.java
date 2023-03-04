@@ -51,7 +51,7 @@ public class RobotInformation {
             SwerveModuleConstants backLeft,
             SwerveModuleConstants backRight) {
         m_WhichRobot = whichRobot;
-        SmartDashboard.putString("RobotInformation/RobotConfiguration", whichRobot.toString());
+        SmartDashboard.putString(this.getClass().getSimpleName()+"/RobotConfiguration", whichRobot.toString());
         m_FrontLeft = frontLeft;
         m_FrontRight = frontRight;
         m_BackLeft = backLeft;

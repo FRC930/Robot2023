@@ -131,16 +131,6 @@ public class RobotContainer {
   private final TimeOfFlightUtility m_timeOfFlight = new TimeOfFlightUtility(1);
   
   // Commands \\
-  private Command m_AutohighTargetCommand = 
-    CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
-    .andThen(new WaitCommand(0.5)) //pause after scoring
-    .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
-
-  private Command m_AutoMidTargetCommand =
-    CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
-    .andThen(new WaitCommand(3)) //pause after scoring
-    .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
-
   private Command m_highTargetCommand = 
     CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
 
@@ -178,7 +168,7 @@ public class RobotContainer {
   private final ElevatorMoveCommand m_LowElevatorPosition = new ElevatorMoveCommand(m_elevatorSubsystem, 0);
 
   private final RunManipulatorRollerCommand m_ManipulatorRollerCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.5);
-  private final RunManipulatorRollerCommand m_ManipulatorRollerStopCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15);
+  private final RunManipulatorRollerCommand m_ManipulatorRollerStopCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED);
   private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED);
   private final RunManipulatorRollerCommand m_ManipulatorRollerShootCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, -1);
 
@@ -195,17 +185,34 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Auto Commands
-
-    // TODO Add markers for real commands/paths
-    eventCommandMap.put("scoreHighCone", m_AutohighTargetCommand);
-    // eventCommandMap.put("scoreMidCone", m_AutoMidTargetCommand);
-    eventCommandMap.put("armIntakeCone", 
-       CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
-      //.andThen(new WaitCommand(2))
-      //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
-    eventCommandMap.put("stowArm" , new WaitCommand(0.5).andThen( CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighCone", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreMidCone", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "armIntakeCone", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "stowArm", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "waitTilArmDown", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "intakeElevatorPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "intakeArmPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "intakeManipulatorPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighElevator", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighArm", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighManipulator", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighNoStow", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+        
     //TODO remove
-    //eventCommandMap = eventCommandMap = new HashMap<>();
+    // eventCommandMap = eventCommandMap = new HashMap<>();
+
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
     m_autoManager.initCommands(eventCommandMap);
@@ -378,7 +385,7 @@ public class RobotContainer {
       TeleopSwerve.SLOW_SPEED));
 
     m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
-      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15)); // TODO constant);
+      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)); 
     m_driverController.rightTrigger()
     .onTrue(
       new ConditionalCommand(m_highTargetCommand, 
@@ -394,6 +401,10 @@ public class RobotContainer {
   m_codriverController.leftBumper()
     .onTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
     .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+  //Arm Intake Upright
+  m_codriverController.a() // TODO REMOVE
+    .onTrue(CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));  
   //substation Intake
   m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
     .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
@@ -404,10 +415,10 @@ public class RobotContainer {
       m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
       m_codriverController.rightBumper()
       .onTrue(
-          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED) //TODO: Constant
+          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED) 
         )
       .onFalse(
-            new RunManipulatorRollerCommand(m_manipulatorSubsystem, 0.15) // TODO constant
+            new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED) 
       );
 
       //Cube and Cone selector
