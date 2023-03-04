@@ -79,7 +79,7 @@ public class LEDCommand extends CommandBase {
                     m_LEDSubsystem.setPins(true, true, false, false);
                 }
                 else{
-                    // Red Pina
+                    // Red Pins
                     m_LEDSubsystem.setPins(true,true, true, false);
                 }
                 break;
