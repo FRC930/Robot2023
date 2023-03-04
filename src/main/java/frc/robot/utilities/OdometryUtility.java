@@ -334,12 +334,17 @@ public class OdometryUtility {
 
                 photonPoseEstimator.setReferencePose(m_PoseEstimator.getEstimatedPosition());
                 final Optional<EstimatedRobotPose> updatedEstimatedPose = photonPoseEstimator.update();
-                Transform3d transformed = new Transform3d(new Pose3d(), updatedEstimatedPose.get().estimatedPose);
-                final Pose3d pose = new Pose3d()
-                .plus(transformed)
-                .plus(robotToCameraPose.inverse());
+
+                if (updatedEstimatedPose.isPresent()) {
+                    EstimatedRobotPose camPose = updatedEstimatedPose.get();
+                    m_PoseEstimator.addVisionMeasurement(
+                            camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+                    SmartDashboard.putString("OdometryUtility/SeeRobot", "true");
+                } else {
+                    SmartDashboard.putString("OdometryUtility/SeeRobot", "false");
+
+                }
                 
-            addVisionMeasurement(pose.toPose2d(), result.getLatencyMillis() / 1000.0);
             SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
             SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/updatedEstimatedPose" + i, LogUtil.toPoseArray3d(updatedEstimatedPose.get().estimatedPose));
             }
