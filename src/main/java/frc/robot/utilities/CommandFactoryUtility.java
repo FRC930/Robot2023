@@ -27,7 +27,7 @@ public class CommandFactoryUtility {
 
     private static double FACTOR = .68;
     private static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_INTAKE_ANGLE = -33.0;
+    private static final double ARM_INTAKE_ANGLE = -30.0;
     private static final double MANIPULATOR_INTAKE = 25.0;
 
     private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
