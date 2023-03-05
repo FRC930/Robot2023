@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -128,12 +129,13 @@ public class OdometryUtility {
     private SwerveModulePosition[] m_swerveModulePositions;
     private Pose2d m_position;
     private SwerveDrivePoseEstimator m_PoseEstimator;
+    private PhotonPoseEstimator photonPoseEstimator;
 
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
-    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, 0.05);
     
     // Confidence level, 0 means that we have 100% confidence in the camera values and it won't trust odometry positions
-    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(3.0, 3.0, Units.degreesToRadians(90));
+    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(30));
 
     private AprilTagFieldLayout tagLayout;
     private List<CameraOnRobot> cameras;
@@ -326,7 +328,6 @@ public class OdometryUtility {
             if (!result.hasTargets()) continue;
 
             try{
-            PhotonPoseEstimator photonPoseEstimator;
 
                 photonPoseEstimator = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, camera, offset);
                 photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
@@ -345,8 +346,8 @@ public class OdometryUtility {
 
                 }
                 
-            SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
-            SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/updatedEstimatedPose" + i, LogUtil.toPoseArray3d(updatedEstimatedPose.get().estimatedPose));
+                // SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
+                SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/updatedEstimatedPose" + i, LogUtil.toPoseArray3d(updatedEstimatedPose.get().estimatedPose));
             }
             catch(Exception e){
                 SmartDashboard.putString("OdometryUtility/e", e.getMessage());
@@ -354,6 +355,15 @@ public class OdometryUtility {
 
   
         }
+    }
+
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+        if (photonPoseEstimator == null) {
+            // The field layout failed to load, so we cannot estimate poses.
+            return Optional.empty();
+        }
+        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return photonPoseEstimator.update();
     }
 
     /**
