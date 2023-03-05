@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
 import frc.robot.utilities.SwerveModuleConstants;
@@ -48,6 +50,7 @@ import java.util.Map;
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.PitchIntakeCommand;
+import frc.robot.commands.PutToSmartDashboardCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.RotateCommand;
@@ -153,7 +156,6 @@ public class RobotContainer {
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
 
-
   private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED);
   
   private final LEDCommand m_RunDisabledLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
@@ -202,7 +204,7 @@ public class RobotContainer {
     m_autoManager.initCommands(eventCommandMap);
 
     // Configure the button bindings
-    configureButtonBindings_sussex();
+    configureButtonBindings_Future();
     
     // Configure default commands
     m_LEDsubsystem.setDefaultCommand(m_RunAllianceLEDPattern);
@@ -225,22 +227,31 @@ public class RobotContainer {
     //--DRIVER CONTROLLER--//
     //.and() makes it so both buttons must be held in order to run the command
     // TODO how are we planning on moving the arm based on the target score position utility
-    // m_driverController.rightTrigger()
-    // .onTrue(
-    //   new ConditionalCommand(m_highTargetCommand, 
-    //     new ConditionalCommand(
-    //       m_mediumTargetCommand, 
-    //       m_lowTargetCommand, 
-    //       m_targetScorePositionUtility::isMedium), 
-    //     m_targetScorePositionUtility::isHigh)
-    // )
-    // .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+    m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
+      .onFalse(m_ManipulatorRollerHoldCommand);
+
+    m_driverController.rightTrigger()
+      .onTrue(
+        new ConditionalCommand(m_highTargetCommand, 
+          new ConditionalCommand(
+            m_mediumTargetCommand, 
+            m_lowTargetCommand, 
+            m_targetScorePositionUtility::isMedium), 
+          m_targetScorePositionUtility::isHigh)
+      )
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+    // Intakes from ground
+    m_driverController.leftBumper()
+      .whileTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));;  
+
     m_driverController.rightBumper()
-      .and(m_driverController.rightTrigger()).whileTrue(m_ManipulatorRollerReleaseCommand);
-    m_driverController.leftBumper().whileTrue(
-      CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));  
+      .whileTrue(CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     
-    //Turbo boost
+    // Slow drive
     m_driverController.leftTrigger().whileTrue(new TeleopSwerve(
       m_robotDrive, 
       m_driverController, 
@@ -256,15 +267,27 @@ public class RobotContainer {
   
       
     //--CODRIVER CONTROLLER--//
-    //Intake buttons
-    m_codriverController.leftBumper().whileTrue(m_EjectRoller);
-    m_codriverController.rightTrigger().whileTrue((CommandFactoryUtility.createExtendIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem))); //Figure out how to not run when y or a is pressed lines see lines below
-    m_codriverController.y()
-      .and(m_codriverController.rightTrigger())
-      .whileTrue(m_HighPitchIntakeCommand); 
-    m_codriverController.a()
-      .and(m_codriverController.rightTrigger())
-      .whileTrue(m_LowPitchIntakeCommand); 
+    // Arm intake
+    // m_codriverController.leftBumper().whileTrue(m_EjectRoller); // Eject intake button
+
+    // Will eventually be Intake Handoff (Intake from bottom gives game bject to top)
+    // m_codriverController.leftTrigger().onTrue()
+
+    // Substation intake
+    m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+    // m_codriverController.a().negate()
+    //   .and(m_codriverController.y().negate())
+    //    .and(m_codriverController.rightTrigger())
+    //      .whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
+    // m_codriverController.y()
+    //   .and(m_codriverController.rightTrigger())
+    //   .whileTrue(m_HighPitchIntakeCommand); 
+    // m_codriverController.a()
+    //   .and(m_codriverController.rightTrigger())
+    //   .whileTrue(m_LowPitchIntakeCommand);
+    // m_codriverController.rightTrigger().negate().onTrue(m_RetractIntakeCommand);
   
     //Arm positions
     m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
@@ -275,6 +298,20 @@ public class RobotContainer {
     //Cube and Cone selector
     m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
     m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
+
+    // Trigger indicator
+    m_driverController.leftTrigger()
+      .onTrue(new PutToSmartDashboardCommand("DriverController/LeftTrigger", true))
+      .onFalse(new PutToSmartDashboardCommand("DriverController/LeftTrigger", false));
+    m_driverController.rightTrigger()
+      .onTrue(new PutToSmartDashboardCommand("DriverController/RightTrigger", true))
+      .onFalse(new PutToSmartDashboardCommand("DriverController/RightTrigger", false));
+    m_codriverController.leftTrigger()
+      .onTrue(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", true))
+      .onFalse(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", false));
+    m_codriverController.rightTrigger()
+      .onTrue(new PutToSmartDashboardCommand("CodriverController/RightTrigger", true))
+      .onFalse(new PutToSmartDashboardCommand("CodriverController/RightTrigger", false));
   }
 
   /**
@@ -382,37 +419,36 @@ public class RobotContainer {
     )
     .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
-  //Arm Intake
-  m_codriverController.leftBumper()
-    .onTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
-    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
-  //Arm Intake Upright
-  m_codriverController.a() // TODO REMOVE
-    .onTrue(CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
-    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));  
-  //substation Intake
-  m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
-    .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+    //Arm Intake
+    m_codriverController.leftBumper()
+      .onTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+    //Arm Intake Upright
+    m_codriverController.a() // TODO REMOVE
+      .onTrue(CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));  
+    //substation Intake
+    m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
-      m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
-      m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
-      m_codriverController.povRight().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
-      m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
-      m_codriverController.rightBumper()
-      .onTrue(
-          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED) 
-        )
-      .onFalse(
-            new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED) 
-      );
+    m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
+    m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
+    m_codriverController.povRight().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
+    m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
+    m_codriverController.rightBumper()
+    .onTrue(
+        new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED) 
+      )
+    .onFalse(
+          new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED) 
+    );
 
-      //Cube and Cone selector
-      m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
-      m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
+    //Cube and Cone selector
+    m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
+    m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
 
       //Intake Buttons
       // will only run after it checks that a and y is not pressed on the codrivercontroller.
-
       // TODO: fix m_CurrentPitchIntakeCommand is not available
       // m_codriverController.a().negate().and(m_codriverController.y().negate()).and(m_codriverController.rightTrigger()).whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
       // m_codriverController.y().and(m_codriverController.rightTrigger())
