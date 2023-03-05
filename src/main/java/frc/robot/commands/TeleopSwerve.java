@@ -70,12 +70,13 @@ public class TeleopSwerve extends CommandBase {
         // Gets the inputs from the joysticks
         double yAxis = -m_controller.getHID().getRawAxis(m_translationAxis);
         double xAxis = -m_controller.getHID().getRawAxis(m_strafeAxis);
-        if (m_controller.getHID().getYButton()) {
-            rAxis = m_rotationMathUtility.rotationSpeed(m_Swerve.getPose(), m_rotatePositions.getPose2dForRotation(), m_Swerve.getHeadingDegrees());
-        }
-        else{
+        // TODO REVIEW BEFORE ENABLING SINCE Y() was used by drive to release cone/cube
+        // if (m_controller.getHID().getYButton()) {
+        //     rAxis = m_rotationMathUtility.rotationSpeed(m_Swerve.getPose(), m_rotatePositions.getPose2dForRotation(), m_Swerve.getHeadingDegrees());
+        // }
+        // else{
             rAxis = -m_controller.getHID().getRawAxis(m_rotationAxis);
-        }
+        // }
 
         // Applies a deadband to the values
         yAxis = MathUtil.applyDeadband(yAxis, STICK_DEAD_BAND);
