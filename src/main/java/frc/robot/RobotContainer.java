@@ -135,13 +135,13 @@ public class RobotContainer {
   
   // Commands \\
   private Command m_highTargetCommand = 
-    CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, false);
 
   private Command m_mediumTargetCommand =
-    CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, false);
   
   private Command m_lowTargetCommand = 
-    CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, false);
   
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
@@ -229,7 +229,7 @@ public class RobotContainer {
     //.and() makes it so both buttons must be held in order to run the command
     // TODO how are we planning on moving the arm based on the target score position utility
 
-    m_driverController.rightBumper().onTrue(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED))
+    m_driverController.y().onTrue(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED))
       .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
 
     m_driverController.rightTrigger()
@@ -376,17 +376,17 @@ public class RobotContainer {
   private void configureButtonBindings_backup() {
     //High score
     m_codriverController.y()
-    .onTrue(CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+    .onTrue(CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true))
     .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
     //Medium score
     m_codriverController.b()
-      .onTrue(CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onTrue(CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
     //Low score
     m_codriverController.a()
-      .onTrue(CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onTrue(CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
     //Arm Intake

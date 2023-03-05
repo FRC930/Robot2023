@@ -40,8 +40,8 @@ public class CommandFactoryUtility {
     private static final double MANIPULATOR_BACK_INTAKE = 260.0;
 
     private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_HIGH_SCORE_ANGLE = 43.0;
-    private static final double MANIPULATOR_HIGH_SCORE = -2.0;
+    private static final double ARM_HIGH_SCORE_ANGLE = 50.0; //43.0;
+    private static final double MANIPULATOR_HIGH_SCORE = 3.0; //-2.0;
 
     private static final double ELEVATOR_MID_SCORE_HEIGHT =  20.0  * FACTOR; // 1.28/1.756  ;
     private static final double ARM_MID_SCORE_ANGLE = 43.0;
@@ -68,13 +68,18 @@ public class CommandFactoryUtility {
         command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
             .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
                 .withTimeout(waitSecondAfterElevator))
-            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition))
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition));
+        // iF wish to wait for arm/manipulator gets to position than release or DONT release DRIVER will control this
+        if(waitSecondArm >= 0.0) {
+            command = command
             .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
             .andThen(new WaitCommand(0.3)) // TODO WHY waiting
-            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED)
+            );
+        }
 
         return command;
     }
@@ -82,38 +87,41 @@ public class CommandFactoryUtility {
     public static Command createScoreHighCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
-        ManipulatorSubsystem m_manipulatorSubsystem) {        
+        ManipulatorSubsystem m_manipulatorSubsystem,
+        boolean releaseAtEnd) {        
 
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
             ELEVATOR_HIGH_SCORE_HEIGHT, 
             2.0, 
             ARM_HIGH_SCORE_ANGLE, 
             MANIPULATOR_HIGH_SCORE, 
-            0.0);
+            releaseAtEnd?0.3:-1.0);
     }
 
     public static Command createScoreMediumCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
-        ManipulatorSubsystem m_manipulatorSubsystem) {
+        ManipulatorSubsystem m_manipulatorSubsystem,
+        boolean releaseAtEnd) {
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
             ELEVATOR_MID_SCORE_HEIGHT, 
             1.0, 
             ARM_MID_SCORE_ANGLE, 
             MANIPULATOR_MID_SCORE, 
-            1.0);
+            releaseAtEnd?1.0:-1.0);
     }
 
     public static Command createScoreLowCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
-        ManipulatorSubsystem m_manipulatorSubsystem) {
+        ManipulatorSubsystem m_manipulatorSubsystem,
+        boolean releaseAtEnd) {
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
             ELEVATOR_LOW_SCORE_HEIGHT, 
             1.0, 
             ARM_LOW_SCORE_ANGLE, 
             MANIPULATOR_LOW_SCORE, 
-            1.5);
+            releaseAtEnd?1.5:-1.0);
     }
 
     public static Command createStowArmCommand(
@@ -229,13 +237,15 @@ public class CommandFactoryUtility {
         Command autoCommand = null;
         switch(eventName) {
             case "scoreHighCone":
-                autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem,
+                                    true)
                                 .andThen(new WaitCommand(0.5)) //pause after scoring
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                         
                 break;
             case "scoreMidCone":
-                autoCommand = CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                autoCommand = CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem,
+                                    true)
                                 .andThen(new WaitCommand(3)) //pause after scoring
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                 break;
@@ -305,7 +315,8 @@ public class CommandFactoryUtility {
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "scoreHighNoStow":
-                autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
+                    true)
                 .andThen(new WaitCommand(0.3));
                 break;
         }
