@@ -27,8 +27,8 @@ public class CommandFactoryUtility {
 
     private static double FACTOR = .68;
     private static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_INTAKE_ANGLE = -30.0;
-    private static final double MANIPULATOR_INTAKE = 25.0;
+    private static final double ARM_INTAKE_ANGLE = -24.0;
+    private static final double MANIPULATOR_INTAKE = 17.0;
 
     private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
     private static final double ARM_UPRIGHT_INTAKE_ANGLE = -22.0;
@@ -40,11 +40,11 @@ public class CommandFactoryUtility {
     private static final double MANIPULATOR_BACK_INTAKE = 260.0;
 
     private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_HIGH_SCORE_ANGLE = 55.0; //43.0;
-    private static final double MANIPULATOR_HIGH_SCORE = -3.0; //-2.0;
+    private static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
+    private static final double MANIPULATOR_HIGH_SCORE = -3.0;
 
     private static final double ELEVATOR_MID_SCORE_HEIGHT =  20.0  * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_MID_SCORE_ANGLE = 43.0;
+    private static final double ARM_MID_SCORE_ANGLE = 55.0; 
     private static final double MANIPULATOR_MID_SCORE = -3.0;
 
     private static final double ELEVATOR_LOW_SCORE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
