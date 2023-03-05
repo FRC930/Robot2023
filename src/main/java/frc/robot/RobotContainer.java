@@ -156,8 +156,6 @@ public class RobotContainer {
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
 
-  private final RunManipulatorRollerCommand m_ManipulatorRollerReleaseCommand = new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED);
-  
   private final LEDCommand m_RunDisabledLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
   private final LEDCommand m_RunConeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CONEREQUEST);
   private final LEDCommand m_RunCubeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CUBEREQUEST);
@@ -228,8 +226,8 @@ public class RobotContainer {
     //.and() makes it so both buttons must be held in order to run the command
     // TODO how are we planning on moving the arm based on the target score position utility
 
-    m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
-      .onFalse(m_ManipulatorRollerHoldCommand);
+    m_driverController.rightBumper().onTrue(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED))
+      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
 
     m_driverController.rightTrigger()
       .onTrue(
@@ -406,7 +404,7 @@ public class RobotContainer {
       true, 
       TeleopSwerve.SLOW_SPEED));
 
-    m_driverController.rightBumper().onTrue(m_ManipulatorRollerReleaseCommand)
+    m_driverController.rightBumper().onTrue(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED))
       .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)); 
     m_driverController.rightTrigger()
     .onTrue(
@@ -443,9 +441,9 @@ public class RobotContainer {
           new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED) 
     );
 
-    //Cube and Cone selector
-    m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
-    m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
+      //Cube and Cone selector
+      m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
+      m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
 
       //Intake Buttons
       // will only run after it checks that a and y is not pressed on the codrivercontroller.

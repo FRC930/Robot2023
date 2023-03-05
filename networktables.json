@@ -1,56 +1,10 @@
 [
   {
-    "name": "/Preferences/WHICH_ROBOT",
-    "type": "string",
-    "value": "PRACTICE_ROBOT",
-    "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
     "name": "/Preferences/kPX",
     "type": "double",
-    "value": 12.6,
+    "value": 3.596,
     "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
-    "name": "/Preferences/kPY",
-    "type": "double",
-    "value": 7.596,
-    "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
-    "name": "/Preferences/kDTheta",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
-    "name": "/Preferences/kDX",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
-    "name": "/Preferences/kDY",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
@@ -58,8 +12,23 @@
     "type": "double",
     "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDX",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kPY",
+    "type": "double",
+    "value": 3.596,
+    "properties": {
+      "persistent": true
     }
   },
   {
@@ -67,17 +36,15 @@
     "type": "double",
     "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
-    "name": "/Preferences/kITheta",
+    "name": "/Preferences/kDY",
     "type": "double",
     "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
@@ -85,17 +52,39 @@
     "type": "double",
     "value": 3.2,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
-    "name": "/Preferences/kDriveD",
+    "name": "/Preferences/kITheta",
     "type": "double",
     "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDTheta",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDriveFF",
+    "type": "double",
+    "value": 0.15751,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDriveP",
+    "type": "double",
+    "value": 0.23983,
+    "properties": {
+      "persistent": true
     }
   },
   {
@@ -103,17 +92,15 @@
     "type": "double",
     "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
-    "name": "/Preferences/kDriveP",
+    "name": "/Preferences/kDriveD",
     "type": "double",
-    "value": 0.01,
+    "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
@@ -121,17 +108,15 @@
     "type": "double",
     "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
-    "name": "/Preferences/kTurnD",
+    "name": "/Preferences/kTurnP",
     "type": "double",
-    "value": 0.02,
+    "value": 1.15,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
@@ -139,26 +124,15 @@
     "type": "double",
     "value": 0.0,
     "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   },
   {
-    "name": "/Preferences/kTurnP",
+    "name": "/Preferences/kTurnD",
     "type": "double",
-    "value": 0.032,
+    "value": 0.1,
     "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
-    "name": "/Preferences/kDriveFF",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true,
-      "retained": true
+      "persistent": true
     }
   }
 ]
