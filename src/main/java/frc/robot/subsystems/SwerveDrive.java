@@ -14,12 +14,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.utilities.FieldCentricOffset;
+import frc.robot.utilities.GeometryUtils;
 import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;
 
@@ -118,8 +120,9 @@ public class SwerveDrive extends SubsystemBase {
 
     moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setSwerveModuleStates(moduleStates, isOpenLoop);
+    chassisSpeeds = correctForDynamics(chassisSpeeds);
   }
-
+  
   public void setSwerveModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
     SwerveDriveKinematics.desaturateWheelSpeeds(states, kMaxSpeedMetersPerSecond);
 
@@ -242,6 +245,28 @@ public class SwerveDrive extends SubsystemBase {
     // resets the position of swerveEstimatorPoses
     m_aprilCameraOne.resetPosition(getYaw(), getModulePositions(), initialPose);
     m_odometry.resetPosition(getYaw(), getModulePositions(), initialPose);
+  }
+
+   /**
+   * Correction for swerve second order dynamics issue. Borrowed from 254:
+   * https://github.com/Team254/FRC-2022-Public/blob/main/src/main/java/com/team254/frc2022/subsystems/Drive.java#L325
+   * Discussion:
+   * https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964
+   */
+  private static ChassisSpeeds correctForDynamics(ChassisSpeeds originalSpeeds) {
+    final double LOOP_TIME_S = 0.02;
+    Pose2d futureRobotPose =
+        new Pose2d(
+            originalSpeeds.vxMetersPerSecond * LOOP_TIME_S,
+            originalSpeeds.vyMetersPerSecond * LOOP_TIME_S,
+            Rotation2d.fromRadians(originalSpeeds.omegaRadiansPerSecond * LOOP_TIME_S));
+    Twist2d twistForPose = GeometryUtils.log(futureRobotPose);
+    ChassisSpeeds updatedSpeeds =
+        new ChassisSpeeds(
+            twistForPose.dx / LOOP_TIME_S,
+            twistForPose.dy / LOOP_TIME_S,
+            twistForPose.dtheta / LOOP_TIME_S);
+    return updatedSpeeds;
   }
 
   private Rotation2d getYaw() {
