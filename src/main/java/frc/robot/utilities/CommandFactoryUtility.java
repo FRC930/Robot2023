@@ -36,13 +36,13 @@ public class CommandFactoryUtility {
     private static final double ARM_BACK_INTAKE_ANGLE = -184.5;
     private static final double MANIPULATOR_BACK_INTAKE = 260.0;
 
-    private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  52.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_HIGH_SCORE_ANGLE = 35.0;
-    private static final double MANIPULATOR_HIGH_SCORE = 1.0;
+    private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
+    private static final double ARM_HIGH_SCORE_ANGLE = 43.0;
+    private static final double MANIPULATOR_HIGH_SCORE = -2.0;
 
-    private static final double ELEVATOR_MID_SCORE_HEIGHT =  22.0  * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_MID_SCORE_ANGLE = 35.0;
-    private static final double MANIPULATOR_MID_SCORE = 0.0;
+    private static final double ELEVATOR_MID_SCORE_HEIGHT =  20.0  * FACTOR; // 1.28/1.756  ;
+    private static final double ARM_MID_SCORE_ANGLE = 43.0;
+    private static final double MANIPULATOR_MID_SCORE = -3.0;
 
     private static final double ELEVATOR_LOW_SCORE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
     private static final double ARM_LOW_SCORE_ANGLE = -25.0;
