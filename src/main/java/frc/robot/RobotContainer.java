@@ -221,6 +221,9 @@ public class RobotContainer {
    */
  
   private void configureButtonBindings_Future() {
+
+    SmartDashboard.putBoolean(this.getClass().getSimpleName()+"/DriverController", DriverStation.getJoystickIsXbox(0));
+    SmartDashboard.putBoolean(this.getClass().getSimpleName()+"/Co-DriverController", DriverStation.getJoystickIsXbox(1));
     //Final Button Bindings
     //--DRIVER CONTROLLER--//
     //.and() makes it so both buttons must be held in order to run the command
