@@ -34,8 +34,9 @@ public class CommandFactoryUtility {
     private static final double ARM_UPRIGHT_INTAKE_ANGLE = -22.0;
     private static final double MANIPULATOR_UPRIGHT_INTAKE = 4.5;
 
+    // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
     private static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.0 * FACTOR; //not sure if correct?
-    private static final double ARM_BACK_INTAKE_ANGLE = -184.5;
+    private static final double ARM_BACK_INTAKE_ANGLE = 184.5;
     private static final double MANIPULATOR_BACK_INTAKE = 260.0;
 
     private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
@@ -289,6 +290,7 @@ public class CommandFactoryUtility {
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_INTAKE);
                 // TODO why were we using waitUntil on intake commands
                 break;
+            // TODO DONT USE YET (wrist issues)
             case "backIntakeElevatorPos":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
                 .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_BACK_INTAKE_HEIGHT)));

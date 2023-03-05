@@ -297,19 +297,20 @@ public class RobotContainer {
     m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
     m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
 
-    // Trigger indicator
-    m_driverController.leftTrigger()
-      .onTrue(new PutToSmartDashboardCommand("DriverController/LeftTrigger", true))
-      .onFalse(new PutToSmartDashboardCommand("DriverController/LeftTrigger", false));
-    m_driverController.rightTrigger()
-      .onTrue(new PutToSmartDashboardCommand("DriverController/RightTrigger", true))
-      .onFalse(new PutToSmartDashboardCommand("DriverController/RightTrigger", false));
-    m_codriverController.leftTrigger()
-      .onTrue(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", true))
-      .onFalse(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", false));
-    m_codriverController.rightTrigger()
-      .onTrue(new PutToSmartDashboardCommand("CodriverController/RightTrigger", true))
-      .onFalse(new PutToSmartDashboardCommand("CodriverController/RightTrigger", false));
+    // TODO REMOVE this is not how determine it xboxcontroller is working!!
+    // // Trigger indicator
+    // m_driverController.leftTrigger()
+    //   .onTrue(new PutToSmartDashboardCommand("DriverController/LeftTrigger", true))
+    //   .onFalse(new PutToSmartDashboardCommand("DriverController/LeftTrigger", false));
+    // m_driverController.rightTrigger()
+    //   .onTrue(new PutToSmartDashboardCommand("DriverController/RightTrigger", true))
+    //   .onFalse(new PutToSmartDashboardCommand("DriverController/RightTrigger", false));
+    // m_codriverController.leftTrigger()
+    //   .onTrue(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", true))
+    //   .onFalse(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", false));
+    // m_codriverController.rightTrigger()
+    //   .onTrue(new PutToSmartDashboardCommand("CodriverController/RightTrigger", true))
+    //   .onFalse(new PutToSmartDashboardCommand("CodriverController/RightTrigger", false));
   }
 
   /**
