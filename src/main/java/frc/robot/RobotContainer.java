@@ -297,8 +297,7 @@ public class RobotContainer {
     m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
   
     //Cube and Cone selector
-    m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
-    m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
+    m_codriverController.b().onTrue(m_RunConeRequestLEDPattern).onFalse(m_RunCubeRequestLEDPattern);
 
     // TODO REMOVE this is not how determine it xboxcontroller is working!!
     // // Trigger indicator

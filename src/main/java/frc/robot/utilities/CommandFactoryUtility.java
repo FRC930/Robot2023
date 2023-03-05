@@ -33,10 +33,10 @@ public class CommandFactoryUtility {
     private static final double ARM_INTAKE_ANGLE = -24.0;
     private static final double MANIPULATOR_INTAKE = 17.0;
 
-    // Arm Intake UpRIght cone
+    // Arm Intake UpRight cone
     private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_UPRIGHT_INTAKE_ANGLE = -22.0;
-    private static final double MANIPULATOR_UPRIGHT_INTAKE = 4.5;
+    private static final double ARM_UPRIGHT_INTAKE_ANGLE = -15.0;
+    private static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
