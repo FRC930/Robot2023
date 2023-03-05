@@ -32,6 +32,10 @@ public class CommandFactoryUtility {
     private static final double ARM_UPRIGHT_INTAKE_ANGLE = -22.0;
     private static final double MANIPULATOR_UPRIGHT_INTAKE = 4.5;
 
+    private static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.0 * FACTOR; //not sure if correct?
+    private static final double ARM_BACK_INTAKE_ANGLE = -184.5;
+    private static final double MANIPULATOR_BACK_INTAKE = 260.0;
+
     private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  52.0 * FACTOR; // 1.28/1.756  ;
     private static final double ARM_HIGH_SCORE_ANGLE = 35.0;
     private static final double MANIPULATOR_HIGH_SCORE = 1.0;
@@ -282,6 +286,19 @@ public class CommandFactoryUtility {
                 break;
             case "intakeManipulatorPos":
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_INTAKE);
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "backIntakeElevatorPos":
+                autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
+                .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_BACK_INTAKE_HEIGHT)));
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "backIntakeArmPos":
+                autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_BACK_INTAKE_ANGLE);
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "backIntakeManipulatorPos":
+                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_BACK_INTAKE);
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "scoreHighNoStow":
