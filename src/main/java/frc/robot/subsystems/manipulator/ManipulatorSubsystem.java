@@ -28,7 +28,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public static final double ROLLER_INTAKE_SPEED = 0.8;
     public static final double SHOOT_SPEED = -1.0;
-    public static final double RELEASE_SPEED = -0.6;
+    public static final double RELEASE_SPEED = -0.5;
     public static final double HOLD_SPEED = 0.15;
    
 
