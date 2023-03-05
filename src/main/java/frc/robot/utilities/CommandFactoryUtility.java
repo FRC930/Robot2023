@@ -35,7 +35,7 @@ public class CommandFactoryUtility {
 
     // Arm Intake UpRight cone
     private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_UPRIGHT_INTAKE_ANGLE = -15.0;
+    private static final double ARM_UPRIGHT_INTAKE_ANGLE = -13.5;
     private static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
 
     // Arm Back intake DONT USE
