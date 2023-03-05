@@ -20,9 +20,9 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int FREE_LIMIT = 20;
 
     // TRY to keep offset value away from flipping around to 359 it would flip around in side
-    public final static double SAFE_ZONE_OFFSET =15.0; 
+    public final static double SAFE_ZONE_OFFSET =15.0;
 
-    private static double manipulatorOffset = 66.0 - SAFE_ZONE_OFFSET; // -45 needed to adjust to get angle back to where tested
+    private static double manipulatorOffset = 17.0 - SAFE_ZONE_OFFSET; // -45 needed to adjust to get angle back to where tested
 
 
     //----------Constructor---------\\
@@ -50,7 +50,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
         manipulatorEncoder.setPositionConversionFactor(360);
         manipulatorEncoder.setVelocityConversionFactor(60);
 
-        manipulator.setInverted(true);
+        manipulator.setInverted(false);
 
         manipulatorEncoder.setZeroOffset(manipulatorOffset);
     }
