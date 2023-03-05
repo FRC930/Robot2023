@@ -80,13 +80,13 @@ public class OdometryUtility {
 
 
     //Left camera constants
-    private static final String LEFT_CAMERA_NAME = "Camera1"; 
-    private static final String LEFT_CAMERA_IP_NAME = "10.9.30.31`";
+    private static final String LEFT_CAMERA_NAME = "Camera2"; 
+    private static final String LEFT_CAMERA_IP_NAME = "10.9.30.32";
     private static final int LEFT_CAMERA_PIPELINE = 0;
     private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5801;
-    private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
-    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 960;
-    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 540;
+    private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
+    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 1280;
+    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 720;
     private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
     private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(12.5);
     private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
@@ -100,13 +100,13 @@ public class OdometryUtility {
             new Rotation3d(LEFT_CAMERA_ROTATION_YAW,LEFT_CAMERA_ROTATION_PITCH, LEFT_CAMERA_ROTATION_ROLL));
 
     // Right camera constants
-    private static final String RIGHT_CAMERA_NAME = "Camera2"; 
-    private static final String RIGHT_CAMERA_IP_NAME = "10.9.30.32";
+    private static final String RIGHT_CAMERA_NAME = "Camera1"; 
+    private static final String RIGHT_CAMERA_IP_NAME = "10.9.30.31";
     private static final int RIGHT_CAMERA_PIPELINE = 0;
     private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5802;
-    private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
-    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 960;
-    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 540;
+    private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
+    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 1280;
+    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 720;
     private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
     private static final double RIGHT_CAMERA_POSITION_Y = -Units.inchesToMeters(11.0);
     private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
@@ -129,7 +129,9 @@ public class OdometryUtility {
     private SwerveModulePosition[] m_swerveModulePositions;
     private Pose2d m_position;
     private SwerveDrivePoseEstimator m_PoseEstimator;
-    private PhotonPoseEstimator photonPoseEstimator;
+    private PhotonPoseEstimator photonPoseEstimator_FrontLeft;
+    private PhotonPoseEstimator photonPoseEstimator_FrontRight;
+    // private PhotonPoseEstimator photonPoseEstimator_Back;
 
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
     private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, 0.05);
@@ -160,12 +162,7 @@ public class OdometryUtility {
         m_swerveModulePositions = swerveModulePositions;
         m_position = position;
 
-        try{
-            tagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-            } catch (IOException e) {
-                DriverStation.reportWarning("Unable to load ChargedUp AprilTag resource file" + 
-                                            AprilTagFields.k2023ChargedUp.m_resourceFile, e.getStackTrace());
-            }
+       
 
         m_PoseEstimator = new SwerveDrivePoseEstimator(
             m_swerveDriveKinematics,
@@ -223,8 +220,18 @@ public class OdometryUtility {
         cameras = List.of(m_rightCamera, m_leftCamera); //m_backCamera );
         cameraOffsets = List.of(robotToLeftCam, robotToRightCam); //robotToBackCam
 
-       // Adjusts AprilTag position based on 0,0 based on alliance selection
-       setOriginBasedOnAlliance();
+       try{
+        tagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+        // Adjusts AprilTag position based on 0,0 based on alliance selection
+        setOriginBasedOnAlliance();
+        photonPoseEstimator_FrontLeft = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_leftCamera.getPhotonCamera(), robotToLeftCam);
+        photonPoseEstimator_FrontLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        photonPoseEstimator_FrontRight = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_rightCamera.getPhotonCamera(), robotToRightCam);
+        photonPoseEstimator_FrontRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        } catch (IOException e) {
+            DriverStation.reportWarning("Unable to load ChargedUp AprilTag resource file" + 
+                                        AprilTagFields.k2023ChargedUp.m_resourceFile, e.getStackTrace());
+        }
     }
 
     public void setOriginBasedOnAlliance() {
@@ -320,50 +327,46 @@ public class OdometryUtility {
      */
     public void updateCameraPositions() {
         SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/RobotPose", LogUtil.toPoseArray2d(getPose()));
-    
-        for(int i = 0; i < this.cameras.size(); i++) {
-            final PhotonCamera camera = this.cameras.get(i).getPhotonCamera();
-            final Transform3d offset = this.cameraOffsets.get(i);
-            final PhotonPipelineResult result = camera.getLatestResult();
-            if (!result.hasTargets()) continue;
+        try{
 
-            try{
+              
 
-                photonPoseEstimator = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, camera, offset);
-                photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-                final Transform3d robotToCameraPose = cameras.get(i).getRobotToCameraPose();
+            photonPoseEstimator_FrontLeft.setReferencePose(m_PoseEstimator.getEstimatedPosition());
+            final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
+            photonPoseEstimator_FrontRight.setReferencePose(m_PoseEstimator.getEstimatedPosition());
+            final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
+            if (!updatedEstimatedPose_FromLeft.isEmpty() && updatedEstimatedPose_FromLeft.isPresent()) {
+                EstimatedRobotPose camPose = updatedEstimatedPose_FromLeft.get();
+                m_PoseEstimator.addVisionMeasurement(
+                        camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+                SmartDashboard.putString("OdometryUtility/SeeLeftRobot", "true");
+            } else {
+                SmartDashboard.putString("OdometryUtility/SeeLeftRobot", "false");
 
-                photonPoseEstimator.setReferencePose(m_PoseEstimator.getEstimatedPosition());
-                final Optional<EstimatedRobotPose> updatedEstimatedPose = photonPoseEstimator.update();
-
-                if (updatedEstimatedPose.isPresent()) {
-                    EstimatedRobotPose camPose = updatedEstimatedPose.get();
-                    m_PoseEstimator.addVisionMeasurement(
-                            camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-                    SmartDashboard.putString("OdometryUtility/SeeRobot", "true");
-                } else {
-                    SmartDashboard.putString("OdometryUtility/SeeRobot", "false");
-
-                }
-                
-                // SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
-                SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/updatedEstimatedPose" + i, LogUtil.toPoseArray3d(updatedEstimatedPose.get().estimatedPose));
             }
-            catch(Exception e){
-                SmartDashboard.putString("OdometryUtility/e", e.getMessage());
-            };
+            if (!updatedEstimatedPose_FromRight.isEmpty() &&updatedEstimatedPose_FromRight.isPresent()) {
+                EstimatedRobotPose camPose = updatedEstimatedPose_FromRight.get();
+                m_PoseEstimator.addVisionMeasurement(
+                        camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+                SmartDashboard.putString("OdometryUtility/SeeRightRobot", "true");
+            } else {
+                SmartDashboard.putString("OdometryUtility/SeeRightRobot", "false");
 
-  
+            }
+            
+            // SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
+            // SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/updatedEstimatedPose", LogUtil.toPoseArray3d(updatedEstimatedPose_FromLeft.get().estimatedPose));
         }
-    }
-
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-        if (photonPoseEstimator == null) {
-            // The field layout failed to load, so we cannot estimate poses.
-            return Optional.empty();
-        }
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return photonPoseEstimator.update();
+        catch(Exception e){
+            DriverStation.reportError(" JS Error", e.getStackTrace());
+            SmartDashboard.putString("OdometryUtility/e", e.getMessage());
+        };
+        // for(int i = 0; i < this.cameras.size(); i++) {
+        //     final PhotonCamera camera = this.cameras.get(i).getPhotonCamera();
+        //     final Transform3d offset = this.cameraOffsets.get(i);
+        //     final PhotonPipelineResult result = camera.getLatestResult();
+        //    if (!result.hasTargets()) continue;
+        // }
     }
 
     /**
