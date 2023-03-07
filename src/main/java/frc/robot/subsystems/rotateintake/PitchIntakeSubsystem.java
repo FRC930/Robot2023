@@ -40,7 +40,7 @@ public class PitchIntakeSubsystem extends SubsystemBase{
 
         // Sets up PID controller TODO: Change these values
         //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
-        controller = new ProfiledPIDController(0.1, 0.0, 0.0, new Constraints(360, 720));
+        controller = new ProfiledPIDController(0.0 /* 0.1 */, 0.0, 0.0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 

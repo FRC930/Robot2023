@@ -28,7 +28,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public static final double ROLLER_INTAKE_SPEED = 0.8;
     public static final double SHOOT_SPEED = -1.0;
-    public static final double RELEASE_SPEED = -0.3;
+    public static final double RELEASE_SPEED = -0.35;
     public static final double HOLD_SPEED = 0.15;
    
 
@@ -39,7 +39,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public ManipulatorSubsystem (ManipulatorIO io) {
 
         // Sets up PID controller TODO: Change these values
-        //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
+        // controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
         //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!
