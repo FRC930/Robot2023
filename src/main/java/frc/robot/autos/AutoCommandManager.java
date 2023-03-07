@@ -127,6 +127,8 @@ public class AutoCommandManager {
         Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command One_ConeCubeNoBump = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBump", eventCommandMap);
+        Command Two_ConeCubeBalanceNoBump = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBump", eventCommandMap,
+            new AutoBalanceCommand(s_SwerveDrive, false));
         
     
 
@@ -136,6 +138,7 @@ public class AutoCommandManager {
         m_chooser.setDefaultOption("None", null);
 
         m_chooser.addOption("1_ConeCubeNoBump", One_ConeCubeNoBump);
+        m_chooser.addOption("2_ConeCubeBalanceNoBump", Two_ConeCubeBalanceNoBump);
 
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
         m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
