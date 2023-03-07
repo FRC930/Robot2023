@@ -126,6 +126,7 @@ public class AutoCommandManager {
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
+        Command One_ConeCubeNoBump = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBump", eventCommandMap);
         
     
 
@@ -133,6 +134,9 @@ public class AutoCommandManager {
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
+
+        m_chooser.addOption("1_ConeCubeNoBump", One_ConeCubeNoBump);
+
         m_chooser.addOption("Taxi One Ball", taxiOneBall);
         m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
