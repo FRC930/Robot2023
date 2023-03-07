@@ -3,6 +3,8 @@ package frc.robot.utilities;
 import java.io.IOException;
 
 import java.util.Optional;
+
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -79,12 +81,12 @@ public class OdometryUtility {
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
     private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 960;
     private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 540;
-    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
-    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(12.5);
-    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
+    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(8.0);
+    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(11.25);
+    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(17.0);
     private static final double LEFT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);
     private static final double LEFT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);
-    private static final double LEFT_CAMERA_ROTATION_YAW = Units.degreesToRadians(30.0);
+    private static final double LEFT_CAMERA_ROTATION_YAW = Units.degreesToRadians(20.0);
 
     static final Transform3d robotToLeftCam = 
         new Transform3d(
@@ -99,12 +101,12 @@ public class OdometryUtility {
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
     private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 960;
     private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 540;
-    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
-    private static final double RIGHT_CAMERA_POSITION_Y = -Units.inchesToMeters(11.0);
-    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
+    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(8.0);
+    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-9.75);
+    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(17);
     private static final double RIGHT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);;
-    private static final double RIGHT_CAMERA_ROTATION_YAW = Units.degreesToRadians(-30.0);;
+    private static final double RIGHT_CAMERA_ROTATION_YAW = Units.degreesToRadians(-20.0);;
 
     static final Transform3d robotToRightCam = 
     new Transform3d(
@@ -288,9 +290,9 @@ public class OdometryUtility {
      * 
      * @return a reference to the right camera
      */
-    // public PhotonCamera getRightCamera() { 
-    //     return m_rightCamera.getPhotonCamera();
-    // }
+    public PhotonCamera getRightCamera() { 
+         return m_rightCamera.getPhotonCamera();
+     }
 
     /**
      * <h3>updateCameraPos</h3>
@@ -324,7 +326,9 @@ public class OdometryUtility {
      * Updates the swerve estimated pose based on the position camera detections of April Tags
      */
     public void updateCameraPositions() {
-        SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/RobotPose", LogUtil.toPoseArray2d(getPose()));
+        //SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/RobotPose", LogUtil.toPoseArray2d(getPose()));
+        //TODO: may want to change other values sent to shuffleboard to be set to logger
+       Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/RobotPose", getPose());
         try{
 
               
