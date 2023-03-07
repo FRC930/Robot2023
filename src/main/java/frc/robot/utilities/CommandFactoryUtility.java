@@ -29,35 +29,43 @@ public class CommandFactoryUtility {
     private static double FACTOR = .68;
 
     //Arm Intake ground/low
-    private static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_INTAKE_ANGLE = -24.0;
-    private static final double MANIPULATOR_INTAKE = 17.0;
+    public static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
+    public static final double ARM_INTAKE_ANGLE = -24.0;
+    public static final double MANIPULATOR_INTAKE = 17.0;
 
     // Arm Intake UpRight cone
-    private static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_UPRIGHT_INTAKE_ANGLE = -13.5;
-    private static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
+    public static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
+    public static final double ARM_UPRIGHT_INTAKE_ANGLE = -13.5;
+    public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
+
+    //Arm substation
+    public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.0 * FACTOR; //not sure if correct?
+    public static final double ARM_SUBSTATION_ANGLE = 190.0;//115.0;
+    public static final double MANIPULATOR_SUBSTATION = 155.0;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
-    private static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.0 * FACTOR; //not sure if correct?
-    private static final double ARM_BACK_INTAKE_ANGLE = 184.5;
-    private static final double MANIPULATOR_BACK_INTAKE = 260.0;
+    public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.0 * FACTOR; //not sure if correct?
+    public static final double ARM_BACK_INTAKE_ANGLE = 184.5;
+    public static final double MANIPULATOR_BACK_INTAKE = 260.0;
 
     // High Score
-    private static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
-    private static final double MANIPULATOR_HIGH_SCORE = -3.0;
+    public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
+    public static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
+    public static final double MANIPULATOR_HIGH_SCORE = -3.0;
 
     // Mid Score
-    private static final double ELEVATOR_MID_SCORE_HEIGHT =  20.0  * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_MID_SCORE_ANGLE = 58.0; 
-    private static final double MANIPULATOR_MID_SCORE = -3.0;
+    public static final double ELEVATOR_MID_SCORE_HEIGHT =  20.0  * FACTOR; // 1.28/1.756  ;
+    public static final double ARM_MID_SCORE_ANGLE = 58.0; 
+    public static final double MANIPULATOR_MID_SCORE = -3.0;
 
     // Low Score
-    private static final double ELEVATOR_LOW_SCORE_HEIGHT = 0.0 * FACTOR; // 1.28/1.756  ;
-    private static final double ARM_LOW_SCORE_ANGLE = 70.0;
-    private static final double MANIPULATOR_LOW_SCORE = -5.0;
+    public static final double ELEVATOR_LOW_SCORE_HEIGHT = 0.0 * FACTOR; // 1.28/1.756  ;
+    public static final double ARM_LOW_SCORE_ANGLE = 70.0;
+    public static final double MANIPULATOR_LOW_SCORE = -5.0;
+
+
+
 
 
     private CommandFactoryUtility() {}
@@ -212,15 +220,15 @@ public class CommandFactoryUtility {
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem) {
         final Command command = 
-            new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0))
+            new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_SUBSTATION_HEIGHT))
                 .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(0.5))
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
-                ArmSubsystem.SUBSTATION_POSITION, 
-                ManipulatorSubsystem.SUBSTATION_POSITION
+                ARM_SUBSTATION_ANGLE, 
+                MANIPULATOR_SUBSTATION
                 ))
                 .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
                 .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
-            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)); //TODO constant
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED));
 
         return command;
     }
