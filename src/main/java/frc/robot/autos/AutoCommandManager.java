@@ -130,7 +130,7 @@ public class AutoCommandManager {
         Command Two_ConeCubeBalanceNoBump = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBump", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command Three_ConeCubeBalanceBump = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBump", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
+            new AutoBalanceCommand(s_SwerveDrive, false));
         Command Four_ConeCubeBump = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBump", eventCommandMap);
         
     
