@@ -117,10 +117,10 @@ public class SwerveDrive extends SubsystemBase {
             // Sets an offset if robot path doesn't start facing drive station
               getHeadingRotation2d().minus(Rotation2d.fromDegrees(FieldCentricOffset.getInstance().getOffset())))
         : new ChassisSpeeds(throttle, strafe, rotation);
-
+        
+    chassisSpeeds = correctForDynamics(chassisSpeeds);
     moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setSwerveModuleStates(moduleStates, isOpenLoop);
-    chassisSpeeds = correctForDynamics(chassisSpeeds);
   }
   
   public void setSwerveModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
