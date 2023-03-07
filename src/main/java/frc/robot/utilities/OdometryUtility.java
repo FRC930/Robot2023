@@ -1,19 +1,12 @@
 package frc.robot.utilities;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-import org.photonvision.EstimatedRobotPose;
+import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.TargetCorner;
-
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -31,7 +24,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -64,8 +56,8 @@ public class OdometryUtility {
     // private static final int BACK_CAMERA_PIPELINE = 0;
     // private static final int BACK_CAMERA_PORT_TO_FORWARD = 5803;
     // private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera3/config.json";
-    // private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
-    // private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
+    // private static final int BACK_CAMERA_RESOLUTION_WIDTH = 960;
+    // private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 540;
     // private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(10.0);
     // private static final double BACK_CAMERA_POSITION_Y = Units.inchesToMeters(10.0);
     // private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(25.0);
@@ -85,8 +77,8 @@ public class OdometryUtility {
     private static final int LEFT_CAMERA_PIPELINE = 0;
     private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5801;
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
-    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 1280;
-    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 720;
+    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 960;
+    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 540;
     private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
     private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(12.5);
     private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
@@ -105,8 +97,8 @@ public class OdometryUtility {
     private static final int RIGHT_CAMERA_PIPELINE = 0;
     private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5802;
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
-    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 1280;
-    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 720;
+    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 960;
+    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 540;
     private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
     private static final double RIGHT_CAMERA_POSITION_Y = -Units.inchesToMeters(11.0);
     private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18.5);
@@ -129,20 +121,20 @@ public class OdometryUtility {
     private SwerveModulePosition[] m_swerveModulePositions;
     private Pose2d m_position;
     private SwerveDrivePoseEstimator m_PoseEstimator;
+    
+    // New Photon Pose Estimator Objects
+    // -- These replaced old utility methods used to utilize multi tags
     private PhotonPoseEstimator photonPoseEstimator_FrontLeft;
     private PhotonPoseEstimator photonPoseEstimator_FrontRight;
     // private PhotonPoseEstimator photonPoseEstimator_Back;
 
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
-    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, 0.05);
+    private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
     
     // Confidence level, 0 means that we have 100% confidence in the camera values and it won't trust odometry positions
-    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(30));
+    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(15));
 
     private AprilTagFieldLayout tagLayout;
-    private List<CameraOnRobot> cameras;
-    private List<Transform3d> cameraOffsets;
-
 
     /**
      * <h3>OdometryUtility</h3>
@@ -217,23 +209,29 @@ public class OdometryUtility {
                                         RIGHT_CAMERA_ROTATION_YAW
                                         );
 
-        cameras = List.of(m_rightCamera, m_leftCamera); //m_backCamera );
-        cameraOffsets = List.of(robotToLeftCam, robotToRightCam); //robotToBackCam
-
        try{
+        // Read tag Json
         tagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
         // Adjusts AprilTag position based on 0,0 based on alliance selection
         setOriginBasedOnAlliance();
+        // Initialize Photon Pose Estimators
         photonPoseEstimator_FrontLeft = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_leftCamera.getPhotonCamera(), robotToLeftCam);
         photonPoseEstimator_FrontLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         photonPoseEstimator_FrontRight = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_rightCamera.getPhotonCamera(), robotToRightCam);
         photonPoseEstimator_FrontRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        //photonPoseEstimator_Back = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_backCamera.getPhotonCamera(), robotToBackCam);
+        //photonPoseEstimator_Back.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         } catch (IOException e) {
             DriverStation.reportWarning("Unable to load ChargedUp AprilTag resource file" + 
                                         AprilTagFields.k2023ChargedUp.m_resourceFile, e.getStackTrace());
         }
     }
 
+    /**
+     * <h3>setOriginBasedOnAlliance</h3>
+     * 
+     * in our odometry it places the robot on a starting spot of the alliance color you are on.
+     */
     public void setOriginBasedOnAlliance() {
 
         for(int i=1; i<9;i++) {
@@ -331,9 +329,7 @@ public class OdometryUtility {
 
               
 
-            photonPoseEstimator_FrontLeft.setReferencePose(m_PoseEstimator.getEstimatedPosition());
             final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
-            photonPoseEstimator_FrontRight.setReferencePose(m_PoseEstimator.getEstimatedPosition());
             final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
             if (!updatedEstimatedPose_FromLeft.isEmpty() && updatedEstimatedPose_FromLeft.isPresent()) {
                 EstimatedRobotPose camPose = updatedEstimatedPose_FromLeft.get();
@@ -367,21 +363,6 @@ public class OdometryUtility {
         //     final PhotonPipelineResult result = camera.getLatestResult();
         //    if (!result.hasTargets()) continue;
         // }
-    }
-
-    /**
-     * <h3>addVisionMeasurement</h3>
-     * 
-     * Updates the swerve pose estimator based on the vision latency
-     *  
-     * @param measurement the estimated Pose2d
-     * @param latencySeconds time the camera lags
-     */
-    private void addVisionMeasurement(Pose2d measurement, double latencySeconds) {
-        m_PoseEstimator.addVisionMeasurement(
-            measurement,
-            Timer.getFPGATimestamp() - latencySeconds
-        );
     }
 
     /**
