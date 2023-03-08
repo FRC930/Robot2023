@@ -363,6 +363,7 @@ public class RobotContainer {
 
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(m_RunLEDPattern);
+    CommandScheduler.getInstance().schedule(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.DISABLED)));
   }
  
   private void configureButtonBindings_Intake(){
