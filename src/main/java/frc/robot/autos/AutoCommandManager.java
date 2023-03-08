@@ -140,29 +140,29 @@ public class AutoCommandManager {
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
 
-        m_chooser.addOption("1_ConeCubeNoBump", One_ConeCubeNoBump);
-        m_chooser.addOption("2_ConeCubeBalanceNoBump", Two_ConeCubeBalanceNoBump);
-        m_chooser.addOption("3_ConeCubeBalanceBump", Three_ConeCubeBalanceBump);
-        m_chooser.addOption("4_ConeCubeBump", Four_ConeCubeBump);
+        m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
+        //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged", Two_ConeCubeBalanceNoBump);
+        m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
+        //m_chooser.addOption("4_BumpConeSCubeS", Four_ConeCubeBump);
 
-        m_chooser.addOption("Taxi One Ball", taxiOneBall);
-        m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
+        //m_chooser.addOption("Taxi One Ball", taxiOneBall);
+        //m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
-        m_chooser.addOption("ScoreMidCone", ScoreMidConeCommand);
+        //m_chooser.addOption("ScoreMidCone", ScoreMidConeCommand);
 
-        m_chooser.addOption("TwoConeEngageBump", TwoConeEngageBumpCommand);
-        m_chooser.addOption("ThreeConeBump", ThreeConeBumpCommand);
-        m_chooser.addOption("twoConeEngageNoBump",TwoConeBalanceNoBumpCommand);
-        m_chooser.addOption("TwoConeBalanceNoBump", TwoConeBalanceNoBumpCommand);
+        // m_chooser.addOption("TwoConeEngageBump", TwoConeEngageBumpCommand);
+        // m_chooser.addOption("ThreeConeBump", ThreeConeBumpCommand);
+        // m_chooser.addOption("twoConeEngageNoBump",TwoConeBalanceNoBumpCommand);
+        // m_chooser.addOption("TwoConeBalanceNoBump", TwoConeBalanceNoBumpCommand);
         m_chooser.addOption("MidScoreEngage", MidScoreEngageCommand);
-        m_chooser.addOption("BumpSide1Cone", BumpSide1ConeCommand);
-        m_chooser.addOption("BumpSide2Cone", BumpSide2ConeCommand);
+        // m_chooser.addOption("BumpSide1Cone", BumpSide1ConeCommand);
+        // m_chooser.addOption("BumpSide2Cone", BumpSide2ConeCommand);
         m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
-        m_chooser.addOption("NoBump1Cone", NoBump1ConeCommand);
-        m_chooser.addOption("NoBump2Cone", NoBump2ConeCommand);
-        m_chooser.addOption("MidPickUpEngage",MidPickUpEngageCommand);
-        m_chooser.addOption("ThreeConeNoBump",ThreeConeNoBumpCommand);
-        m_chooser.addOption("MidScoreTwoEngage", MidScoreTwoEngageCommand);
+        // m_chooser.addOption("NoBump1Cone", NoBump1ConeCommand);
+        // m_chooser.addOption("NoBump2Cone", NoBump2ConeCommand);
+        // m_chooser.addOption("MidPickUpEngage",MidPickUpEngageCommand);
+        // m_chooser.addOption("ThreeConeNoBump",ThreeConeNoBumpCommand);
+        // m_chooser.addOption("MidScoreTwoEngage", MidScoreTwoEngageCommand);
 
 
 

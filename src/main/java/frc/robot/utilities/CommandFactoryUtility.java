@@ -108,7 +108,7 @@ public class CommandFactoryUtility {
 
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
             ELEVATOR_HIGH_SCORE_HEIGHT, 
-            2.0, 
+            1.0, 
             ARM_HIGH_SCORE_ANGLE, 
             MANIPULATOR_HIGH_SCORE, 
             releaseAtEnd?0.3:-1.0);

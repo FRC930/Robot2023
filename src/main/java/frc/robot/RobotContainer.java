@@ -26,6 +26,7 @@ import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
@@ -156,15 +157,7 @@ public class RobotContainer {
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
 
-  private final LEDCommand m_RunDisabledLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
-  private final LEDCommand m_RunConeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CONEREQUEST);
-  private final LEDCommand m_RunCubeRequestLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CUBEREQUEST);
-  private final LEDCommand m_RunConeAquiredLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CONEAQUIRED);
-  private final LEDCommand m_RunCubeAquiredLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.CUBEAQUIRED);
-  private final LEDCommand m_RunAllianceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.ALLIANCE);
-  private final LEDCommand m_RunTeamColorsLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.TEAMCOLORS);
-  private final LEDCommand m_RunRandomLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.RANDOMLED);
-  private final LEDCommand m_RunAutoBalanceLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.AUTOBALANCE);
+  private final LEDCommand m_RunLEDPattern = new LEDCommand(m_LEDsubsystem, LedPatterns.DISABLED);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -205,7 +198,6 @@ public class RobotContainer {
     configureButtonBindings_Future();
     
     // Configure default commands
-    m_LEDsubsystem.setDefaultCommand(m_RunAllianceLEDPattern);
     m_robotDrive.setDefaultCommand(new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true, TeleopSwerve.NORMAL_SPEED));
     m_fieldSim.initSim();
     // m_ExtendIntakeMotorSubsystem.setDefaultCommand(m_RetractIntakeCommand);
@@ -297,7 +289,10 @@ public class RobotContainer {
     m_codriverController.povDown().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.low));
   
     //Cube and Cone selector
-    m_codriverController.b().onTrue(m_RunConeRequestLEDPattern).onFalse(m_RunCubeRequestLEDPattern);
+    m_codriverController.b().onTrue(new InstantCommand(() -> m_RunLEDPattern.toggleConeCubePattern()));
+    // OLD method required to request cone/cube (but required user to hold)
+    // m_codriverController.b().onTrue(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.CONEREQUEST)))
+    //   .onFalse(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.CUBEREQUEST)));
 
     // TODO REMOVE this is not how determine it xboxcontroller is working!!
     // // Trigger indicator
@@ -322,11 +317,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    m_RunDisabledLEDPattern.schedule();
         // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
     if(!DriverStation.isFMSAttached()) {
       m_robotDrive.setOriginBasedOnAlliance();
+      
     }
+    // RANDOM LED for autonomous
+    CommandScheduler.getInstance().schedule(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.RANDOMLED)));
     return m_autoManager.getAutonomousCommand();
     //TODO determine if autoManager needs to have andThen(() -> m_robotDrive.drive(0, 0, 0, false,false));
   }
@@ -336,6 +333,8 @@ public class RobotContainer {
    * autonomous first.
    */
   public void teleopInit() {
+    // Alliance color LED for for LED (but toggle cone/cube over take it)
+    CommandScheduler.getInstance().schedule(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.ALLIANCE)));
     // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
     if(!DriverStation.isFMSAttached()) {
       m_robotDrive.setOriginBasedOnAlliance();
@@ -358,7 +357,7 @@ public class RobotContainer {
   }
 
   public void disabledInit() {
-    CommandScheduler.getInstance().schedule(m_RunDisabledLEDPattern);
+    CommandScheduler.getInstance().schedule(m_RunLEDPattern);
   }
  
   private void configureButtonBindings_Intake(){
@@ -445,8 +444,9 @@ public class RobotContainer {
     );
 
       //Cube and Cone selector
-      m_codriverController.x().toggleOnTrue(m_RunCubeRequestLEDPattern);
-      m_codriverController.b().toggleOnTrue(m_RunConeRequestLEDPattern);
+      m_codriverController.x().toggleOnTrue(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.CUBEREQUEST)));
+      m_codriverController.b().toggleOnTrue(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.CONEREQUEST)));
+
 
       //Intake Buttons
       // will only run after it checks that a and y is not pressed on the codrivercontroller.

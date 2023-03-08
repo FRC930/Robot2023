@@ -18,6 +18,8 @@ public class LEDCommand extends CommandBase {
     private LedPatterns m_pattern;
     private LEDsubsystem m_LEDSubsystem;
     private boolean m_canRunDisabled = false;
+    // Toggler CUBE/CONE requests
+    private LedPatterns m_lastTogglePattern;
 
     public static enum LedPatterns{
         CONEREQUEST,
@@ -33,8 +35,10 @@ public class LEDCommand extends CommandBase {
 
     /**
      * <h3>LEDCommand</h3>
+     * 
      * Create LED command and pattern and assign variables to values
      * Sets m_canRunDisabled to True when the Disabled LED pattern is active in order to let it run when it disabled
+     * ONLY WANT TO have one instance of command (so can setPattern or toggleConeCubePatten)
      * @param ledSubsystem
      * @param pattern
      */
@@ -62,6 +66,18 @@ public class LEDCommand extends CommandBase {
      */
     @Override
     public void initialize(){
+        // What pattern to start with....
+        setPattern(m_pattern);
+    }
+
+    /*
+     * setPattern
+     * 
+     * Change LED pattern  that will be displayed
+     * 
+     */
+    public void setPattern(LedPatterns pattern){
+        m_pattern = pattern;
         switch(m_pattern){
             case CONEREQUEST:
                 m_LEDSubsystem.setPins(true, false, false, false);
@@ -100,6 +116,21 @@ public class LEDCommand extends CommandBase {
 
         }
         SmartDashboard.putString(this.getClass().getSimpleName()+"/LED_Pattern", m_pattern.toString());
+    }
+
+    /*
+     * toggleConeCubePattern
+     * 
+     *  Toggle LED for CONE/CUBE
+     * 
+     */
+    public void toggleConeCubePattern(){
+        if(m_lastTogglePattern == null || m_lastTogglePattern == LedPatterns.CONEREQUEST) {
+            m_lastTogglePattern = LedPatterns.CUBEREQUEST;
+        } else {
+            m_lastTogglePattern = LedPatterns.CONEREQUEST;
+        }
+        setPattern(m_lastTogglePattern);
     }
 
     /**
