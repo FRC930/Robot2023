@@ -40,7 +40,7 @@ public class ArmIORobot implements ArmIO {
         m_armEncoder.setInverted(true);
         m_armMotor.setInverted(true);
 
-        m_armEncoder.setZeroOffset(m_armOffset);
+        m_armEncoder.setZeroOffset((m_armOffset+m_armOffsetDegrees)%360);
     }
 
     /**
@@ -87,7 +87,7 @@ public class ArmIORobot implements ArmIO {
     @Override
     public void adjustOffsetDegrees(double offsetDegrees) {
         m_armOffsetDegrees += offsetDegrees;
-        Preferences.setDouble(PREFERENCE_NAME, offsetDegrees);
+        Preferences.setDouble(PREFERENCE_NAME, m_armOffsetDegrees);
         m_armEncoder.setZeroOffset ((m_armOffset + m_armOffsetDegrees) % 360);
     }
 }
