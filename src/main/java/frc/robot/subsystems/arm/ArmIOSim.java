@@ -55,4 +55,12 @@ public class ArmIOSim implements ArmIO {
     public void setVoltage(double volts) {
         sim.setInputVoltage(volts);
     }
+
+    @Override
+    public void adjustOffsetDegrees(double offsetDegrees) {
+        // TODO Auto-generated method stub
+        
+    }
+
+
 }

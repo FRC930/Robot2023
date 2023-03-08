@@ -10,4 +10,5 @@ public interface ArmIO {
     public double getCurrentAngleDegrees();
     public double getVelocityDegreesPerSecond();
     public void setVoltage(double volts);
+    public void adjustOffsetDegrees(double offsetDegrees);
 }
