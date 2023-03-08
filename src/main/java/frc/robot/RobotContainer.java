@@ -39,6 +39,7 @@ import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 import frc.robot.subsystems.rotateintake.PitchIntakeIORobot;
 import frc.robot.subsystems.rotateintake.PitchIntakeIOSim;
 import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
+import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIORobot;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -125,7 +126,8 @@ public class RobotContainer {
   private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
-  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim());
+  private final ArmIO armio = Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim();
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem(armio);
   private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15) : new ManipulatorIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6, 12)  : new ElevatorIOSim());
   private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
@@ -223,6 +225,9 @@ public class RobotContainer {
 
     m_driverController.y().onTrue(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED))
       .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
+
+    m_driverController.povUp().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(15.0)));
+    m_driverController.povDown().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(-15.0)));
 
     m_driverController.rightTrigger()
       .onTrue(
