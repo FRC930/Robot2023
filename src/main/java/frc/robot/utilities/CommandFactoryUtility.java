@@ -40,7 +40,7 @@ public class CommandFactoryUtility {
 
     //Arm substation
     public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.0 * FACTOR; //not sure if correct?
-    public static final double ARM_SUBSTATION_ANGLE = 190.0;//115.0;
+    public static final double ARM_SUBSTATION_ANGLE = 195.0;//115.0;
     public static final double MANIPULATOR_SUBSTATION = 155.0;
 
     // Arm Back intake DONT USE
