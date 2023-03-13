@@ -7,11 +7,16 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.utilities.CommandFactoryUtility;
 
 public class ArmSubsystem extends SubsystemBase {
 
+    
     private final ProfiledPIDController controller;
     private final ArmFeedforward ff;
 
@@ -20,11 +25,12 @@ public class ArmSubsystem extends SubsystemBase {
     private final ArmIO m_armIO;
 
     //TODO use offsets for positions
-    public static double HIGH_POSITION = 10; //at high elevator position
-    public static double MEDIUM_POSITION = 17.9; //at medium elevator position
-    public static double GROUND_POSITION = 46.8; //at ground elevator position
-    public static double STOW_POSITION = 70.0;//-60.0; //at ground elevator position
-    public static double INTAKE_POSITION = 50.0; // TODO: Find an actual intake value
+    public static double HIGH_POSITION = CommandFactoryUtility.ARM_HIGH_SCORE_ANGLE; //at high arm position
+    public static double MEDIUM_POSITION = CommandFactoryUtility.ARM_MID_SCORE_ANGLE; //at medium arm position
+    public static double GROUND_POSITION = CommandFactoryUtility.ARM_LOW_SCORE_ANGLE; //at ground arm position
+    public static double STOW_POSITION = 84.0;//-60.0; //at arm Stow Position
+    public static double INTAKE_POSITION = CommandFactoryUtility.ARM_INTAKE_ANGLE; //for low intake Position
+    public static final double SUBSTATION_POSITION = CommandFactoryUtility.ARM_SUBSTATION_ANGLE;// TODO:find acutal position
 
     public static double ARM_LENGTH = 27.12;
 
@@ -38,12 +44,14 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem (ArmIO armIO) {
 
         // Sets up PID controller
-        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(90, 360));
+        // controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(225, 270));
+        controller = new ProfiledPIDController(0.28, 0, 0.028, new Constraints(225, 270));
+
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 
         // TODO Change values when manipulator is added
-        ff = new ArmFeedforward(0, 0.85, 0);
+        ff = new ArmFeedforward(0, 1.35, 0);
         
         m_armIO = armIO;
 
@@ -68,16 +76,16 @@ public class ArmSubsystem extends SubsystemBase {
 
             m_armIO.setVoltage(effort);
 
-            SmartDashboard.putNumber("ARM FEED FORWARD", feedforward);
-            SmartDashboard.putNumber("ARM EFFORT", effort);
-            SmartDashboard.putNumber("ARM ERROR", controller.getPositionError());
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/FeedForward", feedforward);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Effort", effort);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Error", controller.getPositionError());
         }
         else{
             controller.reset(m_armIO.getCurrentAngleDegrees());
         }
         
-        SmartDashboard.putNumber("ARM TARGET POSITION", targetPosition);
-        SmartDashboard.putNumber("Arm Encoder Value", getPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
     }
 
     /**
@@ -100,4 +108,15 @@ public class ArmSubsystem extends SubsystemBase {
         return m_armIO.getCurrentAngleDegrees();
     }
 
+    public Command setArmPositionCommand(double degrees) {
+        return new InstantCommand(() -> setPosition(degrees), this);
+    }
+
+    private boolean atSetPoint() {
+        return this.controller.atGoal();
+    }
+
+    public Command createWaitUntilAtAngleCommand() {
+        return Commands.waitUntil(() -> this.atSetPoint());
+    }
 }

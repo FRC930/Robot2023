@@ -6,51 +6,184 @@
       }
     },
     "Other Devices": {
-      "SPARK MAX [18]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SparkMax[12]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SparkMax[7]": {
-        "header": {
-          "open": true
-        }
+      "window": {
+        "visible": false
       }
     },
     "PowerDistributions": {
       "0": {
         "PowerDistribution[0]": {
-          "open": true
+          "open": false
         }
       }
     },
     "RoboRIO": {
       "3.3V Rail": {
-        "open": true
+        "open": false
       },
       "5V Rail": {
-        "open": true
+        "open": false
       },
       "6V Rail": {
-        "open": true
+        "open": false
       },
       "RoboRIO Input": {
-        "open": true
+        "open": false
       }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/SwerveModule": "Subsystem",
+      "/LiveWindow/Ungrouped/DigitalInput[6]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalOutput[0]": "Digital Output",
+      "/LiveWindow/Ungrouped/DigitalOutput[1]": "Digital Output",
+      "/LiveWindow/Ungrouped/DigitalOutput[2]": "Digital Output",
+      "/LiveWindow/Ungrouped/DigitalOutput[3]": "Digital Output",
+      "/LiveWindow/Ungrouped/PIDController[100]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[101]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[102]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[103]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[104]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[105]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[106]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[107]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[108]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[109]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[110]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[111]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[112]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[113]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[114]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[115]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[116]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[117]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[118]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[119]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[120]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[121]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[122]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[123]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[124]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[125]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[126]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[127]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[128]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[129]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[12]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[130]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[131]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[132]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[133]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[134]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[13]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[14]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[15]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[16]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[17]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[18]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[19]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[20]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[21]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[22]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[23]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[24]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[25]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[26]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[27]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[28]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[29]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[30]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[31]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[32]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[33]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[34]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[35]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[36]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[37]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[38]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[39]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[40]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[41]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[42]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[43]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[44]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[45]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[46]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[47]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[48]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[49]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[50]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[51]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[52]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[53]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[54]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[55]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[56]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[57]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[58]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[59]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[60]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[61]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[62]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[63]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[64]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[65]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[66]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[67]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[68]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[69]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[70]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[71]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[72]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[73]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[74]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[75]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[76]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[77]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[78]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[79]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[80]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[81]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[82]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[83]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[84]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[85]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[86]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[87]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[88]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[89]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[90]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[91]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[92]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[93]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[94]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[95]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[96]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[97]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[98]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[99]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[9]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Auto choices": "String Chooser",
       "/SmartDashboard/Field2d": "Field2d",
+      "/SmartDashboard/FieldSim/Field2d": "Field2d",
+      "/SmartDashboard/FieldSimField2d": "Field2d",
+      "/SmartDashboard/LEDCommand": "Command",
       "/SmartDashboard/Mech2d": "Mechanism2d",
-      "/SmartDashboard/PPSwerveControllerCommand_field": "Field2d",
+      "/SmartDashboard/MechanismSimulator/Mech2d": "Mechanism2d",
+      "/SmartDashboard/MechanismSimulatorMech2d": "Mechanism2d",
       "/SmartDashboard/PP_Field": "Field2d"
     },
     "windows": {
@@ -59,13 +192,12 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Field2d": {
-        "image": "C:\\Users\\JackL\\Downloads\\2023-field.png",
+      "/SmartDashboard/FieldSim/Field2d": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/Mech2d": {
+      "/SmartDashboard/MechanismSimulator/Mech2d": {
         "window": {
           "visible": true
         }
@@ -73,18 +205,44 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
     "transitory": {
-      "photonvision": {
-        "CV5647": {
-          "open": true
-        },
-        "Camera5": {
-          "open": true
-        },
-        "OV5647": {
+      "AdvantageKit": {
+        "open": true
+      },
+      "FMSInfo": {
+        "open": true
+      },
+      "LiveWindow": {
+        "open": true
+      },
+      "Preferences": {
+        "open": true
+      },
+      "Shuffleboard": {
+        "open": true
+      },
+      "SmartDashboard": {
+        "LEDCommand": {
           "open": true
         },
         "open": true
+      },
+      "photonvision": {
+        "CV5647": {
+          "open": false
+        },
+        "Camera5": {
+          "open": false
+        },
+        "OV5647": {
+          "open": false
+        }
       }
     }
   }

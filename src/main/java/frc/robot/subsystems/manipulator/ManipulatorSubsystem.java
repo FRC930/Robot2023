@@ -7,8 +7,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.utilities.CommandFactoryUtility;
 
 public class ManipulatorSubsystem extends SubsystemBase {
     
@@ -16,14 +20,18 @@ public class ManipulatorSubsystem extends SubsystemBase {
     private final ArmFeedforward ff;
     private double targetPosition;
     private final ManipulatorIO m_io;
-    public static double HIGH_POSITION = 27.6; //at high elevator position
-    public static double MEDIUM_POSITION = 23.9; //at medium elevator position
-    public static double GROUND_POSITION = 5.2; //at ground elevator position
-    public static double STOW_POSITION = 45.0; //at ground elevator position
-    public static double INTAKE_POSITION = -225.0; //TODO: Find actual intake position value
+    public static double HIGH_POSITION = CommandFactoryUtility.MANIPULATOR_HIGH_SCORE; //at high Manipulator position
+    public static double MEDIUM_POSITION = CommandFactoryUtility.MANIPULATOR_MID_SCORE; //at medium manipulator position
+    public static double GROUND_POSITION = CommandFactoryUtility.MANIPULATOR_LOW_SCORE; //at ground manipulator position
+    public static double STOW_POSITION = 45.0; //at stow manipulator angle
+    public static double INTAKE_POSITION = CommandFactoryUtility.MANIPULATOR_INTAKE; // low intake Position
+    public static final double SUBSTATION_POSITION = CommandFactoryUtility.MANIPULATOR_SUBSTATION;//-125; want position to force long way if continuousinput commented out
 
     public static final double ROLLER_INTAKE_SPEED = 0.8;
-    public static final double RELEASE_SPEED = -0.3;
+    public static final double SHOOT_SPEED = -1.0;
+    public static final double RELEASE_SPEED = -0.35;
+    public static final double HOLD_SPEED = 0.15;
+   
 
     /**<h3>ManipulatorSubsystem</h3>
      * Decides desired output, in volts, for the manipulator.
@@ -32,9 +40,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public ManipulatorSubsystem (ManipulatorIO io) {
 
         // Sets up PID controller TODO: Change these values
-        //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
-        controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(180, 720));
+        // controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
+        controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
+        //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!
 
         // Sets up Feetforward TODO: Change these values
         ff = new ArmFeedforward(0.0, 0.7, 0);
@@ -59,27 +68,25 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
             // Set up PID controller
             double effort = controller.calculate(currentDegrees, targetPosition);
-            controller.setTolerance(1, 1);
-            controller.enableContinuousInput(0, 360);
             
             //Set up Feed Forward
             double feedforward = ff.calculate(Units.degreesToRadians(currentDegrees), Units.degreesToRadians(m_io.getVelocityDegreesPerSecond()));
 
 
             effort += feedforward;
-            effort = MathUtil.clamp(effort, -6, 6);
+            effort = MathUtil.clamp(effort, -8, 8);
 
             m_io.setVoltage(effort);
             
-            SmartDashboard.putNumber("MANIPULATOR EFFORT", effort);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/Effort", effort);
 
-            SmartDashboard.putNumber("MANIPULATOR FEED FORWARD", feedforward);
+            SmartDashboard.putNumber(this.getClass().getSimpleName()+"/FeedForward", feedforward);
         } else {
             controller.reset(m_io.getCurrentAngleDegrees());
         }
 
-        SmartDashboard.putNumber("MANIPULATOR TARGET POSITION", targetPosition);
-        SmartDashboard.putNumber("Manipulator Encoder Value", getPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
     }
 
     /**<h3>setPosition</h3>
@@ -97,6 +104,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public double getPosition(){
         return m_io.getCurrentAngleDegrees();
     }
+
     /**<h3>getRollerVoltage</h3>
      * Gets the voltage of the roller
      * @return getRollerVolate
@@ -104,6 +112,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public double getRollerVoltage() {
         return m_io.getRollerVoltage();
     }
+
     /**<h3>getRollerSpeed</h3>
      * Sets the roller speed
      * @return setRollerSpeed
@@ -112,4 +121,15 @@ public class ManipulatorSubsystem extends SubsystemBase {
         m_io.setRollerSpeed(speed);
     }
 
+    public Command setWristPositionCommand(double degrees) {
+        return new InstantCommand(() -> setPosition(degrees), this);
+    }
+
+    private boolean atSetPoint() {
+        return this.controller.atGoal();
+    }
+
+    public Command createWaitUntilAtAngleCommand() {
+        return Commands.waitUntil(() -> this.atSetPoint());
+    }
 }

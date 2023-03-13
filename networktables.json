@@ -1,1 +1,138 @@
-[]
+[
+  {
+    "name": "/Preferences/kPX",
+    "type": "double",
+    "value": 3.596,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kIX",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDX",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kPY",
+    "type": "double",
+    "value": 3.596,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kIY",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDY",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kPTheta",
+    "type": "double",
+    "value": 3.2,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kITheta",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDTheta",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDriveFF",
+    "type": "double",
+    "value": 0.15751,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDriveP",
+    "type": "double",
+    "value": 0.23983,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDriveI",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kDriveD",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kTurnFF",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kTurnP",
+    "type": "double",
+    "value": 1.15,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kTurnI",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/kTurnD",
+    "type": "double",
+    "value": 0.1,
+    "properties": {
+      "persistent": true
+    }
+  }
+]
