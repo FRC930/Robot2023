@@ -68,9 +68,7 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [
-          "stowArm"
-        ],
+        "names": [],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -171,17 +169,14 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "scoreHighManipulator",
-          "stowArm"
-        ],
+        "names": [],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "maxVelocity": 4.41,
+  "maxVelocity": 2.0,
   "maxAcceleration": 1.1,
   "isReversed": null,
   "markers": [
@@ -204,7 +199,7 @@
       ]
     },
     {
-      "position": 1.8327272727272974,
+      "position": 1.4836363636363903,
       "names": [
         "backIntakeManipulatorPos"
       ]
@@ -222,7 +217,7 @@
       ]
     },
     {
-      "position": 2.9236363636362483,
+      "position": 2.618181818181842,
       "names": [
         "scoreHighManipulator"
       ]
@@ -240,7 +235,7 @@
       ]
     },
     {
-      "position": 4.625454545454332,
+      "position": 4.42,
       "names": [
         "backIntakeManipulatorPos"
       ]
