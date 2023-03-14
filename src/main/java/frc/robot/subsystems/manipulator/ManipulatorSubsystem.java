@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.utilities.CommandFactoryUtility;
 
 public class ManipulatorSubsystem extends SubsystemBase {
     
@@ -19,16 +20,16 @@ public class ManipulatorSubsystem extends SubsystemBase {
     private final ArmFeedforward ff;
     private double targetPosition;
     private final ManipulatorIO m_io;
-    public static double HIGH_POSITION = 27.6; //at high elevator position
-    public static double MEDIUM_POSITION = 23.9; //at medium elevator position
-    public static double GROUND_POSITION = 5.2; //at ground elevator position
-    public static double STOW_POSITION = 45.0; //at ground elevator position
-    public static double INTAKE_POSITION = -225.0; //TODO: Find actual intake position value
-    public static final double SUBSTATION_POSITION = 235;//-125; want position to force long way if continuousinput commented out
+    public static double HIGH_POSITION = CommandFactoryUtility.MANIPULATOR_HIGH_SCORE; //at high Manipulator position
+    public static double MEDIUM_POSITION = CommandFactoryUtility.MANIPULATOR_MID_SCORE; //at medium manipulator position
+    public static double GROUND_POSITION = CommandFactoryUtility.MANIPULATOR_LOW_SCORE; //at ground manipulator position
+    public static double STOW_POSITION = 45.0; //at stow manipulator angle
+    public static double INTAKE_POSITION = CommandFactoryUtility.MANIPULATOR_INTAKE; // low intake Position
+    public static final double SUBSTATION_POSITION = CommandFactoryUtility.MANIPULATOR_SUBSTATION;//-125; want position to force long way if continuousinput commented out
 
     public static final double ROLLER_INTAKE_SPEED = 0.8;
     public static final double SHOOT_SPEED = -1.0;
-    public static final double RELEASE_SPEED = -0.3;
+    public static final double RELEASE_SPEED = -0.35;
     public static final double HOLD_SPEED = 0.15;
    
 
@@ -39,7 +40,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public ManipulatorSubsystem (ManipulatorIO io) {
 
         // Sets up PID controller TODO: Change these values
-        //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
+        // controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
         //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!

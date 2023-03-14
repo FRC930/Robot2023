@@ -7,13 +7,19 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
+import edu.wpi.first.wpilibj.Preferences;
+
 public class ArmIORobot implements ArmIO {
 
     private CANSparkMax m_armMotor;
     
     private AbsoluteEncoder m_armEncoder;
 
-    private static double m_armOffset = 75.5;
+    private static final String PREFERENCE_NAME = "ArmOffsetDegrees";
+    private static double m_armOffsetDegrees = Preferences.getDouble(PREFERENCE_NAME, -12.0);
+
+    private static double m_armOffset = 134.0; //1.3-12.0 this is minus 10.0  // 92.7+36.5;
+    
 
     public ArmIORobot(int armMotorID) {
         m_armMotor = new CANSparkMax(armMotorID, MotorType.kBrushless);
@@ -31,10 +37,10 @@ public class ArmIORobot implements ArmIO {
         m_armEncoder.setPositionConversionFactor(360);
         m_armEncoder.setVelocityConversionFactor(60);
 
-        m_armEncoder.setInverted(false);
+        m_armEncoder.setInverted(true);
         m_armMotor.setInverted(true);
 
-        m_armEncoder.setZeroOffset(m_armOffset);
+        m_armEncoder.setZeroOffset((m_armOffset+m_armOffsetDegrees)%360);
     }
 
     /**
@@ -76,5 +82,12 @@ public class ArmIORobot implements ArmIO {
     @Override
     public void setVoltage(double volts) {
         m_armMotor.setVoltage(volts);
+    }
+
+    @Override
+    public void adjustOffsetDegrees(double offsetDegrees) {
+        m_armOffsetDegrees += offsetDegrees;
+        Preferences.setDouble(PREFERENCE_NAME, m_armOffsetDegrees);
+        m_armEncoder.setZeroOffset ((m_armOffset + m_armOffsetDegrees) % 360);
     }
 }
