@@ -128,7 +128,7 @@ public class AutoCommandManager {
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command One_ConeCubeNoBump = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBump", eventCommandMap);
         Command Two_ConeCubeBalanceNoBump = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBump", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
+            new AutoBalanceCommand(s_SwerveDrive, false));
         Command Three_ConeCubeBalanceBump = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBump", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, false));
         Command Four_ConeCubeBump = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBump", eventCommandMap);
@@ -141,9 +141,9 @@ public class AutoCommandManager {
         m_chooser.setDefaultOption("None", null);
 
         m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
-        //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged", Two_ConeCubeBalanceNoBump);
+        m_chooser.addOption("2_NoBumpConeSCubeNSEngaged", Two_ConeCubeBalanceNoBump);
         m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
-        //m_chooser.addOption("4_BumpConeSCubeS", Four_ConeCubeBump);
+        m_chooser.addOption("4_BumpConeSCubeS", Four_ConeCubeBump);
 
         //m_chooser.addOption("Taxi One Ball", taxiOneBall);
         //m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
