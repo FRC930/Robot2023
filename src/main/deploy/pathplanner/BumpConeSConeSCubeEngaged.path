@@ -42,7 +42,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighCone"
+          "scoreHighNoStow"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -120,7 +120,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreHighCone"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -132,12 +134,12 @@
         "y": 1.9216069916934115
       },
       "prevControl": {
-        "x": 5.158400442024498,
-        "y": -0.5736140273711684
+        "x": 5.114477674375708,
+        "y": -0.5450441900989884
       },
       "nextControl": {
-        "x": 7.159230981202007,
-        "y": 2.5628230340422267
+        "x": 6.9469078605615655,
+        "y": 2.2182751253863557
       },
       "holonomicAngle": -140.90614111377053,
       "isReversal": false,
@@ -145,7 +147,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "stowArm"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -181,19 +185,55 @@
     {
       "position": 1.2654545454545665,
       "names": [
-        "intakeElevatorPos"
+        "backIntakeElevatorPos"
       ]
     },
     {
       "position": 1.4618181818181974,
       "names": [
-        "intakeArmPos"
+        "backIntakeArmPos"
       ]
     },
     {
       "position": 1.7454545454545514,
       "names": [
-        "intakeManipulatorPos"
+        "backIntakeManipulatorPos"
+      ]
+    },
+    {
+      "position": 1.8763636363636351,
+      "names": [
+        "scoreHighElevator"
+      ]
+    },
+    {
+      "position": 2.6618181818180444,
+      "names": [
+        "scoreHighArm"
+      ]
+    },
+    {
+      "position": 2.879999999999991,
+      "names": [
+        "scoreHighManipulator"
+      ]
+    },
+    {
+      "position": 4.494545454545259,
+      "names": [
+        "backIntakeElevatorPos"
+      ]
+    },
+    {
+      "position": 4.581818181817977,
+      "names": [
+        "backIntakeArmPos"
+      ]
+    },
+    {
+      "position": 4.799999999999752,
+      "names": [
+        "backIntakeManipulatorPos"
       ]
     }
   ]

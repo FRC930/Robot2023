@@ -51,16 +51,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.879242524138,
-        "y": 4.5
+        "x": 6.680334025751189,
+        "y": 4.617439638679753
       },
       "prevControl": {
-        "x": 6.6788361233251985,
-        "y": 4.5091093818551276
+        "x": 5.376026334000413,
+        "y": 5.226751261103472
       },
       "nextControl": {
-        "x": 6.996776438334354,
-        "y": 4.494657549354711
+        "x": 6.8797334169984605,
+        "y": 4.524289558097085
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -68,7 +68,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "stowArm"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -76,12 +78,91 @@
     },
     {
       "anchorPoint": {
-        "x": 3.8899452084618455,
-        "y": 2.619597953481622
+        "x": 2.2628247631792187,
+        "y": 3.8653206047504733
       },
       "prevControl": {
-        "x": 4.193468499944926,
-        "y": 3.346464550506404
+        "x": 3.0637085847444343,
+        "y": 5.3251720316679165
+      },
+      "nextControl": {
+        "x": 2.24093576392281,
+        "y": 3.8254213260563272
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.6699773570487313,
+        "y": 3.9281938392936624
+      },
+      "prevControl": {
+        "x": 1.573122044680616,
+        "y": 3.8431715288890724
+      },
+      "nextControl": {
+        "x": 3.77400655323064,
+        "y": 5.775169694765564
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "scoreHighNoStow"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.794579954955635,
+        "y": 3.5225828171371307
+      },
+      "prevControl": {
+        "x": 6.902931621436461,
+        "y": 3.563504790968762
+      },
+      "nextControl": {
+        "x": 5.449722010555132,
+        "y": 3.014660388295136
+      },
+      "holonomicAngle": 154.98310652189994,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "stowArm"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.9538109845450458,
+        "y": 3.094594565257507
+      },
+      "prevControl": {
+        "x": 4.935859444368462,
+        "y": 3.11743290153247
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -113,19 +194,55 @@
     {
       "position": 1.1709090909091118,
       "names": [
-        "intakeElevatorPos"
+        "backIntakeElevatorPos"
       ]
     },
     {
       "position": 1.4763636363636685,
       "names": [
-        "intakeArmPos"
+        "backIntakeArmPos"
       ]
     },
     {
       "position": 1.8327272727272974,
       "names": [
-        "intakeManipulatorPos"
+        "backIntakeManipulatorPos"
+      ]
+    },
+    {
+      "position": 2.356363636363521,
+      "names": [
+        "scoreHighElevator"
+      ]
+    },
+    {
+      "position": 2.574545454545328,
+      "names": [
+        "scoreHighArm"
+      ]
+    },
+    {
+      "position": 2.9236363636362483,
+      "names": [
+        "scoreHighManipulator"
+      ]
+    },
+    {
+      "position": 4.101818181817953,
+      "names": [
+        "backIntakeElevatorPos"
+      ]
+    },
+    {
+      "position": 4.407272727272562,
+      "names": [
+        "backIntakeArmPos"
+      ]
+    },
+    {
+      "position": 4.625454545454332,
+      "names": [
+        "backIntakeManipulatorPos"
       ]
     }
   ]
