@@ -28,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
     public static double HIGH_POSITION = CommandFactoryUtility.ARM_HIGH_SCORE_ANGLE; //at high arm position
     public static double MEDIUM_POSITION = CommandFactoryUtility.ARM_MID_SCORE_ANGLE; //at medium arm position
     public static double GROUND_POSITION = CommandFactoryUtility.ARM_LOW_SCORE_ANGLE; //at ground arm position
-    public static double STOW_POSITION = 70.0;//-60.0; //at arm Stow Position
+    public static double STOW_POSITION = 84.0;//-60.0; //at arm Stow Position
     public static double INTAKE_POSITION = CommandFactoryUtility.ARM_INTAKE_ANGLE; //for low intake Position
     public static final double SUBSTATION_POSITION = CommandFactoryUtility.ARM_SUBSTATION_ANGLE;// TODO:find acutal position
 

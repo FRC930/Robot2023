@@ -22,7 +22,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
     // TRY to keep offset value away from flipping around to 359 it would flip around in side
     public final static double SAFE_ZONE_OFFSET =15.0;
 
-    private static double manipulatorOffset = (17.0 - SAFE_ZONE_OFFSET) % 360; // -45 needed to adjust to get angle back to where tested
+    private static double manipulatorOffset = (200 - SAFE_ZONE_OFFSET) % 360; // -45 needed to adjust to get angle back to where tested
 
 
     //----------Constructor---------\\

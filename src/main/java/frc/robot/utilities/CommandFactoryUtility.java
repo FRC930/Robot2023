@@ -35,12 +35,12 @@ public class CommandFactoryUtility {
 
     // Arm Intake UpRight cone
     public static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
-    public static final double ARM_UPRIGHT_INTAKE_ANGLE = -13.5;
+    public static final double ARM_UPRIGHT_INTAKE_ANGLE = -15.5;
     public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
 
     //Arm substation
     public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.0 * FACTOR; //not sure if correct?
-    public static final double ARM_SUBSTATION_ANGLE = 190.0;//115.0;
+    public static final double ARM_SUBSTATION_ANGLE = 200.0;//115.0;
     public static final double MANIPULATOR_SUBSTATION = 155.0;
 
     // Arm Back intake DONT USE
