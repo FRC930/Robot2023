@@ -119,7 +119,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighCone"
+          "scoreHighNoStow"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -193,13 +193,13 @@
       ]
     },
     {
-      "position": 1.7454545454545514,
+      "position": 1.483636363636366,
       "names": [
         "backIntakeManipulatorPos"
       ]
     },
     {
-      "position": 1.8763636363636351,
+      "position": 2.3563636363636027,
       "names": [
         "scoreHighElevator"
       ]
@@ -211,13 +211,13 @@
       ]
     },
     {
-      "position": 2.879999999999991,
+      "position": 2.69,
       "names": [
         "scoreHighManipulator"
       ]
     },
     {
-      "position": 4.494545454545259,
+      "position": 4.232727272727304,
       "names": [
         "backIntakeElevatorPos"
       ]
@@ -229,7 +229,7 @@
       ]
     },
     {
-      "position": 4.799999999999752,
+      "position": 4.61,
       "names": [
         "backIntakeManipulatorPos"
       ]
