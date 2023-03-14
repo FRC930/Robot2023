@@ -17,8 +17,8 @@ public class AutoBalanceCommand extends CommandBase {
     /**
      *
      */
-    private static final double INVERTED_DEADBAND = 11.0;
-    private static final double NON_INVERTED_DEADBAND = 12.0;
+    private static final double INVERTED_DEADBAND = 9.0;
+    private static final double NON_INVERTED_DEADBAND = 9.0;
     private final double MAX_SPEED = 0.15;
     private final double STRAFE = 0.0;
     private final double ROTATION = 0.0;
@@ -30,6 +30,10 @@ public class AutoBalanceCommand extends CommandBase {
     private double m_robotPitchInDegrees;
     private double m_throttle;
     private boolean m_inverted;
+
+    private double m_previousSpeed ;
+    private int m_pitchCounter;
+    private double m_currentDeadband;
 
     /**
      * <h3>AutoBalanceCommand</h3>
@@ -44,19 +48,27 @@ public class AutoBalanceCommand extends CommandBase {
         m_robotPitchInDegrees = 0.0;
         m_throttle = 0.0;
         m_inverted = inverted;
+
     }
     public AutoBalanceCommand(SwerveDrive swerveDrive) {
         this(swerveDrive, false);
+    }
+    @Override
+    public void initialize(){
+        m_previousSpeed = 0.0;
+        m_pitchCounter = 0;
+        m_currentDeadband =  m_inverted?INVERTED_DEADBAND:NON_INVERTED_DEADBAND;
+
     }
 
     @Override
     public void execute() {
         double degrees;
         // Get pitch in degrees from swerve drive subsystem
-        m_robotPitchInDegrees =m_swerveDrive.getPitch().getDegrees();
+        m_robotPitchInDegrees = m_swerveDrive.getPitch().getDegrees();
         degrees = m_robotPitchInDegrees;
         m_robotPitchInDegrees = MathUtil.applyDeadband(m_robotPitchInDegrees, 
-            m_inverted?INVERTED_DEADBAND:NON_INVERTED_DEADBAND, // TODO TUNE deadband to balance
+            m_currentDeadband, // TODO TUNE deadband to balance
             15.0); 
 
         // Gets percentage of max speed to set swerve drive to
@@ -65,12 +77,27 @@ public class AutoBalanceCommand extends CommandBase {
 
         // Logs values to advantage kit
         Logger.getInstance().recordOutput("AutoBalanceCommand/RobotPitch", m_robotPitchInDegrees);
+        Logger.getInstance().recordOutput("AutoBalanceCommand/CurrentDeadband", m_currentDeadband);
         Logger.getInstance().recordOutput("AutoBalanceCommand/degrees", degrees);
         Logger.getInstance().recordOutput("AutoBalanceCommand/Speed", tempSpeed);
         
         
         // Sets drive to throttle
         m_throttle = ((m_inverted)?-1.0:1.0) *tempSpeed * MAX_SPEED;
+        if(m_pitchCounter == 0) {
+            m_previousSpeed = m_throttle;
+            m_pitchCounter++;
+        }
+        else{
+            //  if pitch switched then update m_previousSpeed, increase currentDeadband, increase number of pitches
+            if((m_previousSpeed < 0 && m_throttle > 0) ||
+               (m_previousSpeed > 0 && m_throttle < 0))
+            {
+                m_previousSpeed = m_throttle;
+                m_currentDeadband++ ;
+                m_pitchCounter++;
+            }
+        }
         m_swerveDrive.drive(m_throttle, STRAFE, ROTATION, IS_FIELD_RELATIVE, IS_OPEN_LOOP);
     }
 
