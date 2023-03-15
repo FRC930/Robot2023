@@ -168,11 +168,14 @@ public class CommandFactoryUtility {
         command = new SequentialCommandGroup(
             new RunManipulatorRollerCommand(m_manipulatorSubsystem,
                 ManipulatorSubsystem.ROLLER_INTAKE_SPEED),
-            new ElevatorMoveCommand(m_elevatorSubsystem, 
+            new ParallelCommandGroup(
+                new ElevatorMoveCommand(m_elevatorSubsystem, 
                 Units.inchesToMeters(elevatorHeight)),
-            m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(waitSecond),
-            new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, 
-                manipulatorPosition));
+                m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(waitSecond),
+                new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, 
+                    manipulatorPosition))
+            );
+            
 
         return command;
     }
