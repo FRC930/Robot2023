@@ -74,16 +74,16 @@ public class OdometryUtility {
 
 
     //Left camera constants
-    private static final String LEFT_CAMERA_NAME = "Camera2"; 
-    private static final String LEFT_CAMERA_IP_NAME = "10.9.30.32";
+    private static final String LEFT_CAMERA_NAME = "Camera3"; 
+    private static final String LEFT_CAMERA_IP_NAME = "10.9.30.33";
     private static final int LEFT_CAMERA_PIPELINE = 0;
-    private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5801;
+    private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5803;
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
     private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 960;
     private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 540;
-    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(8.0);
-    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(11.25);
-    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(17.0);
+    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
+    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(9.625);
+    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18.25);
     private static final double LEFT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);
     private static final double LEFT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);
     private static final double LEFT_CAMERA_ROTATION_YAW = Units.degreesToRadians(20.0);
@@ -94,16 +94,16 @@ public class OdometryUtility {
             new Rotation3d(LEFT_CAMERA_ROTATION_YAW,LEFT_CAMERA_ROTATION_PITCH, LEFT_CAMERA_ROTATION_ROLL));
 
     // Right camera constants
-    private static final String RIGHT_CAMERA_NAME = "Camera1"; 
-    private static final String RIGHT_CAMERA_IP_NAME = "10.9.30.31";
+    private static final String RIGHT_CAMERA_NAME = "Camera4"; 
+    private static final String RIGHT_CAMERA_IP_NAME = "10.9.30.34";
     private static final int RIGHT_CAMERA_PIPELINE = 0;
-    private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5802;
+    private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5804;
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
     private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 960;
     private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 540;
-    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(8.0);
-    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-9.75);
-    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(17);
+    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
+    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-9.875);
+    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18.25);
     private static final double RIGHT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_YAW = Units.degreesToRadians(-20.0);;
