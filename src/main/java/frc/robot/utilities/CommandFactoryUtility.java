@@ -50,6 +50,10 @@ public class CommandFactoryUtility {
     public static final double ARM_BACK_INTAKE_ANGLE = 201.0;// 184.5;
     public static final double MANIPULATOR_BACK_INTAKE = 251.0; //260.0;
 
+    public static final double ELEVATOR_BACK_CUBE_INTAKE_HEIGHT = 11.3;  // NO CONVESION FACTOR
+    public static final double ARM_BACK_CUBE_INTAKE_ANGLE = 201.0;// 184.5;
+    public static final double MANIPULATOR_BACK_CUBE_INTAKE = 250.0; //260.0;
+
     // High Score
     public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
@@ -157,7 +161,7 @@ public class CommandFactoryUtility {
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
                 ArmSubsystem.STOW_POSITION, 
                 ManipulatorSubsystem.STOW_POSITION))
-            .andThen(m_armSubsystem.createWaitUntilLessThanAngleCommand(180.0))    
+            .andThen(m_armSubsystem.createWaitUntilLessThanAngleCommand(170.0))    
             .andThen(m_armSubsystem.createWaitUntilGreaterThanAngleCommand(45.0))    
             .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
                 ;
@@ -220,6 +224,18 @@ public class CommandFactoryUtility {
             1.0, 
             ARM_BACK_INTAKE_ANGLE, 
             MANIPULATOR_BACK_INTAKE);
+    }
+
+    public static Command createArmBackCubeIntakeCommand(
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+
+        return createArmIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
+            ELEVATOR_BACK_CUBE_INTAKE_HEIGHT, 
+            1.0, 
+            ARM_BACK_CUBE_INTAKE_ANGLE, 
+            MANIPULATOR_BACK_CUBE_INTAKE);
     }
 
     public static Command createExtendIntakeCommand(
@@ -349,6 +365,19 @@ public class CommandFactoryUtility {
                 break;
             case "backIntakeManipulatorPos":
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_BACK_INTAKE);
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "backCubeIntakeElevatorPos":
+                autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
+                .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_BACK_CUBE_INTAKE_HEIGHT)));
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "backCubeIntakeArmPos":
+                autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_BACK_CUBE_INTAKE_ANGLE);
+                // TODO why were we using waitUntil on intake commands
+                break;
+            case "backCubeIntakeManipulatorPos":
+                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_BACK_CUBE_INTAKE);
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "scoreHighNoStow":
