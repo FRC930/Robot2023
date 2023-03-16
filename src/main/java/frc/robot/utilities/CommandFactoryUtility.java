@@ -340,6 +340,9 @@ public class CommandFactoryUtility {
                     .withTimeout(0.2))
                 .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
                 break;
+            case "scoreHighManipulatorAndNotRelease":
+                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem, MANIPULATOR_HIGH_SCORE);
+                break;
             case "intakeElevatorPos":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
                 .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_INTAKE_HEIGHT)));

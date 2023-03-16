@@ -119,7 +119,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighNoStow"
+          "scoreHighManipulator"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -213,7 +213,7 @@
     {
       "position": 2.454545454545454,
       "names": [
-        "scoreHighManipulator"
+        "scoreHighManipulatorAndNotRelease"
       ]
     },
     {
