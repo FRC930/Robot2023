@@ -37,12 +37,12 @@ public class ElevatorSubsystem extends SubsystemBase{
         //new Constraints(1.0, 2.0)); //This is in meters
         //our p is in terms of meters, meaning you are multiplying a decmal by p
         //45
-        this.controller = new ProfiledPIDController(45, 0.0, 0.0, 
+        this.controller = new ProfiledPIDController(30.0, 0.0, 0.0, 
                  new Constraints(Units.inchesToMeters(110.0), Units.inchesToMeters(90.0))); //This is in meters //110 175
-        this.ff = new ElevatorFeedforward(0.0, 0.8, 0.0, 0.0);
-        this.topff = new ElevatorFeedforward(0, 0.8, 0.0, 0.0);
+        this.ff = new ElevatorFeedforward(0.0, 0.3, 0.0, 0.0);
+        this.topff = new ElevatorFeedforward(0, 0.3, 0.0, 0.0);
         // TODO set tolerance
-        this.controller.setTolerance(0.1, 0.1);
+        this.controller.setTolerance(0.05, 0.1);
     }
     
     /**
@@ -84,7 +84,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
             double effort = voltage + feedforward;
 
-            effort = MathUtil.clamp(effort, -12, 12);
+            effort = MathUtil.clamp(effort, -9.0, 9.0);
 
             m_io.setVoltage(effort);
 

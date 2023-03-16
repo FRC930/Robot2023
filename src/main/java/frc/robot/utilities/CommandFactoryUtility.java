@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -45,9 +46,9 @@ public class CommandFactoryUtility {
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
-    public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.0 * FACTOR; //not sure if correct?
-    public static final double ARM_BACK_INTAKE_ANGLE = 184.5;
-    public static final double MANIPULATOR_BACK_INTAKE = 260.0;
+    public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.0;  // NO CONVESION FACTOR
+    public static final double ARM_BACK_INTAKE_ANGLE = 201.0;// 184.5;
+    public static final double MANIPULATOR_BACK_INTAKE = 251.0; //260.0;
 
     // High Score
     public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
@@ -144,13 +145,23 @@ public class CommandFactoryUtility {
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem) {
-        final Command command = new ParallelCommandGroup(
-            new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+        // final Command command = new ParallelCommandGroup(
+        //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
+        //     new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+        //     .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
+        //         ArmSubsystem.STOW_POSITION, 
+        //         ManipulatorSubsystem.STOW_POSITION))
+        //     ); 
+        final Command command = 
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
                 ArmSubsystem.STOW_POSITION, 
                 ManipulatorSubsystem.STOW_POSITION))
-            ); 
+            .andThen(m_armSubsystem.createWaitUntilLessThanAngleCommand(180.0))    
+            .andThen(m_armSubsystem.createWaitUntilGreaterThanAngleCommand(45.0))    
+            .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
+                ;
+             
 
         return command;
     }
@@ -191,14 +202,24 @@ public class CommandFactoryUtility {
     public static Command createArmIntakeUpRightCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
-
         ManipulatorSubsystem m_manipulatorSubsystem) {
-
         return createArmIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
             ELEVATOR_UPRIGHT_INTAKE_HEIGHT, 
             1.0, 
             ARM_UPRIGHT_INTAKE_ANGLE, 
             MANIPULATOR_UPRIGHT_INTAKE);
+    }
+
+    public static Command createArmBackIntakeCommand(
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+
+        return createArmIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
+            ELEVATOR_BACK_INTAKE_HEIGHT, 
+            1.0, 
+            ARM_BACK_INTAKE_ANGLE, 
+            MANIPULATOR_BACK_INTAKE);
     }
 
     public static Command createExtendIntakeCommand(

@@ -51,7 +51,7 @@ public class ArmSubsystem extends SubsystemBase {
         controller.enableContinuousInput(0, 360);
 
         // TODO Change values when manipulator is added
-        ff = new ArmFeedforward(0, 1.35, 0);
+        ff = new ArmFeedforward(0, 1.0, 0);
         
         m_armIO = armIO;
 
@@ -116,7 +116,23 @@ public class ArmSubsystem extends SubsystemBase {
         return this.controller.atGoal();
     }
 
+    private boolean lessThan(double angle) {
+        return this.getPosition() < angle;
+    }
+
+    private boolean greaterThan(double angle) {
+        return this.getPosition() > angle;
+    }
+
     public Command createWaitUntilAtAngleCommand() {
         return Commands.waitUntil(() -> this.atSetPoint());
+    }
+
+    public Command createWaitUntilLessThanAngleCommand(double angle) {
+        return Commands.waitUntil(() -> this.lessThan(angle));
+    }
+
+    public Command createWaitUntilGreaterThanAngleCommand(double angle) {
+        return Commands.waitUntil(() -> this.greaterThan(angle));
     }
 }

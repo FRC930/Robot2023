@@ -207,19 +207,19 @@
     {
       "position": 2.356363636363521,
       "names": [
-        "scoreHighElevator"
+        "scoreHighArm"
       ]
     },
     {
-      "position": 2.574545454545328,
+      "position": 2.454545454545454,
       "names": [
-        "scoreHighArm"
+        "scoreHighManipulator"
       ]
     },
     {
       "position": 2.618181818181842,
       "names": [
-        "scoreHighManipulator"
+        "scoreHighElevator"
       ]
     },
     {

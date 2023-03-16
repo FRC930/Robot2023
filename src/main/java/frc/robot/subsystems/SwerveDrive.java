@@ -118,9 +118,9 @@ public class SwerveDrive extends SubsystemBase {
               getHeadingRotation2d().minus(Rotation2d.fromDegrees(FieldCentricOffset.getInstance().getOffset())))
         : new ChassisSpeeds(throttle, strafe, rotation);
 
+    chassisSpeeds = correctForDynamics(chassisSpeeds);
     moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setSwerveModuleStates(moduleStates, isOpenLoop);
-    chassisSpeeds = correctForDynamics(chassisSpeeds);
   }
   
   public void setSwerveModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {

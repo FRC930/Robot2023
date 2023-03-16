@@ -201,19 +201,19 @@
     {
       "position": 2.3563636363636027,
       "names": [
-        "scoreHighElevator"
+        "scoreHighArm"
       ]
     },
     {
-      "position": 2.6618181818180444,
+      "position": 2.5,
       "names": [
-        "scoreHighArm"
+        "scoreHighManipulator"
       ]
     },
     {
       "position": 2.69,
       "names": [
-        "scoreHighManipulator"
+        "scoreHighElevator"
       ]
     },
     {
