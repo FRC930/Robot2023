@@ -202,6 +202,8 @@ public class RobotContainer {
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem); 
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighManipulatorAndNotRelease", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "manipulatorHold", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem); 
 
     //TODO remove
     // eventCommandMap = eventCommandMap = new HashMap<>();
@@ -290,8 +292,8 @@ public class RobotContainer {
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     
     // // TODO remove
-    //   m_codriverController.rightTrigger().onTrue(CommandFactoryUtility.createArmBackCubeIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
-    //   .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+      m_codriverController.rightTrigger().onTrue(CommandFactoryUtility.createArmBackIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
     // m_codriverController.a().negate()
     //   .and(m_codriverController.y().negate())

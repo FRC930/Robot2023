@@ -42,7 +42,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighNoStow"
+          "manipulatorHold"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -232,6 +232,18 @@
       "position": 4.61,
       "names": [
         "backCubeIntakeManipulatorPos"
+      ]
+    },
+    {
+      "position": 2.312727272727254,
+      "names": [
+        "manipulatorHold"
+      ]
+    },
+    {
+      "position": 5.410909090908815,
+      "names": [
+        "manipulatorHold"
       ]
     }
   ]

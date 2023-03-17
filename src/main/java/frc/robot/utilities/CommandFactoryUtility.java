@@ -87,12 +87,14 @@ public class CommandFactoryUtility {
         Command command;
         
         command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
-            .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
-                .withTimeout(waitSecondAfterElevator))
+            // .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
+            //     .withTimeout(waitSecondAfterElevator))
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition));
         // iF wish to wait for arm/manipulator gets to position than release or DONT release DRIVER will control this
         if(waitSecondArm >= 0.0) {
             command = command
+            .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand() // needed because violent fast arm movement for scoring during auto
+                .withTimeout(waitSecondAfterElevator))
             .andThen(m_armSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
@@ -185,7 +187,7 @@ public class CommandFactoryUtility {
                 ManipulatorSubsystem.ROLLER_INTAKE_SPEED),
             new ElevatorMoveCommand(m_elevatorSubsystem, 
                 Units.inchesToMeters(elevatorHeight)),
-            m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(waitSecond),
+            // m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(waitSecond),
             new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, 
                 manipulatorPosition));
 
@@ -387,6 +389,10 @@ public class CommandFactoryUtility {
                 autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
                     true)
                 .andThen(new WaitCommand(0.3));
+                break;
+            case "manipulatorHold":
+                autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED);
+                // TODO why were we using waitUntil on intake commands
                 break;
         }
 
