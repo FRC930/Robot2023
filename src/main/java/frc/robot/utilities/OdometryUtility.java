@@ -79,11 +79,11 @@ public class OdometryUtility {
     private static final int LEFT_CAMERA_PIPELINE = 0;
     private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5803;
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
-    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 960;
-    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 540;
-    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
-    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(9.625);
-    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18.25);
+    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 320;
+    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 240;
+    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.664);
+    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(10.583);
+    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(15.891);
     private static final double LEFT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);
     private static final double LEFT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);
     private static final double LEFT_CAMERA_ROTATION_YAW = Units.degreesToRadians(20.0);
@@ -99,11 +99,11 @@ public class OdometryUtility {
     private static final int RIGHT_CAMERA_PIPELINE = 0;
     private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5804;
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
-    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 960;
-    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 540;
-    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.0);
-    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-9.875);
-    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18.25);
+    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 800;
+    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 600;
+    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.664);
+    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-10.583);
+    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(15.891);
     private static final double RIGHT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_YAW = Units.degreesToRadians(-20.0);;
@@ -134,7 +134,7 @@ public class OdometryUtility {
     private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
     
     // Confidence level, 0 means that we have 100% confidence in the camera values and it won't trust odometry positions
-    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(15));
+    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.4, 0.4, Units.degreesToRadians(15));
 
     private AprilTagFieldLayout tagLayout;
 
