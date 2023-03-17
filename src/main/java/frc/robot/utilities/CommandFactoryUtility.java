@@ -46,9 +46,9 @@ public class CommandFactoryUtility {
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
-    public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.0;  // NO CONVESION FACTOR
-    public static final double ARM_BACK_INTAKE_ANGLE = 201.0;// 184.5;
-    public static final double MANIPULATOR_BACK_INTAKE = 251.0; //260.0;
+    public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 14.17;  // NO CONVESION FACTOR
+    public static final double ARM_BACK_INTAKE_ANGLE = 199.0;// 184.5;
+    public static final double MANIPULATOR_BACK_INTAKE = 246.0; //260.0;
 
     public static final double ELEVATOR_BACK_CUBE_INTAKE_HEIGHT = 11.3;  // NO CONVESION FACTOR
     public static final double ARM_BACK_CUBE_INTAKE_ANGLE = 201.0;// 184.5;
