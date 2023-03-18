@@ -42,9 +42,10 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "manipulatorHold"
+          "manipulatorHold",
+          "scoreHighNoStow"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -68,7 +69,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "stowArm"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -119,9 +122,10 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighManipulator"
+          "manipulatorHold",
+          "scoreHighNoStow"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -196,24 +200,6 @@
       "position": 1.483636363636366,
       "names": [
         "backIntakeManipulatorPos"
-      ]
-    },
-    {
-      "position": 2.3563636363636027,
-      "names": [
-        "scoreHighArm"
-      ]
-    },
-    {
-      "position": 2.5,
-      "names": [
-        "scoreHighManipulatorAndNotRelease"
-      ]
-    },
-    {
-      "position": 2.69,
-      "names": [
-        "scoreHighElevator"
       ]
     },
     {

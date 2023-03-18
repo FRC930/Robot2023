@@ -62,7 +62,7 @@
         "x": 6.111333040847899,
         "y": 4.500034636432909
       },
-      "holonomicAngle": -6.709836807756911,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -89,7 +89,7 @@
         "x": 6.996776438334354,
         "y": 4.494657549354711
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -142,19 +142,19 @@
     {
       "position": 1.1709090909091118,
       "names": [
-        "intakeElevatorPos"
+        "backIntakeElevatorPos"
       ]
     },
     {
       "position": 1.4763636363636685,
       "names": [
-        "intakeArmPos"
+        "backIntakeArmPos"
       ]
     },
     {
-      "position": 1.8327272727272974,
+      "position": 1.5127272727272776,
       "names": [
-        "intakeManipulatorPos"
+        "backIntakeManipulatorPos"
       ]
     }
   ]
