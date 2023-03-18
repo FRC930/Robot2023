@@ -271,6 +271,23 @@ public class CommandFactoryUtility {
 
         return command;
     }
+
+    public static Command createScoreGroundCubeCommand(
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        
+        final Command command = 
+            new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_INTAKE_HEIGHT))
+                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(0.5))
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem,
+                ARM_INTAKE_ANGLE, MANIPULATOR_INTAKE))
+                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5)
+                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5)))
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED));
+
+        return command;
+    }
     //Create command for pitch intake
 
 
@@ -393,6 +410,9 @@ public class CommandFactoryUtility {
             case "manipulatorHold":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED);
                 // TODO why were we using waitUntil on intake commands
+                break;
+            case "scoreGroundCube":
+                autoCommand = CommandFactoryUtility.createScoreGroundCubeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
                 break;
         }
 
