@@ -21,7 +21,7 @@ public class IntakeRollerCommand extends CommandBase{
      * @param voltage Gets voltage to determine speed and retract or Extend
      * @param IntakeRollerMotorSubsystem Roller motor subsystem
      */
-    public IntakeRollerCommand(int voltage, IntakeRollerMotorSubsystem IntakeRollerMotorSubsystem ){
+    public IntakeRollerCommand(double voltage, IntakeRollerMotorSubsystem IntakeRollerMotorSubsystem ){
         m_voltage = voltage;
         m_IntakeRollerMotorSubsystem = IntakeRollerMotorSubsystem;
         addRequirements(m_IntakeRollerMotorSubsystem);    

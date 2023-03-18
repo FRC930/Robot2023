@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.SparkMaxWrapper;
 
@@ -13,8 +13,12 @@ import frc.robot.utilities.SparkMaxWrapper;
  */
 public class IntakeRollerMotorSubsystem extends SubsystemBase{
     
+    // -------- CONSTANTS --------\\
+    private final int m_freeLimit = 30;
+    private final int m_stallLimit = 10;
+    
+
     private SparkMaxWrapper m_IntakerollerMotor;
-    private int currentLimit = 2;
 
     /**
      * 
@@ -26,8 +30,8 @@ public class IntakeRollerMotorSubsystem extends SubsystemBase{
      */
     public IntakeRollerMotorSubsystem(int rollerID) {
         //Creates the motor
-        m_IntakerollerMotor = new SparkMaxWrapper(rollerID, MotorType.kBrushless);
-        m_IntakerollerMotor.setSmartCurrentLimit(currentLimit);
+        m_IntakerollerMotor = new SparkMaxWrapper(rollerID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        m_IntakerollerMotor.setSmartCurrentLimit(m_stallLimit, m_freeLimit);
 
         m_IntakerollerMotor.restoreFactoryDefaults();
     }

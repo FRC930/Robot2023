@@ -22,7 +22,7 @@ public class ExtendIntakeCommand extends CommandBase{
      * @param voltage Gets voltage to determine speed and retract or Extend
      * @param extendIntakeMotorSubsystem Extend intake motor subsystem
      */
-    public ExtendIntakeCommand(int voltage, ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem){
+    public ExtendIntakeCommand(double voltage, ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem){
         m_voltage = voltage;
         m_ExtendIntakeMotorSubsystem = extendIntakeMotorSubsystem;
         addRequirements(m_ExtendIntakeMotorSubsystem);

@@ -75,6 +75,9 @@ import frc.robot.commands.armcommands.SetArmDegreesCommand;
  */
 public class RobotContainer {
 
+  private final double INTAKE_EXTEND_VOLTAGE = 6.0;
+  private final double INTAKE_ROLLER_VOLTAGE = 7.0;
+
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;   
@@ -125,14 +128,14 @@ public class RobotContainer {
   // Subsystems \\
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
-  private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
+  // private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmIO armio = Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(armio);
   private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15) : new ManipulatorIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6, 12)  : new ElevatorIOSim());
-  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
+  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, /* m_PitchIntakeSubsystem,  */m_robotDrive);
   private final LEDsubsystem m_LEDsubsystem = new LEDsubsystem(0, 1,2,3 );
 
   // Utilities \\
@@ -150,15 +153,15 @@ public class RobotContainer {
   
   private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-2, m_ExtendIntakeMotorSubsystem);
-  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(2, m_ExtendIntakeMotorSubsystem);
-  private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
-  private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
-  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
-  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
+  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
+  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
+  private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
+  private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
+  // private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
+  // private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
   //private PitchIntakeCommand m_CurrentPitchIntakeCommand;
 
-  private final TeleopSwerve m_TeleopSwerve = new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, false, false);
+  private final TeleopSwerve m_TeleopSwerve = new TeleopSwerve(m_robotDrive, m_driverController, translationAxis, strafeAxis, rotationAxis, true, true);
     
   private AutoCommandManager m_autoManager;
   private Map<String, Command> eventCommandMap = new HashMap<>();
@@ -246,9 +249,9 @@ public class RobotContainer {
     m_driverController.y().onTrue(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED))
       .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
 
-    m_driverController.b()
-      .onTrue(CommandFactoryUtility.createScoreGroundCubeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
-      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+    m_driverController.b().and(m_driverController.rightBumper().negate())
+      .onTrue(new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem).withTimeout(0.5).andThen(new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)))
+      .onFalse(new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem));
 
     m_driverController.povUp().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(15.0)));
     m_driverController.povDown().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(-15.0)));
@@ -269,14 +272,21 @@ public class RobotContainer {
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
     // Intakes from ground or substation
-    m_driverController.rightBumper()
+    m_driverController.rightBumper().and(m_driverController.b().negate())
       .whileTrue(
         new ConditionalCommand(
-          CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+          new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem)
+            .withTimeout(0.5)
+            .andThen(new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)),
           CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
           m_targetScorePositionUtility::isLow)
       )
-      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+      .onFalse(
+        new ConditionalCommand(
+          new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem),
+          CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+          m_targetScorePositionUtility::isLow)
+      );
     
     // Slow drive
     m_driverController.leftStick().onTrue(new InstantCommand(() -> m_TeleopSwerve.toggleSpeed()));
