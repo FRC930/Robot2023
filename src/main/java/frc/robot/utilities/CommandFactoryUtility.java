@@ -2,6 +2,8 @@ package frc.robot.utilities;
 
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -99,7 +101,7 @@ public class CommandFactoryUtility {
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
-            .andThen(new WaitCommand(0.3)) // TODO WHY waiting
+            // .andThen(new WaitCommand(0.1)) // TODO WHY waiting
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED)
             );
         }
@@ -167,6 +169,8 @@ public class CommandFactoryUtility {
             .andThen(m_armSubsystem.createWaitUntilGreaterThanAngleCommand(45.0))    
             .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
                 ;
+        
+                Logger.getInstance().recordOutput("CommandFactoryUtility/createStowArmCommand", "present");
              
 
         return command;

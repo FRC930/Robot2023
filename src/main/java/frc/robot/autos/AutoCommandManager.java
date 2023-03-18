@@ -117,9 +117,11 @@ public class AutoCommandManager {
         Command Four_ConeCubeBump = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBump", eventCommandMap);
         
         Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
-        new AutoBalanceCommand(s_SwerveDrive, true));
+            new AutoBalanceCommand(s_SwerveDrive, true));
         Command NoBumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngaged", eventCommandMap,
-        new AutoBalanceCommand(s_SwerveDrive, true));
+            new AutoBalanceCommand(s_SwerveDrive, true));
+        Command NoBumpConeSConeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngageV2", eventCommandMap,
+            new AutoBalanceCommand(s_SwerveDrive, true));
     
 
 
@@ -140,7 +142,8 @@ public class AutoCommandManager {
 
         m_chooser.addOption("MidScoreEngage", MidScoreEngageCommand);
         m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
-
+        m_chooser.addOption("NoBumpConeSConeSCubeEngageV2", NoBumpConeSConeSCubeEngageV2);
+       
 
 
 
