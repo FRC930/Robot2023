@@ -5,7 +5,7 @@
   "FOV" : 70.0,
   "path" : "/dev/video0",
   "cameraType" : "UsbCamera",
-  "currentPipelineIndex" : -1,
+  "currentPipelineIndex" : 0,
   "calibrations" : [ {
     "resolution" : {
       "width" : 1280.0,
