@@ -99,6 +99,14 @@ public class SwerveDrive extends SubsystemBase {
     return m_aprilCameraOne.getPose();
   }
 
+  public Rotation2d getOffsetAngle(){
+    Rotation2d 
+    ninety = new Rotation2d(90);
+    Rotation2d offset = m_aprilCameraOne.getPose().getRotation().plus(
+                                    (ninety.minus(m_aprilCameraOne.getPose().getRotation().times(2))));
+    return offset;
+}
+
   public void drive(
       double throttle,
       double strafe,
@@ -115,7 +123,8 @@ public class SwerveDrive extends SubsystemBase {
         ? ChassisSpeeds.fromFieldRelativeSpeeds(
             throttle, strafe, rotation, 
             // Sets an offset if robot path doesn't start facing drive station
-              getHeadingRotation2d().minus(Rotation2d.fromDegrees(FieldCentricOffset.getInstance().getOffset())))
+              //getHeadingRotation2d().minus(Rotation2d.fromDegrees(FieldCentricOffset.getInstance().getOffset())))
+              getOffsetAngle())              
         : new ChassisSpeeds(throttle, strafe, rotation);
     chassisSpeeds = correctForDynamics(chassisSpeeds);
     moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
