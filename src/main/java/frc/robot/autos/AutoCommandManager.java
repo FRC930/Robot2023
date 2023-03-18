@@ -104,28 +104,11 @@ public class AutoCommandManager {
         SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
         
         //Autonomous Commands
-        TaxiOneBall taxiOneBall = new TaxiOneBall( s_SwerveDrive);
-        Command taxiOneBallAutoBuildCommand = new PathPlannerCommand(s_SwerveDrive, "TaxiOneBall", eventCommandMap);
         Command MidScoreEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreEngage", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
-        Command BumpSide1ConeCommand = new PathPlannerCommand(s_SwerveDrive, "BumpSide1Cone", eventCommandMap);
-        Command BumpSide2ConeCommand = new PathPlannerCommand(s_SwerveDrive, "BumpSide2Cone", eventCommandMap);
         Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive));
-        //Command NoBump1ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump1Cone", eventCommandMap);
-        //Command NoBump2ConeCommand = new PathPlannerCommand(s_SwerveDrive, "NoBump2Cone", eventCommandMap);
-        Command MidPickUpEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidPickUpEngage", eventCommandMap,
-             new AutoBalanceCommand(s_SwerveDrive));
         Command ScoreHighConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
-        Command ScoreMidConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreMidCone", eventCommandMap);
-        Command ThreeConeNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeNoBump", eventCommandMap);
-        Command ThreeConeBumpCommand = new PathPlannerCommand(s_SwerveDrive, "ThreeConeBump", eventCommandMap);
-        Command TwoConeBalanceNoBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeBalanceNoBump", eventCommandMap,
-             new AutoBalanceCommand(s_SwerveDrive, true));   
-        Command TwoConeEngageBumpCommand = new PathPlannerCommand(s_SwerveDrive, "TwoConeEngageBump", eventCommandMap, 
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command MidScoreTwoEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreTwoEngage", eventCommandMap, 
-            new AutoBalanceCommand(s_SwerveDrive, true));
         Command One_ConeCubeNoBump = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBump", eventCommandMap);
         Command Two_ConeCubeBalanceNoBump = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBump", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
@@ -133,6 +116,10 @@ public class AutoCommandManager {
             new AutoBalanceCommand(s_SwerveDrive, false));
         Command Four_ConeCubeBump = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBump", eventCommandMap);
         
+        Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
+        new AutoBalanceCommand(s_SwerveDrive, true));
+        Command NoBumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngaged", eventCommandMap,
+        new AutoBalanceCommand(s_SwerveDrive, true));
     
 
 
@@ -140,29 +127,19 @@ public class AutoCommandManager {
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
 
+        //commented *** to show that the path is untested
+        m_chooser.addOption("BumpConeSConeSCubeEngaged***", BumpConeSConeSCubeEngaged);
+        m_chooser.addOption("NoBumpConeSConeSCubeEngaged***", NoBumpConeSConeSCubeEngaged);
+
         m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
-        //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged", Two_ConeCubeBalanceNoBump);
+        m_chooser.addOption("2_NoBumpConeSCubeNSEngaged***", Two_ConeCubeBalanceNoBump);
         m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
-        //m_chooser.addOption("4_BumpConeSCubeS", Four_ConeCubeBump);
+        m_chooser.addOption("4_BumpConeSCubeS***", Four_ConeCubeBump);
 
-        //m_chooser.addOption("Taxi One Ball", taxiOneBall);
-        //m_chooser.addOption("taxiOneBallAutoBuild", taxiOneBallAutoBuildCommand);
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
-        //m_chooser.addOption("ScoreMidCone", ScoreMidConeCommand);
 
-        // m_chooser.addOption("TwoConeEngageBump", TwoConeEngageBumpCommand);
-        // m_chooser.addOption("ThreeConeBump", ThreeConeBumpCommand);
-        // m_chooser.addOption("twoConeEngageNoBump",TwoConeBalanceNoBumpCommand);
-        // m_chooser.addOption("TwoConeBalanceNoBump", TwoConeBalanceNoBumpCommand);
         m_chooser.addOption("MidScoreEngage", MidScoreEngageCommand);
-        // m_chooser.addOption("BumpSide1Cone", BumpSide1ConeCommand);
-        // m_chooser.addOption("BumpSide2Cone", BumpSide2ConeCommand);
         m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
-        // m_chooser.addOption("NoBump1Cone", NoBump1ConeCommand);
-        // m_chooser.addOption("NoBump2Cone", NoBump2ConeCommand);
-        // m_chooser.addOption("MidPickUpEngage",MidPickUpEngageCommand);
-        // m_chooser.addOption("ThreeConeNoBump",ThreeConeNoBumpCommand);
-        // m_chooser.addOption("MidScoreTwoEngage", MidScoreTwoEngageCommand);
 
 
 
