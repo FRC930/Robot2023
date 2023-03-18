@@ -134,7 +134,7 @@ public class OdometryUtility {
     private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
     
     // Confidence level, 0 means that we have 100% confidence in the camera values and it won't trust odometry positions
-    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.4, 0.4, Units.degreesToRadians(15));
+    private Matrix<N3, N1> m_VisionMeasurementStdDevs = VecBuilder.fill(0.4, 0.45, Units.degreesToRadians(20));
 
     private AprilTagFieldLayout tagLayout;
 
