@@ -2,7 +2,6 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
@@ -21,7 +20,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     private static final double UPPER_STAGE_HIGHT = 20.0;
     private double targetElevatorPosition = 0;
 
-    private final PIDController controller;
+    private final ProfiledPIDController controller;
     private final ElevatorFeedforward ff;
     private final ElevatorFeedforward topff;
    
@@ -38,13 +37,12 @@ public class ElevatorSubsystem extends SubsystemBase{
         //new Constraints(1.0, 2.0)); //This is in meters
         //our p is in terms of meters, meaning you are multiplying a decmal by p
         //45
-        // this.controller = new ProfiledPIDController(30.0, 0.0, 0.0, 
-        //          new Constraints(Units.inchesToMeters(110.0), Units.inchesToMeters(90.0))); //This is in meters //110 175
-        this.controller = new PIDController(30.0, 0.0, 0.0);
-        this.ff = new ElevatorFeedforward(0.0, 0.3, 0.0, 0.0);
-        this.topff = new ElevatorFeedforward(0, 0.3, 0.0, 0.0);
+        this.controller = new ProfiledPIDController(45, 0.0, 0.0, 
+                 new Constraints(Units.inchesToMeters(110.0), Units.inchesToMeters(90.0))); //This is in meters //110 175
+        this.ff = new ElevatorFeedforward(0.0, 0.8, 0.0, 0.0);
+        this.topff = new ElevatorFeedforward(0, 0.8, 0.0, 0.0);
         // TODO set tolerance
-        this.controller.setTolerance(0.5, 0.5);
+        this.controller.setTolerance(0.1, 0.1);
     }
     
     /**
@@ -86,7 +84,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
             double effort = voltage + feedforward;
 
-            effort = MathUtil.clamp(effort, -5.5, 5.5);
+            effort = MathUtil.clamp(effort, -12, 12);
 
             m_io.setVoltage(effort);
 
@@ -114,6 +112,6 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public Command createWaitUntilAtHeightCommand() {
-        return Commands.waitUntil(() -> this.controller.atSetpoint()); //atGoal()
+        return Commands.waitUntil(() -> this.controller.atGoal());
     }
 }
