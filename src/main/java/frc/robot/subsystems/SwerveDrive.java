@@ -118,9 +118,9 @@ public class SwerveDrive extends SubsystemBase {
               getHeadingRotation2d().minus(Rotation2d.fromDegrees(FieldCentricOffset.getInstance().getOffset())))
         : new ChassisSpeeds(throttle, strafe, rotation);
 
-    chassisSpeeds = correctForDynamics(chassisSpeeds);
     moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setSwerveModuleStates(moduleStates, isOpenLoop);
+    chassisSpeeds = correctForDynamics(chassisSpeeds);
   }
   
   public void setSwerveModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
@@ -254,7 +254,7 @@ public class SwerveDrive extends SubsystemBase {
    * https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964
    */
   private static ChassisSpeeds correctForDynamics(ChassisSpeeds originalSpeeds) {
-    final double LOOP_TIME_S = 0.01;
+    final double LOOP_TIME_S = 0.02;
     Pose2d futureRobotPose =
         new Pose2d(
             originalSpeeds.vxMetersPerSecond * LOOP_TIME_S,
