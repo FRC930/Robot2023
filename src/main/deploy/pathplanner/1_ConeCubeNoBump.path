@@ -95,7 +95,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "stowArm"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -118,7 +120,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreHighManipulator",
+          "scoreHighNoStow",
           "stowArm"
         ],
         "executionBehavior": "sequential",
@@ -153,18 +155,6 @@
       "position": 1.8327272727272974,
       "names": [
         "intakeManipulatorPos"
-      ]
-    },
-    {
-      "position": 3.2072727272725614,
-      "names": [
-        "scoreHighElevator"
-      ]
-    },
-    {
-      "position": 3.4109090909091138,
-      "names": [
-        "scoreHighArm"
       ]
     }
   ]

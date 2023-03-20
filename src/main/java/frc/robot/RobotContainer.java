@@ -123,14 +123,14 @@ public class RobotContainer {
   // Subsystems \\
   private final SwerveDrive m_robotDrive = new SwerveDrive(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
   private final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
-  private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
+  //private final PitchIntakeSubsystem m_PitchIntakeSubsystem = new PitchIntakeSubsystem(Robot.isReal()? new PitchIntakeIORobot(14): new PitchIntakeIOSim());
   
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmIO armio = Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(armio);
   private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15) : new ManipulatorIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6, 12)  : new ElevatorIOSim());
-  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, m_PitchIntakeSubsystem, m_robotDrive);
+  private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, /*m_PitchIntakeSubsystem,*/ m_robotDrive);
   private final LEDsubsystem m_LEDsubsystem = new LEDsubsystem(0, 1,2,3 );
 
   // Utilities \\
@@ -152,8 +152,8 @@ public class RobotContainer {
   private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(2, m_ExtendIntakeMotorSubsystem);
   private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem);
   private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(-2, m_IntakeRollerMotorSubsystem);
-  private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
-  private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
+  //private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
+  //private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
   //private PitchIntakeCommand m_CurrentPitchIntakeCommand;
     
   private AutoCommandManager m_autoManager;
@@ -188,7 +188,23 @@ public class RobotContainer {
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighNoStow", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
-        
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "backIntakeElevatorPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "backIntakeArmPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "backIntakeManipulatorPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "backCubeIntakeElevatorPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "backCubeIntakeArmPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "backCubeIntakeManipulatorPos", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem); 
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighManipulatorAndNotRelease", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "manipulatorHold", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem); 
+
     //TODO remove
     // eventCommandMap = eventCommandMap = new HashMap<>();
 
@@ -273,6 +289,10 @@ public class RobotContainer {
 
     // Substation intake
     m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+    
+    // // TODO remove
+      m_codriverController.rightTrigger().onTrue(CommandFactoryUtility.createArmBackIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
     // m_codriverController.a().negate()
@@ -370,11 +390,11 @@ public class RobotContainer {
     m_codriverController.leftBumper().whileTrue(m_EjectRoller);
     // will only run after it checks that a and y is not pressed on the codrivercontroller.
     m_codriverController.a().negate().and(m_codriverController.y().negate()).and(m_codriverController.rightTrigger()).whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
-    m_codriverController.y().and(m_codriverController.rightTrigger())
-      .whileTrue(m_HighPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
-    m_codriverController.a()
-      .and(m_codriverController.rightTrigger())
-      .whileTrue(m_LowPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
+    // m_codriverController.y().and(m_codriverController.rightTrigger())
+    //   .whileTrue(m_HighPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
+    // m_codriverController.a()
+    //   .and(m_codriverController.rightTrigger())
+    //   .whileTrue(m_LowPitchIntakeCommand.alongWith(new IntakeRollerCommand(2, m_IntakeRollerMotorSubsystem)));
   }
   
   private void configureButtonBindings_backup() {
