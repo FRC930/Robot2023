@@ -48,11 +48,11 @@ public class MechanismSimulator {
      * @param arm Subsystem for the arm.
      * @param elevator Subsystem for the elevator.
      */
-    public MechanismSimulator(ArmSubsystem arm, ElevatorSubsystem elevator, ManipulatorSubsystem manipulator, /*PitchIntakeSubsystem intake, */ SwerveDrive swerve){
+    public MechanismSimulator(ArmSubsystem arm, ElevatorSubsystem elevator, ManipulatorSubsystem manipulator, /*  PitchIntakeSubsystem intake,*/ SwerveDrive swerve){
         this.arm = arm;
         this.elevator = elevator;
         this.manipulator = manipulator;
-        // this.intake = intake;
+        //this.intake = intake;
         this.swerve = swerve;
 
         manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
@@ -88,7 +88,7 @@ public class MechanismSimulator {
                 )  
             );
         
-        // Adds manipulator to the arm in simulation
+        //Adds manipulator to the arm in simulation
         m_hand =
             m_arm.append(
                 new MechanismLigament2d(
@@ -112,7 +112,7 @@ public class MechanismSimulator {
         //         )
         //     );
         
-        // Sends system simulations to the smart dashboard
+        // // Sends system simulations to the smart dashboard
         SmartDashboard.putData(this.getClass().getSimpleName()+"/Mech2d", mech);
     }
     
@@ -125,7 +125,7 @@ public class MechanismSimulator {
         m_elevator.setLength(elevator.getElevatorPosition());
         m_arm.setAngle(arm.getPosition()-45);
         m_hand.setAngle(manipulator.getPosition()-arm.getPosition()-45);
-        // m_intake.setAngle(intake.getEncoderPosition());
+        //m_intake.setAngle(intake.getEncoderPosition());
 
         // Elevator Position in Advantage Scope
         double[] elevatorPosition = {
