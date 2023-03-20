@@ -13,8 +13,8 @@ import frc.robot.utilities.SparkMaxWrapper;
 public class ExtendIntakeMotorSubsystem extends SubsystemBase{
 
      // -------- CONSTANTS --------\\
-    private final int m_freeLimit = 10;
-    private final int m_stallLimit = 30;
+    private final int m_freeLimit = 30;
+    private final int m_stallLimit = 5;
 
     // -------- DECLARATIONS --------\\
     private final SparkMaxWrapper m_intakeMotor;

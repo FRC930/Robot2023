@@ -3,6 +3,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utilities.RotatePositions;
 import frc.robot.utilities.RotationMathUtility;
+
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -47,9 +48,11 @@ public class TeleopSwerve extends CommandBase {
      * @param percentSpeed    The speed of the robot from 0.0 to 1.0
      */
     public TeleopSwerve(SwerveDrive Swerve, CommandXboxController controller, int translationAxis, int strafeAxis,
-            int rotationAxis, boolean fieldRelative, boolean openLoop, double percentSpeed) {
+            int rotationAxis, boolean fieldRelative, boolean openLoop) {
         m_Swerve = Swerve;
         addRequirements(m_Swerve);
+
+        m_percentSpeed = NORMAL_SPEED;
 
         m_controller = controller;
         m_translationAxis = translationAxis;
@@ -58,8 +61,6 @@ public class TeleopSwerve extends CommandBase {
         m_fieldRelative = fieldRelative;
         m_openLoop = openLoop;
 
-        m_percentSpeed = percentSpeed;
-        Logger.getInstance().recordOutput("TeleopSwerve/percentSpeed", m_percentSpeed);
         m_rotatePositions = new RotatePositions();
         m_rotationMathUtility = new RotationMathUtility();
     }
@@ -91,5 +92,14 @@ public class TeleopSwerve extends CommandBase {
         
 
         m_Swerve.drive(m_throttle, m_strafe, m_rotation, m_fieldRelative, m_openLoop);
+    }
+
+    public void toggleSpeed() {
+        if (m_percentSpeed == SLOW_SPEED) {
+            m_percentSpeed = NORMAL_SPEED;
+        } else {
+            m_percentSpeed = SLOW_SPEED;
+        }
+        Logger.getInstance().recordOutput("TeleopSwerve/percentSpeed", m_percentSpeed);
     }
 }
