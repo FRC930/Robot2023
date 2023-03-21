@@ -112,8 +112,6 @@ public class MechanismSimulator {
         //         )
         //     );
         
-        // // Sends system simulations to the smart dashboard
-        SmartDashboard.putData(this.getClass().getSimpleName()+"/Mech2d", mech);
     }
     
     /**
@@ -136,7 +134,7 @@ public class MechanismSimulator {
             0,
             0,
             swerve.getHeadingDegrees()};
-        Logger.getInstance().recordOutput("Elevator Position Advantage Scope", elevatorPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ElevatorPos", elevatorPosition);
         
         // Arm Position in Advantage Scope
         double[] armPosition = {
@@ -148,7 +146,7 @@ public class MechanismSimulator {
             arm.getPosition(),
             swerve.getHeadingDegrees()
         };
-        Logger.getInstance().recordOutput("Arm Position Advantage Scope", armPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ArmPos", armPosition);
 
         // Manipulator Position in Advantage Scope
         double[] manipulatorPosition = {
@@ -160,6 +158,9 @@ public class MechanismSimulator {
             manipulator.getPosition()-arm.getPosition(),
             swerve.getHeadingDegrees()
         };
-        Logger.getInstance().recordOutput("Manipulator Position Advantage Scope", manipulatorPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ManipulatorPos", manipulatorPosition);
+
+        // Sends system simulations to logger
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/Mech2d", mech);
     }
 }
