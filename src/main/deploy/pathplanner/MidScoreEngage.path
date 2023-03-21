@@ -42,9 +42,10 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
+          "manipulatorHold",
           "scoreHighCone"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
