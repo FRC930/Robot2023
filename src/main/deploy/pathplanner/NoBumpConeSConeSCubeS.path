@@ -52,18 +52,18 @@
     },
     {
       "anchorPoint": {
-        "x": 7.3567230895145554,
-        "y": 4.46
+        "x": 7.41,
+        "y": 4.59
       },
       "prevControl": {
-        "x": 5.895069567916913,
-        "y": 4.67696419461215
+        "x": 5.948346478402358,
+        "y": 4.80696419461215
       },
       "nextControl": {
-        "x": 7.574422000991932,
-        "y": 4.427685317827577
+        "x": 7.627698911477377,
+        "y": 4.557685317827577
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 170.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -103,15 +103,15 @@
     {
       "anchorPoint": {
         "x": 1.71,
-        "y": 3.65
+        "y": 3.8
       },
       "prevControl": {
         "x": 1.5310410322134878,
-        "y": 3.449450933657945
+        "y": 3.5994509336579448
       },
       "nextControl": {
         "x": 4.567787376806271,
-        "y": 6.8525586496806135
+        "y": 7.002558649680612
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -155,16 +155,16 @@
     },
     {
       "anchorPoint": {
-        "x": 3.0815872558110926,
-        "y": 4.693603591482718
+        "x": 4.4865382430977485,
+        "y": 4.959738849314694
       },
       "prevControl": {
-        "x": 6.204309320732658,
-        "y": 5.18866928470199
+        "x": 5.0887516658094905,
+        "y": 4.959738849314694
       },
       "nextControl": {
-        "x": 2.373667353487407,
-        "y": 4.581372387455793
+        "x": 3.941137407434277,
+        "y": 4.959738849314694
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -180,12 +180,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.71,
-        "y": 4.417509262571969
+        "x": 1.74,
+        "y": 4.37
       },
       "prevControl": {
-        "x": 2.237367189910163,
-        "y": 4.417509262571969
+        "x": 1.8992270922162382,
+        "y": 4.398406293524158
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -196,7 +196,7 @@
       "stopEvent": {
         "names": [
           "manipulatorHold",
-          "scoreHighNoStow"
+          "scoreHigh"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -215,19 +215,19 @@
       ]
     },
     {
-      "position": 1.1709090909091118,
+      "position": 1.1,
       "names": [
         "backIntakeElevatorPos"
       ]
     },
     {
-      "position": 1.25,
+      "position": 1.15,
       "names": [
         "backIntakeArmPos"
       ]
     },
     {
-      "position": 1.32,
+      "position": 1.2,
       "names": [
         "backIntakeManipulatorPos"
       ]
