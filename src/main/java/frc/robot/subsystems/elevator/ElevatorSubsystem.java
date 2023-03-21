@@ -86,7 +86,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
             double effort = voltage + feedforward;
 
-            effort = MathUtil.clamp(effort, -6.0, 6.0);
+            effort = MathUtil.clamp(effort, -5.5, 5.5);
 
             m_io.setVoltage(effort);
 
