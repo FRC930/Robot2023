@@ -122,7 +122,7 @@ public class CommandFactoryUtility {
 
         return createScoreCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
             ELEVATOR_HIGH_SCORE_HEIGHT, 
-            1.0, 
+            0.5, 
             ARM_HIGH_SCORE_ANGLE, 
             MANIPULATOR_HIGH_SCORE, 
             releaseAtEnd?0.3:-1.0);
@@ -320,7 +320,7 @@ public class CommandFactoryUtility {
             case "scoreHighCone":
                 autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem,
                                     true)
-                                .andThen(new WaitCommand(0.5)) //pause after scoring
+                                .andThen(new WaitCommand(0.18)) //pause after scoring
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                         
                 break;
