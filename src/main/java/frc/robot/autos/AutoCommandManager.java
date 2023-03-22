@@ -143,12 +143,12 @@ public class AutoCommandManager {
 
         m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
         //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged***", Two_ConeCubeBalanceNoBump);
-        m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
+        //m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
         //m_chooser.addOption("4_BumpConeSCubeS***", Four_ConeCubeBump);
 
         // m_chooser.addOption("1_NoBumpConeSCubeSV2***", One_ConeCubeNoBumpV2);
         // m_chooser.addOption("2_NoBumpConeSCubeNSEngagedV2***", Two_ConeCubeBalanceNoBumpV2);
-        // m_chooser.addOption("3_BumpConeSCubeNSEngagedV2***", Three_ConeCubeBalanceBumpV2);
+        m_chooser.addOption("3_BumpConeSCubeNSEngagedV2", Three_ConeCubeBalanceBumpV2);
         // m_chooser.addOption("4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
 
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
