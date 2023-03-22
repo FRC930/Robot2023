@@ -262,6 +262,11 @@ public class RobotContainer {
       .onTrue(CommandFactoryUtility.createArmBackCubeIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
+    // Intakes from ground
+    m_driverController.leftBumper()
+      .whileTrue(CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
     m_driverController.rightTrigger()
       .onTrue(
         new ConditionalCommand(m_highTargetCommand, 

@@ -141,7 +141,7 @@ public class AutoCommandManager {
         //m_chooser.addOption("BumpConeSConeSCubeEngaged***", BumpConeSConeSCubeEngaged);
         //m_chooser.addOption("NoBumpConeSConeSCubeEngaged***", NoBumpConeSConeSCubeEngaged);
 
-        m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
+        //m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
         //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged***", Two_ConeCubeBalanceNoBump);
         //m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
         //m_chooser.addOption("4_BumpConeSCubeS***", Four_ConeCubeBump);
