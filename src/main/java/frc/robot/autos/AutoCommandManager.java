@@ -2,8 +2,6 @@ package frc.robot.autos;
 
 import java.util.*;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
@@ -92,10 +90,8 @@ public class AutoCommandManager {
                     // Log target pose
                     // TODO May not want both pose and trajectory
                     pp_field2d.setRobotPose(targetPose);
-                    // May just want dashboard not on field2d                    
-                    // SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
-                    // Logging the target pose so we can see how far off we are
-                    Logger.getInstance().recordOutput("PathPlanner/DesiredPose", targetPose);
+                    // May just want dashboard not on field2d
+                    SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
                 },
                 null, // logSetPoint
 
@@ -122,9 +118,9 @@ public class AutoCommandManager {
 
         Command One_ConeCubeNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBumpV2", eventCommandMap);
         Command Two_ConeCubeBalanceNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBumpV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, false));
+        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV2", eventCommandMap,
+            new AutoBalanceCommand(s_SwerveDrive, true));
         Command Four_ConeCubeBumpV2 = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBumpV2", eventCommandMap);
         
         Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
@@ -132,7 +128,7 @@ public class AutoCommandManager {
         Command NoBumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngaged", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command NoBumpConeSConeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngageV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
+            new AutoBalanceCommand(s_SwerveDrive, false));
         Command NoBumpConeSConeSCubeS = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeS", eventCommandMap);
         Command NoBumpConeSCubeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSCubeEngageV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
