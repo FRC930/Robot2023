@@ -414,7 +414,7 @@ public class CommandFactoryUtility {
             case "scoreHighNoStow":
                 autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
                     true)
-                .andThen(new WaitCommand(0.3));
+                .andThen(new WaitCommand(0.35));
                 break;
             case "manipulatorHold":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED);
