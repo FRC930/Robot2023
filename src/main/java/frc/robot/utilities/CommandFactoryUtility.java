@@ -125,7 +125,7 @@ public class CommandFactoryUtility {
             0.5, 
             ARM_HIGH_SCORE_ANGLE, 
             MANIPULATOR_HIGH_SCORE, 
-            releaseAtEnd?0.3:-1.0);
+            releaseAtEnd?0.4:-1.0);
     }
 
     public static Command createScoreMediumCommand(
