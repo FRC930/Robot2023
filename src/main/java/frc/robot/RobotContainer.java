@@ -249,7 +249,8 @@ public class RobotContainer {
     // TODO how are we planning on moving the arm based on the target score position utility
 
     m_driverController.y().onTrue(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED))
-      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
+      .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+        .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
 
     m_driverController.b().and(m_driverController.rightBumper().negate())
       .onTrue(new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem).withTimeout(0.5).andThen(new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)))
