@@ -2,6 +2,8 @@ package frc.robot.autos;
 
 import java.util.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
@@ -90,8 +92,10 @@ public class AutoCommandManager {
                     // Log target pose
                     // TODO May not want both pose and trajectory
                     pp_field2d.setRobotPose(targetPose);
-                    // May just want dashboard not on field2d
-                    SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
+                    // May just want dashboard not on field2d                    
+                    // SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
+                    // Logging the target pose so we can see how far off we are
+                    Logger.getInstance().recordOutput("PathPlanner/DesiredPose", targetPose);
                 },
                 null, // logSetPoint
 
