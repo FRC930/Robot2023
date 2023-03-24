@@ -130,82 +130,29 @@
     },
     {
       "anchorPoint": {
-        "x": 7.36,
-        "y": 3.18
+        "x": 6.657895952155541,
+        "y": 3.7439559424573403
       },
       "prevControl": {
-        "x": 7.47579890481741,
-        "y": 3.1776966948667473
+        "x": 6.77369485697295,
+        "y": 3.7416526373240875
       },
-      "nextControl": {
-        "x": 7.076565616812075,
-        "y": 3.1856376687738672
-      },
+      "nextControl": null,
       "holonomicAngle": 138.0,
       "isReversal": false,
       "velOverride": 1.0,
       "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 4.4865382430977485,
-        "y": 4.96
-      },
-      "prevControl": {
-        "x": 5.0887516658094905,
-        "y": 4.96
-      },
-      "nextControl": {
-        "x": 3.941137407434277,
-        "y": 4.96
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": 2.5,
-      "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 1.91,
-        "y": 3.9
-      },
-      "prevControl": {
-        "x": 2.069227092216238,
-        "y": 3.928406293524158
-      },
-      "nextControl": null,
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [
-          "manipulatorHold",
-          "scoreHighCone"
-        ],
-        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "maxVelocity": 4.0,
-  "maxAcceleration": 5.0,
+  "maxVelocity": 4.1,
+  "maxAcceleration": 1.1,
   "isReversed": null,
   "markers": [
     {
@@ -233,37 +180,13 @@
       ]
     },
     {
-      "position": 4.021818181818184,
-      "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 4.0727272727272865,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 4.12363636363636,
-      "names": [
-        "backCubeIntakeManipulatorPos"
-      ]
-    },
-    {
       "position": 0.0,
       "names": [
         "event"
       ]
     },
     {
-      "position": 5.15,
-      "names": [
-        "stowArm"
-      ]
-    },
-    {
-      "position": 2.15,
+      "position": 2.227272727272727,
       "names": [
         "stowArm"
       ]

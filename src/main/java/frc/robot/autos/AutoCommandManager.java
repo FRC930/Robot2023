@@ -133,6 +133,7 @@ public class AutoCommandManager {
         Command NoBumpConeSCubeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSCubeEngageV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command Three_ConeCubeNoBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeNoBalanceBumpV2", eventCommandMap);
+        Command NoBumpConeSCubeSV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSV2", eventCommandMap);
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
@@ -151,7 +152,8 @@ public class AutoCommandManager {
         // m_chooser.addOption("2_NoBumpConeSCubeNSEngagedV2***", Two_ConeCubeBalanceNoBumpV2);
         m_chooser.addOption("3_BumpConeSCubeNSEngagedV2", Three_ConeCubeBalanceBumpV2);
         m_chooser.addOption("*****3_BumpConeSCubeNSV2******", Three_ConeCubeNoBalanceBumpV2);
-        // m_chooser.addOption("4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
+        m_chooser.addOption("***4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
+        m_chooser.addOption("***NoBumpConeSCubeSV2***", NoBumpConeSCubeSV2);
 
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
 
