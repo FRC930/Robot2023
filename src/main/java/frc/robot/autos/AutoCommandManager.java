@@ -118,9 +118,9 @@ public class AutoCommandManager {
 
         Command One_ConeCubeNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBumpV2", eventCommandMap);
         Command Two_ConeCubeBalanceNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBumpV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, false));
+        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV2", eventCommandMap,
+            new AutoBalanceCommand(s_SwerveDrive, true));
         Command Four_ConeCubeBumpV2 = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBumpV2", eventCommandMap);
         
         Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
@@ -128,10 +128,12 @@ public class AutoCommandManager {
         Command NoBumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngaged", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command NoBumpConeSConeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngageV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
+            new AutoBalanceCommand(s_SwerveDrive, false));
         Command NoBumpConeSConeSCubeS = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeS", eventCommandMap);
         Command NoBumpConeSCubeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSCubeEngageV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
+        Command Three_ConeCubeNoBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeNoBalanceBumpV2", eventCommandMap);
+        Command NoBumpConeSCubeSV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSV2", eventCommandMap);
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
@@ -141,15 +143,17 @@ public class AutoCommandManager {
         //m_chooser.addOption("BumpConeSConeSCubeEngaged***", BumpConeSConeSCubeEngaged);
         //m_chooser.addOption("NoBumpConeSConeSCubeEngaged***", NoBumpConeSConeSCubeEngaged);
 
-        m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
+        //m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
         //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged***", Two_ConeCubeBalanceNoBump);
-        m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
-        //m_chooser.addOption("4_BumpConeSCubeS***", Four_ConeCubeBump);
+        //m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
+        m_chooser.addOption("4_BumpConeSCubeS***", Four_ConeCubeBump);
 
         // m_chooser.addOption("1_NoBumpConeSCubeSV2***", One_ConeCubeNoBumpV2);
         // m_chooser.addOption("2_NoBumpConeSCubeNSEngagedV2***", Two_ConeCubeBalanceNoBumpV2);
-        // m_chooser.addOption("3_BumpConeSCubeNSEngagedV2***", Three_ConeCubeBalanceBumpV2);
-        // m_chooser.addOption("4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
+        m_chooser.addOption("3_BumpConeSCubeNSEngagedV2", Three_ConeCubeBalanceBumpV2);
+        m_chooser.addOption("*****3_BumpConeSCubeNSV2******", Three_ConeCubeNoBalanceBumpV2);
+        m_chooser.addOption("***4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
+        m_chooser.addOption("***NoBumpConeSCubeSV2***", NoBumpConeSCubeSV2);
 
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
 
