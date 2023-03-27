@@ -42,9 +42,10 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreHighCone"
+          "manipulatorHold",
+          "scoreHighNoStow"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -93,9 +94,10 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreHighCone"
+          "manipulatorHold",
+          "scoreHighNoStow"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -121,18 +123,6 @@
       "position": 1.7672727272728173,
       "names": [
         "intakeManipulatorPos"
-      ]
-    },
-    {
-      "position": 2.5309090909091507,
-      "names": [
-        "scoreHighElevator"
-      ]
-    },
-    {
-      "position": 2.705454545454625,
-      "names": [
-        "scoreHighArm"
       ]
     }
   ]

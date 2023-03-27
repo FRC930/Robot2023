@@ -21,12 +21,12 @@ public class MechanismSimulator {
     private final MechanismLigament2d m_elevator;
     private final MechanismLigament2d m_arm;
     private final MechanismLigament2d m_hand;
-    private final MechanismLigament2d m_intake;
+    private final MechanismLigament2d m_intake = null;
 
     private final ArmSubsystem arm;
     private final ManipulatorSubsystem manipulator;
     private final ElevatorSubsystem elevator;
-    private final PitchIntakeSubsystem intake;
+    private final PitchIntakeSubsystem intake = null;
 
     private final SwerveDrive swerve;
 
@@ -48,11 +48,11 @@ public class MechanismSimulator {
      * @param arm Subsystem for the arm.
      * @param elevator Subsystem for the elevator.
      */
-    public MechanismSimulator(ArmSubsystem arm, ElevatorSubsystem elevator, ManipulatorSubsystem manipulator, PitchIntakeSubsystem intake, SwerveDrive swerve){
+    public MechanismSimulator(ArmSubsystem arm, ElevatorSubsystem elevator, ManipulatorSubsystem manipulator, /*  PitchIntakeSubsystem intake,*/ SwerveDrive swerve){
         this.arm = arm;
         this.elevator = elevator;
         this.manipulator = manipulator;
-        this.intake = intake;
+        //this.intake = intake;
         this.swerve = swerve;
 
         manipulatorYOffset = Math.cos(arm.getPosition()) * ArmSubsystem.ARM_LENGTH;
@@ -88,7 +88,7 @@ public class MechanismSimulator {
                 )  
             );
         
-        // Adds manipulator to the arm in simulation
+        //Adds manipulator to the arm in simulation
         m_hand =
             m_arm.append(
                 new MechanismLigament2d(
@@ -101,19 +101,17 @@ public class MechanismSimulator {
             );
         
         // Adds intake to the root robot simulation
-        m_intake =
-            root.append(
-                new MechanismLigament2d(
-                    "Intake",
-                    Units.inchesToMeters(9.4),
-                    this.intake.getEncoderPosition(),
-                    6,
-                    new Color8Bit(Color.kBlueViolet)
-                )
-            );
+        // m_intake =
+        //     root.append(
+        //         new MechanismLigament2d(
+        //             "Intake",
+        //             Units.inchesToMeters(9.4),
+        //             this.intake.getEncoderPosition(),
+        //             6,
+        //             new Color8Bit(Color.kBlueViolet)
+        //         )
+        //     );
         
-        // Sends system simulations to the smart dashboard
-        SmartDashboard.putData(this.getClass().getSimpleName()+"/Mech2d", mech);
     }
     
     /**
@@ -125,7 +123,7 @@ public class MechanismSimulator {
         m_elevator.setLength(elevator.getElevatorPosition());
         m_arm.setAngle(arm.getPosition()-45);
         m_hand.setAngle(manipulator.getPosition()-arm.getPosition()-45);
-        m_intake.setAngle(intake.getEncoderPosition());
+        //m_intake.setAngle(intake.getEncoderPosition());
 
         // Elevator Position in Advantage Scope
         double[] elevatorPosition = {
@@ -136,7 +134,7 @@ public class MechanismSimulator {
             0,
             0,
             swerve.getHeadingDegrees()};
-        Logger.getInstance().recordOutput("Elevator Position Advantage Scope", elevatorPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ElevatorPos", elevatorPosition);
         
         // Arm Position in Advantage Scope
         double[] armPosition = {
@@ -148,7 +146,7 @@ public class MechanismSimulator {
             arm.getPosition(),
             swerve.getHeadingDegrees()
         };
-        Logger.getInstance().recordOutput("Arm Position Advantage Scope", armPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ArmPos", armPosition);
 
         // Manipulator Position in Advantage Scope
         double[] manipulatorPosition = {
@@ -160,6 +158,9 @@ public class MechanismSimulator {
             manipulator.getPosition()-arm.getPosition(),
             swerve.getHeadingDegrees()
         };
-        Logger.getInstance().recordOutput("Manipulator Position Advantage Scope", manipulatorPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ManipulatorPos", manipulatorPosition);
+
+        // Sends system simulations to logger
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/Mech2d", mech);
     }
 }
