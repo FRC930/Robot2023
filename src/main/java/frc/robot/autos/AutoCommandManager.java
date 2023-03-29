@@ -131,9 +131,9 @@ public class AutoCommandManager {
         Command One_ConeCubeNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBumpV2", eventCommandMap);
         Command Two_ConeCubeBalanceNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBumpV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, false));
-        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV2", eventCommandMap,
+        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV3", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Four_ConeCubeBumpV2 = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBumpV2", eventCommandMap);
+        Command Four_ConeCubeBumpV2 = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBumpV3", eventCommandMap);
         
         Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
@@ -142,8 +142,8 @@ public class AutoCommandManager {
         Command NoBumpConeSConeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngageV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, false));
         Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
-            // CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-            s_SwerveDrive, "NoBumpConeSConeSCubeS", eventCommandMap);
+             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+            s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
         Command NoBumpConeSCubeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSCubeEngageV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command Three_ConeCubeNoBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeNoBalanceBumpV2", eventCommandMap);
