@@ -46,7 +46,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
         //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!
 
         // Sets up Feetforward TODO: Change these values
-        ff = new ArmFeedforward(0.0, 0.7, 0);
+        ff = new ArmFeedforward(0.0, 0.35, 0);
 
         m_io = io;
 
