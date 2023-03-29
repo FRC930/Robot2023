@@ -53,32 +53,32 @@ public class OdometryUtility {
      */
 
     // Back camera constants
-    // private static final String BACK_CAMERA_NAME = "Camera3"; 
-    // private static final String BACK_CAMERA_IP_NAME = "10.9.30.33";
-    // private static final int BACK_CAMERA_PIPELINE = 0;
-    // private static final int BACK_CAMERA_PORT_TO_FORWARD = 5803;
-    // private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera3/config.json";
-    // private static final int BACK_CAMERA_RESOLUTION_WIDTH = 960;
-    // private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 540;
-    // private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(10.0);
-    // private static final double BACK_CAMERA_POSITION_Y = Units.inchesToMeters(10.0);
-    // private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(25.0);
-    // private static final double BACK_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
-    // private static final double BACK_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
-    // private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(0.0);
+    private static final String BACK_CAMERA_NAME = "Camera3"; 
+    private static final String BACK_CAMERA_IP_NAME = "10.9.30.33";
+    private static final int BACK_CAMERA_PIPELINE = 0;
+    private static final int BACK_CAMERA_PORT_TO_FORWARD = 5803;
+    private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera3/config.json";
+    private static final int BACK_CAMERA_RESOLUTION_WIDTH = 1280;
+    private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 720;
+    private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(10.223);
+    private static final double BACK_CAMERA_POSITION_Y = Units.inchesToMeters(10.462226);
+    private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(10.0);
+    private static final double BACK_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
+    private static final double BACK_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
+    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(15.0);
 
-    // static final Transform3d robotToBackCam = 
-    //     new Transform3d(
-    //         new Translation3d(BACK_CAMERA_POSITION_X, BACK_CAMERA_POSITION_Y, BACK_CAMERA_POSITION_Z),
-    //         new Rotation3d(BACK_CAMERA_ROTATION_YAW,BACK_CAMERA_ROTATION_PITCH, BACK_CAMERA_ROTATION_ROLL));
+    static final Transform3d robotToBackCam = 
+        new Transform3d(
+            new Translation3d(BACK_CAMERA_POSITION_X, BACK_CAMERA_POSITION_Y, BACK_CAMERA_POSITION_Z),
+            new Rotation3d(BACK_CAMERA_ROTATION_YAW,BACK_CAMERA_ROTATION_PITCH, BACK_CAMERA_ROTATION_ROLL));
 
 
     //Left camera constants
-    private static final String LEFT_CAMERA_NAME = "Camera3"; 
-    private static final String LEFT_CAMERA_IP_NAME = "10.9.30.33";
+    private static final String LEFT_CAMERA_NAME = "Camera1"; 
+    private static final String LEFT_CAMERA_IP_NAME = "10.9.30.31";
     private static final int LEFT_CAMERA_PIPELINE = 0;
-    private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5803;
-    private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
+    private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5801;
+    private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
     private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 1280;
     private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 720;
     private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.664);
@@ -94,11 +94,11 @@ public class OdometryUtility {
             new Rotation3d(LEFT_CAMERA_ROTATION_YAW,LEFT_CAMERA_ROTATION_PITCH, LEFT_CAMERA_ROTATION_ROLL));
 
     // Right camera constants
-    private static final String RIGHT_CAMERA_NAME = "Camera4"; 
-    private static final String RIGHT_CAMERA_IP_NAME = "10.9.30.34";
+    private static final String RIGHT_CAMERA_NAME = "Camera2"; 
+    private static final String RIGHT_CAMERA_IP_NAME = "10.9.30.32";
     private static final int RIGHT_CAMERA_PIPELINE = 0;
-    private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5804;
-    private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera1/config.json";
+    private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5802;
+    private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
     private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 1280;
     private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 720;
     private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.664);
@@ -114,7 +114,7 @@ public class OdometryUtility {
         new Rotation3d(RIGHT_CAMERA_ROTATION_YAW, RIGHT_CAMERA_ROTATION_PITCH, RIGHT_CAMERA_ROTATION_ROLL));
 
     // Three cameras on the robot, 2 in the front, 1 on the back
-    //private final CameraOnRobot m_backCamera;
+    private final CameraOnRobot m_backCamera;
     private final CameraOnRobot m_rightCamera;
     private final CameraOnRobot m_leftCamera;
 
@@ -128,7 +128,7 @@ public class OdometryUtility {
     // -- These replaced old utility methods used to utilize multi tags
     private PhotonPoseEstimator photonPoseEstimator_FrontLeft;
     private PhotonPoseEstimator photonPoseEstimator_FrontRight;
-    // private PhotonPoseEstimator photonPoseEstimator_Back;
+    private PhotonPoseEstimator photonPoseEstimator_Back;
 
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
     private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
@@ -168,20 +168,20 @@ public class OdometryUtility {
         );
 
         // Creates the cameras
-        // m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
-        //                                 BACK_CAMERA_IP_NAME, 
-        //                                 BACK_CAMERA_PIPELINE, 
-        //                                 BACK_CAMERA_PORT_TO_FORWARD,
-        //                                 BACK_CAMERA_CONFIG_FILE,
-        //                                 BACK_CAMERA_RESOLUTION_WIDTH,
-        //                                 BACK_CAMERA_RESOLUTION_HEIGHT,
-        //                                 BACK_CAMERA_POSITION_X,
-        //                                 BACK_CAMERA_POSITION_Y,
-        //                                 BACK_CAMERA_POSITION_Z,
-        //                                 BACK_CAMERA_ROTATION_ROLL,
-        //                                 BACK_CAMERA_ROTATION_PITCH,
-        //                                 BACK_CAMERA_ROTATION_YAW
-        //                                 );
+        m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
+                                        BACK_CAMERA_IP_NAME, 
+                                        BACK_CAMERA_PIPELINE, 
+                                        BACK_CAMERA_PORT_TO_FORWARD,
+                                        BACK_CAMERA_CONFIG_FILE,
+                                        BACK_CAMERA_RESOLUTION_WIDTH,
+                                        BACK_CAMERA_RESOLUTION_HEIGHT,
+                                        BACK_CAMERA_POSITION_X,
+                                        BACK_CAMERA_POSITION_Y,
+                                        BACK_CAMERA_POSITION_Z,
+                                        BACK_CAMERA_ROTATION_ROLL,
+                                        BACK_CAMERA_ROTATION_PITCH,
+                                        BACK_CAMERA_ROTATION_YAW
+                                        );
         m_leftCamera = new CameraOnRobot(LEFT_CAMERA_NAME, 
                                         LEFT_CAMERA_IP_NAME, 
                                         LEFT_CAMERA_PIPELINE, 
@@ -221,8 +221,8 @@ public class OdometryUtility {
         photonPoseEstimator_FrontLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         photonPoseEstimator_FrontRight = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_rightCamera.getPhotonCamera(), robotToRightCam);
         photonPoseEstimator_FrontRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-        //photonPoseEstimator_Back = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_backCamera.getPhotonCamera(), robotToBackCam);
-        //photonPoseEstimator_Back.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        photonPoseEstimator_Back = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_backCamera.getPhotonCamera(), robotToBackCam);
+        photonPoseEstimator_Back.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         } catch (IOException e) {
             DriverStation.reportWarning("Unable to load ChargedUp AprilTag resource file" + 
                                         AprilTagFields.k2023ChargedUp.m_resourceFile, e.getStackTrace());
