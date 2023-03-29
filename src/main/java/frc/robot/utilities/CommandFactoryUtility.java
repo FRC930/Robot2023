@@ -53,9 +53,9 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_BACK_INTAKE = 244.0;
 
     //Values for backwards cone pickup in autonomous
-    public static final double AUTO_ELEVATOR_BACK_INTAKE_HEIGHT = 13;  // NO CONVESION FACTOR
-    public static final double AUTO_ARM_BACK_INTAKE_ANGLE = 205.0;
-    public static final double AUTO_MANIPULATOR_BACK_INTAKE = 250.0;
+    // public static final double AUTO_ELEVATOR_BACK_INTAKE_HEIGHT = 13;  // NO CONVESION FACTOR
+    // public static final double AUTO_ARM_BACK_INTAKE_ANGLE = 205.0;
+    // public static final double AUTO_MANIPULATOR_BACK_INTAKE = 250.0;
 
     public static final double ELEVATOR_BACK_CUBE_INTAKE_HEIGHT = 11.3;  // NO CONVESION FACTOR
     public static final double ARM_BACK_CUBE_INTAKE_ANGLE = 201.0;
@@ -383,15 +383,15 @@ public class CommandFactoryUtility {
             // TODO DONT USE YET (wrist issues)
             case "backIntakeElevatorPos":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
-                .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(AUTO_ELEVATOR_BACK_INTAKE_HEIGHT)));
+                .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_BACK_INTAKE_HEIGHT)));
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "backIntakeArmPos":
-                autoCommand = new SetArmDegreesCommand(m_armSubsystem, AUTO_ARM_BACK_INTAKE_ANGLE);
+                autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_BACK_INTAKE_ANGLE);
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "backIntakeManipulatorPos":
-                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  AUTO_MANIPULATOR_BACK_INTAKE);
+                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_BACK_INTAKE);
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "backCubeIntakeElevatorPos":
