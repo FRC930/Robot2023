@@ -2,6 +2,8 @@ package frc.robot.autos;
 
 import java.util.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
@@ -14,6 +16,10 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.PPSwerveControllerCommand;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
+import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.LogUtil;
 
 /**
@@ -40,7 +46,10 @@ public class AutoCommandManager {
     private Field2d pp_field2d = new Field2d();
 
     public static enum subNames {
-        SwerveDriveSubsystem("SwerveDrive");
+        SwerveDriveSubsystem("SwerveDrive"),
+        ElevatorSubsystem("Elevator"),
+        ArmSubsystem("Arm"),
+        ManipulatorSubsystem("Manipulator");
 
         final String m_name;
 
@@ -91,7 +100,7 @@ public class AutoCommandManager {
                     // TODO May not want both pose and trajectory
                     pp_field2d.setRobotPose(targetPose);
                     // May just want dashboard not on field2d
-                    SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
+                    Logger.getInstance().recordOutput("PathPlanner/DesiredPose",targetPose);
                 },
                 null, // logSetPoint
 
@@ -102,6 +111,9 @@ public class AutoCommandManager {
         SmartDashboard.putData("PP_Field", pp_field2d);
         //Subsystems used by auto commands
         SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
+        ElevatorSubsystem m_elevatorSubsystem = (ElevatorSubsystem) subsystemMap.get(subNames.ElevatorSubsystem.toString());
+        ArmSubsystem m_armSubsystem = (ArmSubsystem) subsystemMap.get(subNames.ArmSubsystem.toString());
+        ManipulatorSubsystem m_manipulatorSubsystem = (ManipulatorSubsystem) subsystemMap.get(subNames.ManipulatorSubsystem.toString());
         
         //Autonomous Commands
         Command MidScoreEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreEngage", eventCommandMap, 
@@ -119,9 +131,9 @@ public class AutoCommandManager {
         Command One_ConeCubeNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBumpV2", eventCommandMap);
         Command Two_ConeCubeBalanceNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBumpV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, false));
-        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV2", eventCommandMap,
+        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV3", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Four_ConeCubeBumpV2 = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBumpV2", eventCommandMap);
+        Command Four_ConeCubeBumpV2 = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBumpV3", eventCommandMap);
         
         Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
@@ -129,7 +141,9 @@ public class AutoCommandManager {
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command NoBumpConeSConeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngageV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, false));
-        Command NoBumpConeSConeSCubeS = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeS", eventCommandMap);
+        Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
+             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+            s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
         Command NoBumpConeSCubeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSCubeEngageV2", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command Three_ConeCubeNoBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeNoBalanceBumpV2", eventCommandMap);

@@ -128,6 +128,14 @@ public class CommandFactoryUtility {
             releaseAtEnd?0.4:-1.0);
     }
 
+    public static Command createAutoScoreHighCommand(ElevatorSubsystem m_elevatorSubsystem, ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        return new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+            .andThen(CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true)
+            .andThen(new WaitCommand(0.18)) //pause after scoring
+            .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+    }
+
     public static Command createScoreMediumCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
@@ -158,13 +166,6 @@ public class CommandFactoryUtility {
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem) {
-        // final Command command = new ParallelCommandGroup(
-        //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        //     new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
-        //     .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
-        //         ArmSubsystem.STOW_POSITION, 
-        //         ManipulatorSubsystem.STOW_POSITION))
-        //     ); 
         final Command command = 
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
@@ -172,12 +173,7 @@ public class CommandFactoryUtility {
                 ManipulatorSubsystem.STOW_POSITION))
             .andThen(m_armSubsystem.createWaitUntilLessThanAngleCommand(170.0))    
             .andThen(m_armSubsystem.createWaitUntilGreaterThanAngleCommand(45.0))    
-            .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
-                ;
-        
-                Logger.getInstance().recordOutput("CommandFactoryUtility/createStowArmCommand", "present");
-             
-
+            .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0))) ;
         return command;
     }
 
@@ -433,6 +429,5 @@ public class CommandFactoryUtility {
         }
      
     }
-
 
 }
