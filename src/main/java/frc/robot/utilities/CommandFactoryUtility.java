@@ -128,6 +128,14 @@ public class CommandFactoryUtility {
             releaseAtEnd?0.4:-1.0);
     }
 
+    public static Command createAutoScoreHighCommand(ElevatorSubsystem m_elevatorSubsystem, ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        return new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+            .andThen(CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true)
+            .andThen(new WaitCommand(0.18)) //pause after scoring
+            .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+    }
+
     public static Command createScoreMediumCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
@@ -421,6 +429,5 @@ public class CommandFactoryUtility {
         }
      
     }
-
 
 }

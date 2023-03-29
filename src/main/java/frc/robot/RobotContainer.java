@@ -219,6 +219,9 @@ public class RobotContainer {
 
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
+    m_autoManager.addSubsystem(subNames.ElevatorSubsystem, m_elevatorSubsystem);
+    m_autoManager.addSubsystem(subNames.ArmSubsystem, m_armSubsystem);
+    m_autoManager.addSubsystem(subNames.ManipulatorSubsystem, m_manipulatorSubsystem);
     m_autoManager.initCommands(eventCommandMap);
 
     // Configure the button bindings
