@@ -116,6 +116,12 @@
       "names": [
         "backIntakeManipulatorPos"
       ]
+    },
+    {
+      "position": 2.2181818181817214,
+      "names": [
+        "stowArm"
+      ]
     }
   ]
 }
