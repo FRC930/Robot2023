@@ -53,7 +53,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
                 s_Swerve::getPose, //Using Pose Swerve estimator
                 s_Swerve::resetOdometry, //pose2D consumer, used to reset odometry at beginning of zero
                 SwerveDrive.getSwerveKinematics(),
-                new PIDConstants(1.53, 0.0, 0.153), //PID constants to correct for translation error (X and Y)
+                new PIDConstants(1.6, 0.0, 0.16), //PID constants to correct for translation error (X and Y)
                 //new PIDConstants(1.0, 0.0, 0.0), //PID constants to correct for rotation error (used to create the rotation controller)
                 new PIDConstants(1.9, 0.0, 0.19), //PID constants to correct for rotation error (used to create the rotation controller)
                 s_Swerve::setSwerveModuleStates,

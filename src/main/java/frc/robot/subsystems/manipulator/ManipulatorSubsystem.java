@@ -1,5 +1,7 @@
 package frc.robot.subsystems.manipulator;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -46,7 +48,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
         //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!
 
         // Sets up Feetforward TODO: Change these values
-        ff = new ArmFeedforward(0.0, 0.7, 0);
+        ff = new ArmFeedforward(0.0, 0.35, 0);
 
         m_io = io;
 
@@ -119,6 +121,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
      */
     public void setRollerSpeed(double speed) {
         m_io.setRollerSpeed(speed);
+        Logger.getInstance().recordOutput("RunManipulatorRollerCommand/ManipulatorSpeed", speed);
     }
 
     public Command setWristPositionCommand(double degrees) {
