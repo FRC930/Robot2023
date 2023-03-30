@@ -136,6 +136,14 @@ public class CommandFactoryUtility {
             .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
     }
 
+    public static Command createAutoScoreMidCommand(ElevatorSubsystem m_elevatorSubsystem, ArmSubsystem m_armSubsystem,
+    ManipulatorSubsystem m_manipulatorSubsystem) {
+    return new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+        .andThen(CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true)
+        .andThen(new WaitCommand(0.18)) //pause after scoring
+        .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+}
+
     public static Command createScoreMediumCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
@@ -320,10 +328,16 @@ public class CommandFactoryUtility {
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                         
                 break;
+            case "scoreMidCube":
+                autoCommand = CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                    .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED))
+                    .andThen(new WaitCommand(0.35)); //pause after scoring
+                break;
+                
             case "scoreMidCone":
                 autoCommand = CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem,
                                     true)
-                                .andThen(new WaitCommand(3)) //pause after scoring
+                                .andThen(new WaitCommand(0.18)) //pause after scoring
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                 break;
             case "armIntakeCone":

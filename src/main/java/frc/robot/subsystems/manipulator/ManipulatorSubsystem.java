@@ -1,5 +1,7 @@
 package frc.robot.subsystems.manipulator;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -27,7 +29,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static double INTAKE_POSITION = CommandFactoryUtility.MANIPULATOR_INTAKE; // low intake Position
     public static final double SUBSTATION_POSITION = CommandFactoryUtility.MANIPULATOR_SUBSTATION;//-125; want position to force long way if continuousinput commented out
 
-    public static final double ROLLER_INTAKE_SPEED = 0.9;
+    public static final double ROLLER_INTAKE_SPEED = 0.8;
     public static final double SHOOT_SPEED = -1.0;
     public static final double RELEASE_SPEED = -0.35;
     public static final double HOLD_SPEED = 0.15;
@@ -119,6 +121,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
      */
     public void setRollerSpeed(double speed) {
         m_io.setRollerSpeed(speed);
+        Logger.getInstance().recordOutput("RunManipulatorRollerCommand/ManipulatorSpeed", speed);
     }
 
     public Command setWristPositionCommand(double degrees) {
