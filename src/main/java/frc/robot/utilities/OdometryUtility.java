@@ -65,7 +65,7 @@ public class OdometryUtility {
     private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(10.0);
     private static final double BACK_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
     private static final double BACK_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
-    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(15.0);
+    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(-15.0);
 
     static final Transform3d robotToBackCam = 
         new Transform3d(
@@ -79,14 +79,14 @@ public class OdometryUtility {
     private static final int LEFT_CAMERA_PIPELINE = 0;
     private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5804;
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera4/config.json";
-    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 1280;
-    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 720;
-    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(9.664);
-    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(10.583);
-    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(15.891);
+    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 960;
+    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 540;
+    private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(10.664); //9.664);
+    private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(11.5); //10.583);
+    private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18); //15.891);
     private static final double LEFT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);
     private static final double LEFT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);
-    private static final double LEFT_CAMERA_ROTATION_YAW = Units.degreesToRadians(-20.0);
+    private static final double LEFT_CAMERA_ROTATION_YAW = Units.degreesToRadians(20.0);
 
     static final Transform3d robotToLeftCam = 
         new Transform3d(
@@ -101,12 +101,12 @@ public class OdometryUtility {
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera4/config.json";
     private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 960;
     private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 540;
-    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(9.664);
-    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-10.583);
-    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(15.891);
+    private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(10.664); //9.664);
+    private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-11.5); //-10.583);
+    private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18); //15.891);
     private static final double RIGHT_CAMERA_ROTATION_ROLL = Units.degreesToRadians(0.0);;
     private static final double RIGHT_CAMERA_ROTATION_PITCH = Units.degreesToRadians(0.0);;
-    private static final double RIGHT_CAMERA_ROTATION_YAW = Units.degreesToRadians(20.0);;
+    private static final double RIGHT_CAMERA_ROTATION_YAW = Units.degreesToRadians(-20.0);;
 
     static final Transform3d robotToRightCam = 
     new Transform3d(
