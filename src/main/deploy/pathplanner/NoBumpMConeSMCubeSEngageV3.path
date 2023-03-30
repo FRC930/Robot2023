@@ -49,15 +49,15 @@
     },
     {
       "anchorPoint": {
-        "x": 1.6928156933236946,
+        "x": 1.66,
         "y": 4.396379732930406
       },
       "prevControl": {
-        "x": 1.5572753540381372,
+        "x": 1.5244596607144425,
         "y": 4.324055836473685
       },
       "nextControl": {
-        "x": 4.581865232106533,
+        "x": 4.549049538782838,
         "y": 5.937967431490419
       },
       "holonomicAngle": 180.0,
@@ -127,12 +127,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.490968502127029,
-        "y": 3.122722064921564
+        "x": 3.9107049778080607,
+        "y": 3.1628119180408976
       },
       "prevControl": {
-        "x": 3.6501955943432693,
-        "y": 3.1511283584457215
+        "x": 4.0699320700243025,
+        "y": 3.191218211565055
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -141,10 +141,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "manipulatorHold",
-          "scoreHighCone"
-        ],
+        "names": [],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -204,7 +201,7 @@
       ]
     },
     {
-      "position": 3.2363636363638646,
+      "position": 3.121212121212156,
       "names": [
         "stowArm"
       ]
