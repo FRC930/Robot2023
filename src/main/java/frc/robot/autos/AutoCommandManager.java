@@ -154,9 +154,22 @@ public class AutoCommandManager {
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command Three_ConeCubeNoBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeNoBalanceBumpV2", eventCommandMap);
         Command NoBumpConeSCubeSV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSV2", eventCommandMap);
+
         Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "NoBumpMConeSMCubeSCubeSV3", eventCommandMap);
+        Command NoBumpMConeSMCubeSEngageV3 = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+            s_SwerveDrive, "NoBumpMConeSMCubeSEngageV3", eventCommandMap,
+            new AutoBalanceCommand(s_SwerveDrive, true));    
+        Command twoScoreMidBump_ou = new PathPlannerCommand(
+                CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+                s_SwerveDrive, "TwoScoreMidBump_ou", eventCommandMap);
+        Command oneScoreMidBumpEngage_ou = new PathPlannerCommand(
+                CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+                s_SwerveDrive, "OneScoreMidBumpEngage_ou", eventCommandMap,
+                new AutoBalanceCommand(s_SwerveDrive, true)); 
+
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
@@ -172,23 +185,23 @@ public class AutoCommandManager {
 
         // m_chooser.addOption("1_NoBumpConeSCubeSV2***", One_ConeCubeNoBumpV2);
         // m_chooser.addOption("2_NoBumpConeSCubeNSEngagedV2***", Two_ConeCubeBalanceNoBumpV2);
-        m_chooser.addOption("3_BumpConeSCubeNSEngagedV2", Three_ConeCubeBalanceBumpV2);
+        // m_chooser.addOption("3_BumpConeSCubeNSEngagedV2", Three_ConeCubeBalanceBumpV2);
         //m_chooser.addOption("*****3_BumpConeSCubeNSV2******", Three_ConeCubeNoBalanceBumpV2);
-        m_chooser.addOption("***4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
+        // m_chooser.addOption("***4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
        // m_chooser.addOption("***NoBumpConeSCubeSV2***", NoBumpConeSCubeSV2);
 
-        //m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
+        m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
 
         //m_chooser.addOption("MidScoreEngage", MidScoreEngageCommand);
         //m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
        // m_chooser.addOption("NoBumpConeSConeSCubeEngageV2", NoBumpConeSConeSCubeEngageV2);
-        m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
-        m_chooser.addOption("NoBumpConeSCubeSCubeEngageV2", NoBumpConeSCubeSCubeEngageV2);
-        m_chooser.addOption("NoBumpMConeSMCubeSCubeSV3", NoBumpMConeSMCubeSCubeSV3);
+        // m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
+        //m_chooser.addOption("NoBumpConeSCubeSCubeEngageV2", NoBumpConeSCubeSCubeEngageV2);
+        m_chooser.addOption("ThreeScoreMid_ouu", NoBumpMConeSMCubeSCubeSV3);
+        m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3);
+        m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);
+        m_chooser.addOption("OneScoreMidBumpEngage_ou", oneScoreMidBumpEngage_ou);
 
-
-        
-        
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }
