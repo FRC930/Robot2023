@@ -211,7 +211,7 @@ public class RobotContainer {
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "manipulatorHold", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
-    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreGroundcube", 
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreGroundCube", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreMidCube", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
