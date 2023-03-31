@@ -116,11 +116,15 @@ public class AutoCommandManager {
         ManipulatorSubsystem m_manipulatorSubsystem = (ManipulatorSubsystem) subsystemMap.get(subNames.ManipulatorSubsystem.toString());
         
         //Autonomous Commands
-        Command MidScoreEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreEngage", eventCommandMap, 
+        Command ScoreHighEngageCommand = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+            s_SwerveDrive, "ScoreHighEngageV3", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive));
-        Command ScoreHighConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
+        Command ScoreHighConeCommand = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+            s_SwerveDrive, "ScoreHighConeV3", eventCommandMap);
         Command One_ConeCubeNoBump = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBump", eventCommandMap);
         Command Two_ConeCubeBalanceNoBump = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBump", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));
@@ -192,7 +196,7 @@ public class AutoCommandManager {
 
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
 
-        //m_chooser.addOption("MidScoreEngage", MidScoreEngageCommand);
+        m_chooser.addOption("ScoreHighEngage", ScoreHighEngageCommand);
         //m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
        // m_chooser.addOption("NoBumpConeSConeSCubeEngageV2", NoBumpConeSConeSCubeEngageV2);
         // m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
