@@ -330,46 +330,44 @@ public class OdometryUtility {
         //TODO: may want to change other values sent to shuffleboard to be set to logger
        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/RobotPose", getPose());
         try{
-            //TODO only runs cameras if we are in auto
-            //if (DriverStation.isAutonomous()){
-            if (true){
+            // only runs cameras if we are in auto
+            if (!DriverStation.isTeleop()){
                 final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
                 final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
                 final Optional<EstimatedRobotPose> updatedEstimatedPose_FromBack = photonPoseEstimator_Back.update();
+                boolean seeLeftRobot = false;
+                boolean seeRightRobot = false;
+                boolean seeBackRobot = false;
                 
                 if (!updatedEstimatedPose_FromLeft.isEmpty() && updatedEstimatedPose_FromLeft.isPresent()) {
                     EstimatedRobotPose camPose = updatedEstimatedPose_FromLeft.get();
                     if(camPose.targetsUsed.size() > 1) {
                         m_PoseEstimator.addVisionMeasurement(
                                 camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-                        SmartDashboard.putString("OdometryUtility/SeeLeftRobot", "true");
+                        seeLeftRobot = true;
                     }
-                } else {
-                    SmartDashboard.putString("OdometryUtility/SeeLeftRobot", "false");
-
                 }
+                SmartDashboard.putString("OdometryUtility/SeeLeftRobot", seeLeftRobot?"true":"false");
+
                 if (!updatedEstimatedPose_FromRight.isEmpty() &&updatedEstimatedPose_FromRight.isPresent()) {
                     EstimatedRobotPose camPose = updatedEstimatedPose_FromRight.get();
                     if(camPose.targetsUsed.size() > 1) {
                         m_PoseEstimator.addVisionMeasurement(
                             camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-                        SmartDashboard.putString("OdometryUtility/SeeRightRobot", "true");
+                        seeRightRobot = true;
                     }
-                } else {
-                    SmartDashboard.putString("OdometryUtility/SeeRightRobot", "false");
-
                 }
+                SmartDashboard.putString("OdometryUtility/SeeRightRobot", seeRightRobot?"true":"false");
+
                 if (!updatedEstimatedPose_FromBack.isEmpty() &&updatedEstimatedPose_FromBack.isPresent()) {
                     EstimatedRobotPose camPose = updatedEstimatedPose_FromBack.get();
                     if(camPose.targetsUsed.size() > 1) {
                         m_PoseEstimator.addVisionMeasurement(
                             camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-                        SmartDashboard.putString("OdometryUtility/SeeBackRobot", "true");
+                        seeBackRobot = true;
                     }
-                } else {
-                    SmartDashboard.putString("OdometryUtility/SeeBackRobot", "false");
-
                 }
+                SmartDashboard.putString("OdometryUtility/SeeBackRobot", seeBackRobot?"true":"false");
             }
                 
             // SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
