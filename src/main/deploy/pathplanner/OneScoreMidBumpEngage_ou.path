@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.85170291955786,
-        "y": 0.8854059513344673
+        "x": 6.99,
+        "y": 0.93
       },
       "prevControl": {
-        "x": 4.87352034125825,
-        "y": 0.8171927589793136
+        "x": 5.011817421700391,
+        "y": 0.8617868076448464
       },
       "nextControl": {
-        "x": 7.143020494674214,
-        "y": 0.8954513849591683
+        "x": 7.281317575116355,
+        "y": 0.940045433624701
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -102,25 +102,25 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.193939393939316,
+      "position": 0.89,
       "names": [
         "backCubeIntakeElevatorPos"
       ]
     },
     {
-      "position": 0.26666666666655914,
+      "position": 0.97,
       "names": [
         "backCubeIntakeArmPos"
       ]
     },
     {
-      "position": 0.3,
+      "position": 1.0,
       "names": [
         "backCubeIntakeManipulatorPos"
       ]
     },
     {
-      "position": 2.054545454545541,
+      "position": 2.01,
       "names": [
         "event",
         "stowArm"
