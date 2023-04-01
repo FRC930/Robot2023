@@ -79,8 +79,8 @@ public class OdometryUtility {
     private static final int LEFT_CAMERA_PIPELINE = 0;
     private static final int LEFT_CAMERA_PORT_TO_FORWARD = 5802;
     private static final String LEFT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera2/config.json";
-    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 960;
-    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 540;
+    private static final int LEFT_CAMERA_RESOLUTION_WIDTH = 640;
+    private static final int LEFT_CAMERA_RESOLUTION_HEIGHT = 480;
     private static final double LEFT_CAMERA_POSITION_X = Units.inchesToMeters(10.664); //9.664);
     private static final double LEFT_CAMERA_POSITION_Y = Units.inchesToMeters(11.5); //10.583);
     private static final double LEFT_CAMERA_POSITION_Z = Units.inchesToMeters(18); //15.891);
@@ -99,8 +99,8 @@ public class OdometryUtility {
     private static final int RIGHT_CAMERA_PIPELINE = 0;
     private static final int RIGHT_CAMERA_PORT_TO_FORWARD = 5804;
     private static final String RIGHT_CAMERA_CONFIG_FILE = "CameraConfigs/Camera4/config.json";
-    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 960;
-    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 540;
+    private static final int RIGHT_CAMERA_RESOLUTION_WIDTH = 640;
+    private static final int RIGHT_CAMERA_RESOLUTION_HEIGHT = 480;
     private static final double RIGHT_CAMERA_POSITION_X = Units.inchesToMeters(10.664); //9.664);
     private static final double RIGHT_CAMERA_POSITION_Y = Units.inchesToMeters(-11.5); //-10.583);
     private static final double RIGHT_CAMERA_POSITION_Z = Units.inchesToMeters(18); //15.891);
