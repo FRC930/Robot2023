@@ -43,8 +43,13 @@ public class CommandFactoryUtility {
 
     //Arm substation
     public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.0 * FACTOR; //not sure if correct?
-    public static final double ARM_SUBSTATION_ANGLE = 200.0;//115.0;
+    public static final double ARM_SUBSTATION_ANGLE = 200.0;
     public static final double MANIPULATOR_SUBSTATION = 155.0;
+
+    //Arm Double substation
+    public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 12.2;
+    public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 86.5;
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
@@ -281,6 +286,24 @@ public class CommandFactoryUtility {
                 .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
                 .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED));
+
+        return command;
+    }
+
+    public static Command createDoubleSubstationCommand(
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        final Command command = 
+            new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_DOUBLE_SUBSTATION_HEIGHT))
+                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(0.5))
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
+                ARM_DOUBLE_SUBSTATION_ANGLE, 
+                MANIPULATOR_DOUBLE_SUBSTATION
+                ))
+                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.DOUBLE_SUBSTATION_ROLLER_INTAKE_SPEED));
 
         return command;
     }
