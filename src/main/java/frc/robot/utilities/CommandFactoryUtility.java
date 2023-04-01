@@ -34,9 +34,9 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
 
     //Arm substation
-    public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.0 * FACTOR; //not sure if correct?
-    public static final double ARM_SUBSTATION_ANGLE = 200.0;
-    public static final double MANIPULATOR_SUBSTATION = 155.0;
+    public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.2; //29.1; //26.0 * FACTOR; //not sure if correct?
+    public static final double ARM_SUBSTATION_ANGLE = 207.7; //209.4; //200.0;
+    public static final double MANIPULATOR_SUBSTATION = 147.7; //155.1; //155.0;
 
     //Arm Double substation
     public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 12.2; //14.4 Maybe use these values
