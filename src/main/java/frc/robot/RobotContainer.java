@@ -7,10 +7,8 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
@@ -27,9 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
@@ -38,9 +33,6 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorIORobot;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
-import frc.robot.subsystems.rotateintake.PitchIntakeIORobot;
-import frc.robot.subsystems.rotateintake.PitchIntakeIOSim;
-import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIORobot;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -53,9 +45,6 @@ import java.util.Map;
 
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.PitchIntakeCommand;
-import frc.robot.commands.PutToSmartDashboardCommand;
-import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
@@ -65,7 +54,6 @@ import frc.robot.subsystems.IntakeRollerMotorSubsystem;
 import frc.robot.commands.TravelToTarget;
 import frc.robot.commands.LEDCommand.LedPatterns;
 import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
-import frc.robot.commands.armcommands.SetArmDegreesCommand;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -151,12 +139,12 @@ public class RobotContainer {
   private Command m_lowTargetCommand = 
     CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, false);
   
-  private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
+  //private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
-  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
-  private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
-  private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
+  // private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
+  // private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
+  // private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
+  // private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
   // private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
   // private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
   //private PitchIntakeCommand m_CurrentPitchIntakeCommand;

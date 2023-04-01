@@ -20,7 +20,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.autos.AutoCommandManager;
-import frc.robot.utilities.FieldCentricOffset;
 import frc.robot.utilities.GeometryUtils;
 import frc.robot.utilities.OdometryUtility;
 import frc.robot.utilities.SwerveModuleConstants;

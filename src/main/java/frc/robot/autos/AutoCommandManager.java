@@ -145,29 +145,9 @@ public class AutoCommandManager {
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
 
-        //commented *** to show that the path is untested
-        //m_chooser.addOption("BumpConeSConeSCubeEngaged***", BumpConeSConeSCubeEngaged);
-        //m_chooser.addOption("NoBumpConeSConeSCubeEngaged***", NoBumpConeSConeSCubeEngaged);
-
-        //m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
-        //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged***", Two_ConeCubeBalanceNoBump);
-        //m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
-        //m_chooser.addOption("4_BumpConeSCubeS***", Four_ConeCubeBump);
-
-        // m_chooser.addOption("1_NoBumpConeSCubeSV2***", One_ConeCubeNoBumpV2);
-        // m_chooser.addOption("2_NoBumpConeSCubeNSEngagedV2***", Two_ConeCubeBalanceNoBumpV2);
-        // m_chooser.addOption("3_BumpConeSCubeNSEngagedV2", Three_ConeCubeBalanceBumpV2);
-        //m_chooser.addOption("*****3_BumpConeSCubeNSV2******", Three_ConeCubeNoBalanceBumpV2);
-        // m_chooser.addOption("***4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
-       // m_chooser.addOption("***NoBumpConeSCubeSV2***", NoBumpConeSCubeSV2);
-
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
-
         m_chooser.addOption("ScoreHighEngage", ScoreHighEngageCommand);
-        //m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
-       // m_chooser.addOption("NoBumpConeSConeSCubeEngageV2", NoBumpConeSConeSCubeEngageV2);
         // m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
-        //m_chooser.addOption("NoBumpConeSCubeSCubeEngageV2", NoBumpConeSCubeSCubeEngageV2);
         m_chooser.addOption("ThreeScoreMid_ouu", NoBumpMConeSMCubeSCubeSV3);
         m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3);
         m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);

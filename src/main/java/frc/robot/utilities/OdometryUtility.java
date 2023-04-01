@@ -335,6 +335,7 @@ public class OdometryUtility {
 
             final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
             final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
+            final Optional<EstimatedRobotPose> updatedEstimatedPose_FromBack = photonPoseEstimator_Back.update();
             if (!updatedEstimatedPose_FromLeft.isEmpty() && updatedEstimatedPose_FromLeft.isPresent()) {
                 EstimatedRobotPose camPose = updatedEstimatedPose_FromLeft.get();
                 m_PoseEstimator.addVisionMeasurement(
@@ -351,6 +352,15 @@ public class OdometryUtility {
                 SmartDashboard.putString("OdometryUtility/SeeRightRobot", "true");
             } else {
                 SmartDashboard.putString("OdometryUtility/SeeRightRobot", "false");
+
+            }
+            if (!updatedEstimatedPose_FromBack.isEmpty() &&updatedEstimatedPose_FromBack.isPresent()) {
+                EstimatedRobotPose camPose = updatedEstimatedPose_FromBack.get();
+                m_PoseEstimator.addVisionMeasurement(
+                        camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+                SmartDashboard.putString("OdometryUtility/SeeBackRobot", "true");
+            } else {
+                SmartDashboard.putString("OdometryUtility/SeeBackRobot", "false");
 
             }
             
