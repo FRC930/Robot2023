@@ -20,7 +20,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 import frc.robot.utilities.CommandFactoryUtility;
-import frc.robot.utilities.LogUtil;
+
 
 /**
  * <h3>AutonomouseCommandManager</h3>
@@ -120,45 +120,12 @@ public class AutoCommandManager {
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "ScoreHighEngageV3", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
-        Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, 
-            new AutoBalanceCommand(s_SwerveDrive));
         Command ScoreHighConeCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-            s_SwerveDrive, "ScoreHighConeV3", eventCommandMap);
-        Command One_ConeCubeNoBump = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBump", eventCommandMap);
-        Command Two_ConeCubeBalanceNoBump = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBump", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Three_ConeCubeBalanceBump = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBump", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, false));
-        Command Four_ConeCubeBump = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBump", eventCommandMap);
-
-        Command One_ConeCubeNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBumpV2", eventCommandMap);
-        Command Two_ConeCubeBalanceNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBumpV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, false));
-        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(
-            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-            s_SwerveDrive, "3_ConeCubeBalanceBumpV3", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Four_ConeCubeBumpV2 = new PathPlannerCommand(
-            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-            s_SwerveDrive, "4_ConeCubeBumpV3", eventCommandMap);
-        
-        Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command NoBumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngaged", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command NoBumpConeSConeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngageV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, false));
-        Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
-             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-            s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
-        Command NoBumpConeSCubeSCubeEngageV2 = new PathPlannerCommand(
-            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-            s_SwerveDrive, "NoBumpConeSCubeSCubeEngageV3", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Three_ConeCubeNoBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeNoBalanceBumpV2", eventCommandMap);
-        Command NoBumpConeSCubeSV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSV2", eventCommandMap);
-
+            s_SwerveDrive, "ScoreHighConeV3", eventCommandMap);  
+        // Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
+        //      CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+        //     s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
         Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "NoBumpMConeSMCubeSCubeSV3", eventCommandMap);
