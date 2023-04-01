@@ -344,8 +344,8 @@ public class CommandFactoryUtility {
                         
                 break;
             case "scoreMidCube":
-                autoCommand = CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
-                    .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED))
+                autoCommand = //CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                    new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED)
                     .andThen(new WaitCommand(0.4)); //pause after scoring
                 break;
                 
