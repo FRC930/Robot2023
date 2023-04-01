@@ -331,7 +331,7 @@ public class OdometryUtility {
        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/RobotPose", getPose());
         try{
             // only runs cameras if we are in auto
-            if (!DriverStation.isTeleop()){
+            if (true) {//!DriverStation.isTeleop()){
                 final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
                 final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
                 final Optional<EstimatedRobotPose> updatedEstimatedPose_FromBack = photonPoseEstimator_Back.update();
