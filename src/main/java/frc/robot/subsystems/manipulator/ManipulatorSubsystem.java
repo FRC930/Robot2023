@@ -29,10 +29,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static double INTAKE_POSITION = CommandFactoryUtility.MANIPULATOR_INTAKE; // low intake Position
     public static final double SUBSTATION_POSITION = CommandFactoryUtility.MANIPULATOR_SUBSTATION;//-125; want position to force long way if continuousinput commented out
 
-    public static final double ROLLER_INTAKE_SPEED = 0.8;
+    public static final double ROLLER_INTAKE_SPEED = 1.0;
     public static final double DOUBLE_SUBSTATION_ROLLER_INTAKE_SPEED = 1.0;
     public static final double SHOOT_SPEED = -1.0;
-    public static final double RELEASE_SPEED = -0.35;
+    public static final double RELEASE_SPEED = -0.7;
     public static final double HOLD_SPEED = 0.15;
    
 
