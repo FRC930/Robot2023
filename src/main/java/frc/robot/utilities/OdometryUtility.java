@@ -60,12 +60,12 @@ public class OdometryUtility {
     private static final String BACK_CAMERA_CONFIG_FILE = "CameraConfigs/Camera3/config.json";
     private static final int BACK_CAMERA_RESOLUTION_WIDTH = 640;
     private static final int BACK_CAMERA_RESOLUTION_HEIGHT = 480;
-    private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(10.223);
+    private static final double BACK_CAMERA_POSITION_X = Units.inchesToMeters(-10.223);
     private static final double BACK_CAMERA_POSITION_Y = Units.inchesToMeters(10.462226);
     private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(10.0);
     private static final double BACK_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);;
     private static final double BACK_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);;
-    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(-15.0);
+    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(-195.0);
 
     static final Transform3d robotToBackCam = 
         new Transform3d(
