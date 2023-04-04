@@ -90,7 +90,7 @@ public class SwerveDrive extends SubsystemBase {
         autoXController = new PIDController(AutoCommandManager.kPXController, AutoCommandManager.kIXController, AutoCommandManager.kDXController);
         autoYController = new PIDController(AutoCommandManager.kPYController, AutoCommandManager.kIYController, AutoCommandManager.kDYController);
         autoThetaController = new PIDController(AutoCommandManager.kPThetaController, AutoCommandManager.kIThetaController, AutoCommandManager.kDThetaController);
-        autoPitchController = new PIDController(1, 0, 0);
+        autoPitchController = new PIDController(1, 0, 0.1);
         
     m_aprilCameraOne = new OdometryUtility(kDriveKinematics, getHeadingRotation2d(), getModulePositions(), getPoseMeters());
   }
@@ -98,6 +98,14 @@ public class SwerveDrive extends SubsystemBase {
   public Pose2d getPose() {
     return m_aprilCameraOne.getPose();
   }
+
+  public Rotation2d getOffsetAngle(){
+    Rotation2d 
+    ninety = new Rotation2d(90);
+    Rotation2d offset = m_aprilCameraOne.getPose().getRotation().plus(
+                                    (ninety.minus(m_aprilCameraOne.getPose().getRotation().times(2))));
+    return offset;
+}
 
   public void drive(
       double throttle,
@@ -117,7 +125,6 @@ public class SwerveDrive extends SubsystemBase {
             // Sets an offset if robot path doesn't start facing drive station
               getHeadingRotation2d().minus(Rotation2d.fromDegrees(FieldCentricOffset.getInstance().getOffset())))
         : new ChassisSpeeds(throttle, strafe, rotation);
-
     chassisSpeeds = correctForDynamics(chassisSpeeds);
     moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setSwerveModuleStates(moduleStates, isOpenLoop);
