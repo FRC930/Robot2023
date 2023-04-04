@@ -65,7 +65,7 @@ public class OdometryUtility {
     private static final double BACK_CAMERA_POSITION_Z = Units.inchesToMeters(10.0);
     private static final double BACK_CAMERA_ROTATION_ROLL = Math.toRadians(0.0);
     private static final double BACK_CAMERA_ROTATION_PITCH = Math.toRadians(0.0);
-    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(-195.0);
+    private static final double BACK_CAMERA_ROTATION_YAW = Math.toRadians(180.0);
 
     static final Transform3d robotToBackCam = 
         new Transform3d(
