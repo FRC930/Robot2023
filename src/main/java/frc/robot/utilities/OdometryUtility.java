@@ -114,7 +114,7 @@ public class OdometryUtility {
         new Rotation3d(RIGHT_CAMERA_ROTATION_ROLL, RIGHT_CAMERA_ROTATION_PITCH, RIGHT_CAMERA_ROTATION_YAW));
 
     // Three cameras on the robot, 2 in the front, 1 on the back
-    private final CameraOnRobot m_backCamera;
+    //private final CameraOnRobot m_backCamera;
     private final CameraOnRobot m_rightCamera;
     private final CameraOnRobot m_leftCamera;
 
@@ -128,7 +128,7 @@ public class OdometryUtility {
     // -- These replaced old utility methods used to utilize multi tags
     private PhotonPoseEstimator photonPoseEstimator_FrontLeft;
     private PhotonPoseEstimator photonPoseEstimator_FrontRight;
-    private PhotonPoseEstimator photonPoseEstimator_Back;
+    //private PhotonPoseEstimator photonPoseEstimator_Back;
 
     // Confidence level, 0 means that we have 100% confidence in the odometry position and it won't use camera values
     private Matrix<N3, N1> m_StateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
@@ -168,20 +168,20 @@ public class OdometryUtility {
         );
 
         // Creates the cameras
-        m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
-                                        BACK_CAMERA_IP_NAME, 
-                                        BACK_CAMERA_PIPELINE, 
-                                        BACK_CAMERA_PORT_TO_FORWARD,
-                                        BACK_CAMERA_CONFIG_FILE,
-                                        BACK_CAMERA_RESOLUTION_WIDTH,
-                                        BACK_CAMERA_RESOLUTION_HEIGHT,
-                                        BACK_CAMERA_POSITION_X,
-                                        BACK_CAMERA_POSITION_Y,
-                                        BACK_CAMERA_POSITION_Z,
-                                        BACK_CAMERA_ROTATION_ROLL,
-                                        BACK_CAMERA_ROTATION_PITCH,
-                                        BACK_CAMERA_ROTATION_YAW
-                                        );
+        // m_backCamera = new CameraOnRobot(BACK_CAMERA_NAME, 
+        //                                 BACK_CAMERA_IP_NAME, 
+        //                                 BACK_CAMERA_PIPELINE, 
+        //                                 BACK_CAMERA_PORT_TO_FORWARD,
+        //                                 BACK_CAMERA_CONFIG_FILE,
+        //                                 BACK_CAMERA_RESOLUTION_WIDTH,
+        //                                 BACK_CAMERA_RESOLUTION_HEIGHT,
+        //                                 BACK_CAMERA_POSITION_X,
+        //                                 BACK_CAMERA_POSITION_Y,
+        //                                 BACK_CAMERA_POSITION_Z,
+        //                                 BACK_CAMERA_ROTATION_ROLL,
+        //                                 BACK_CAMERA_ROTATION_PITCH,
+        //                                 BACK_CAMERA_ROTATION_YAW
+        //                                 );
         m_leftCamera = new CameraOnRobot(LEFT_CAMERA_NAME, 
                                         LEFT_CAMERA_IP_NAME, 
                                         LEFT_CAMERA_PIPELINE, 
@@ -221,7 +221,7 @@ public class OdometryUtility {
         //photonPoseEstimator_FrontLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         photonPoseEstimator_FrontRight = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_rightCamera.getPhotonCamera(), robotToRightCam);
         //photonPoseEstimator_FrontRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-        photonPoseEstimator_Back = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_backCamera.getPhotonCamera(), robotToBackCam);
+        //photonPoseEstimator_Back = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP, m_backCamera.getPhotonCamera(), robotToBackCam);
         //photonPoseEstimator_Back.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         } catch (IOException e) {
             DriverStation.reportWarning("Unable to load ChargedUp AprilTag resource file" + 
@@ -331,10 +331,15 @@ public class OdometryUtility {
        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/RobotPose", getPose());
         try{
             // only runs cameras if we are in auto
-            if (true) {//!DriverStation.isTeleop()){
-                final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
-                final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
-                final Optional<EstimatedRobotPose> updatedEstimatedPose_FromBack = photonPoseEstimator_Back.update();
+            final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
+            final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
+            Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/CameraLeft", updatedEstimatedPose_FromLeft.get().estimatedPose.toPose2d());
+            Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/CameraRight", updatedEstimatedPose_FromRight.get().estimatedPose.toPose2d());
+           // final Optional<EstimatedRobotPose> updatedEstimatedPose_FromBack = photonPoseEstimator_Back.update();
+            if (false) {//!DriverStation.isTeleop()){
+                // final Optional<EstimatedRobotPose> updatedEstimatedPose_FromLeft = photonPoseEstimator_FrontLeft.update();
+                // final Optional<EstimatedRobotPose> updatedEstimatedPose_FromRight = photonPoseEstimator_FrontRight.update();
+                // final Optional<EstimatedRobotPose> updatedEstimatedPose_FromBack = photonPoseEstimator_Back.update();
                 boolean seeLeftRobot = false;
                 boolean seeRightRobot = false;
                 boolean seeBackRobot = false;
@@ -359,15 +364,15 @@ public class OdometryUtility {
                 }
                 SmartDashboard.putString("OdometryUtility/SeeRightRobot", seeRightRobot?"true":"false");
 
-                if (!updatedEstimatedPose_FromBack.isEmpty() &&updatedEstimatedPose_FromBack.isPresent()) {
-                    EstimatedRobotPose camPose = updatedEstimatedPose_FromBack.get();
-                    if(camPose.targetsUsed.size() > 1) {
-                        m_PoseEstimator.addVisionMeasurement(
-                            camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-                        seeBackRobot = true;
-                    }
-                }
-                SmartDashboard.putString("OdometryUtility/SeeBackRobot", seeBackRobot?"true":"false");
+                // if (!updatedEstimatedPose_FromBack.isEmpty() &&updatedEstimatedPose_FromBack.isPresent()) {
+                //     EstimatedRobotPose camPose = updatedEstimatedPose_FromBack.get();
+                //     if(camPose.targetsUsed.size() > 1) {
+                //         m_PoseEstimator.addVisionMeasurement(
+                //             camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+                //         seeBackRobot = true;
+                //     }
+                // }
+                //SmartDashboard.putString("OdometryUtility/SeeBackRobot", seeBackRobot?"true":"false");
             }
                 
             // SmartDashboard.putNumberArray(this.getClass().getSimpleName()+"/AdjustedRobotPose", LogUtil.toPoseArray2d(pose.toPose2d()));
