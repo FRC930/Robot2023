@@ -165,13 +165,13 @@
       ]
     },
     {
-      "position": 0.25454545454538535,
+      "position": 0.2,
       "names": [
         "backCubeIntakeArmPos"
       ]
     },
     {
-      "position": 0.2909090909089883,
+      "position": 0.23,
       "names": [
         "backCubeIntakeManipulatorPos"
       ]
@@ -183,13 +183,13 @@
       ]
     },
     {
-      "position": 2.0727272727272488,
+      "position": 2.04,
       "names": [
         "backCubeIntakeArmPos"
       ]
     },
     {
-      "position": 2.109090909090963,
+      "position": 2.05,
       "names": [
         "backCubeIntakeManipulatorPos"
       ]
@@ -207,7 +207,7 @@
       ]
     },
     {
-      "position": 1.1636363636361962,
+      "position": 1.0454545454545452,
       "names": [
         "stowArm"
       ]
