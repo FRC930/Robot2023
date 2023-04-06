@@ -349,6 +349,9 @@ public class RobotContainer {
     // m_codriverController.rightTrigger()
     //   .onTrue(new PutToSmartDashboardCommand("CodriverController/RightTrigger", true))
     //   .onFalse(new PutToSmartDashboardCommand("CodriverController/RightTrigger", false));
+
+    m_codriverController.x().whileTrue(new AutoBalanceCommand(m_robotDrive, false));
+    m_codriverController.y().whileTrue(new AutoBalanceCommand(m_robotDrive, true));
   }
 
   /**
