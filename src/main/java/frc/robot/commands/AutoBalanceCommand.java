@@ -17,8 +17,8 @@ public class AutoBalanceCommand extends CommandBase {
     /**
      *
      */
-    private static final double INVERTED_DEADBAND = 7.0;
-    private static final double NON_INVERTED_DEADBAND = 7.0;
+    private static final double INVERTED_DEADBAND = 8.0;
+    private static final double NON_INVERTED_DEADBAND = 8.0;
     private final double MAX_SPEED = 0.14;
     private final double STRAFE = 0.0;
     private final double ROTATION = 0.0;
