@@ -1,6 +1,7 @@
 {
   "download": {
-    "localDir": "C:\\Users\\eap66\\Downloads\\Pittsburgh\\Thursday",
-    "serverTeam": "930"
+    "localDir": "C:\\Users\\eap66\\Downloads\\Pittsburgh\\Friday",
+    "serverTeam": "930",
+    "visible": false
   }
 }

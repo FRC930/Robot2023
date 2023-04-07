@@ -187,19 +187,19 @@
       ]
     },
     {
-      "position": 0.1818181818180911,
+      "position": 0.1,
       "names": [
         "backIntakeElevatorPos"
       ]
     },
     {
-      "position": 0.25454545454538535,
+      "position": 0.15,
       "names": [
         "backIntakeArmPos"
       ]
     },
     {
-      "position": 0.2909090909089883,
+      "position": 0.2,
       "names": [
         "backIntakeManipulatorPos"
       ]
