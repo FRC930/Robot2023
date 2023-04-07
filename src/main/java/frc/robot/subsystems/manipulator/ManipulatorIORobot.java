@@ -12,6 +12,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
     // -------- DECLARATIONS --------\\
     private final CANSparkMax manipulator;
     private final CANSparkMax roller;
+    // private final CANSparkMax rollerFollower;
     private final AbsoluteEncoder manipulatorEncoder;
 
     // -------- CONSTANTS --------\\
@@ -26,7 +27,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
 
 
     //----------Constructor---------\\
-    public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
+    public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID, int manipulatorRollerMotorFollowerID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
         roller = new CANSparkMax(manipulatorRollerMotorID, MotorType.kBrushless);
 
@@ -35,6 +36,10 @@ public class ManipulatorIORobot implements ManipulatorIO {
         roller.restoreFactoryDefaults();
         roller.setIdleMode(IdleMode.kBrake);
 
+        // rollerFollower = new CANSparkMax(manipulatorRollerMotorFollowerID, MotorType.kBrushless);
+        // rollerFollower.restoreFactoryDefaults();
+        // rollerFollower.setIdleMode(IdleMode.kBrake);
+        // rollerFollower.follow(roller, true);
 
         // TODO: Determine if this helps encoder position update faster
         manipulator.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
