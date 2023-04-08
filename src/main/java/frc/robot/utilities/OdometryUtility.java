@@ -247,8 +247,11 @@ public class OdometryUtility {
         AprilTagFieldLayout.OriginPosition originPos;
         if(DriverStation.getAlliance() == Alliance.Blue) {
             originPos = AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide;
+            Logger.getInstance().recordOutput(" OdometryUtility/alliance", "Blue");
         } else {
             originPos = AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide;
+            Logger.getInstance().recordOutput(" OdometryUtility/alliance", "Red");
+
         }
         tagLayout.setOrigin(originPos);
 
