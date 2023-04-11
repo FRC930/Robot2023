@@ -218,10 +218,10 @@ public class SwerveModule extends SubsystemBase {
     }
   }
 
-  // gets the swerve module number
-  private int getModuleNumber() {
-    return m_moduleNumber;
-  }
+  // // gets the swerve module number
+  // private int getModuleNumber() {
+  //   return m_moduleNumber;
+  // }
 
   private void simUpdateDrivePosition(SwerveModuleState state) {
     m_simDriveEncoderVelocity = state.speedMetersPerSecond;
@@ -230,21 +230,21 @@ public class SwerveModule extends SubsystemBase {
     m_simDriveEncoderPosition += distancePer20Ms;
   }
 
-  private void simTurnPosition(double angle) {
-    if (angle != m_currentAngle && m_simTurnAngleIncrement == 0) {
-      m_simAngleDifference = angle - m_currentAngle;
-      m_simTurnAngleIncrement = m_simAngleDifference / 20.0;// 10*20ms = .2 sec move time
-    }
+  // private void simTurnPosition(double angle) {
+  //   if (angle != m_currentAngle && m_simTurnAngleIncrement == 0) {
+  //     m_simAngleDifference = angle - m_currentAngle;
+  //     m_simTurnAngleIncrement = m_simAngleDifference / 20.0;// 10*20ms = .2 sec move time
+  //   }
 
-    if (m_simTurnAngleIncrement != 0) {
-      m_currentAngle += m_simTurnAngleIncrement;
+  //   if (m_simTurnAngleIncrement != 0) {
+  //     m_currentAngle += m_simTurnAngleIncrement;
 
-      if ((Math.abs(angle - m_currentAngle)) < .1) {
-        m_currentAngle = angle;
-        m_simTurnAngleIncrement = 0;
-      }
-    }
-  }
+  //     if ((Math.abs(angle - m_currentAngle)) < .1) {
+  //       m_currentAngle = angle;
+  //       m_simTurnAngleIncrement = 0;
+  //     }
+  //   }
+  // }
 
   public SwerveDriveKinematics getSwerveKinematics() {
     return SwerveDrive.kDriveKinematics;

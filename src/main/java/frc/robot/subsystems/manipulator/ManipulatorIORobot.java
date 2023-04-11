@@ -12,6 +12,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
     // -------- DECLARATIONS --------\\
     private final CANSparkMax manipulator;
     private final CANSparkMax roller;
+    // private final CANSparkMax rollerFollower;
     private final AbsoluteEncoder manipulatorEncoder;
 
     // -------- CONSTANTS --------\\
@@ -20,13 +21,13 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int FREE_LIMIT = 20;
 
     // TRY to keep offset value away from flipping around to 359 it would flip around in side
-    public final static double SAFE_ZONE_OFFSET =15.0;
+    public final static double SAFE_ZONE_OFFSET = 45.0;
 
-    private static double manipulatorOffset = (200 - SAFE_ZONE_OFFSET) % 360; // -45 needed to adjust to get angle back to where tested
+    private static double manipulatorOffset = (83 - SAFE_ZONE_OFFSET) % 360; // -45 needed to adjust to get angle back to where tested
 
 
     //----------Constructor---------\\
-    public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID) {
+    public ManipulatorIORobot(int manipulatorMotorID, int manipulatorRollerMotorID, int manipulatorRollerMotorFollowerID) {
         manipulator = new CANSparkMax(manipulatorMotorID, MotorType.kBrushless);
         roller = new CANSparkMax(manipulatorRollerMotorID, MotorType.kBrushless);
 
@@ -35,6 +36,10 @@ public class ManipulatorIORobot implements ManipulatorIO {
         roller.restoreFactoryDefaults();
         roller.setIdleMode(IdleMode.kBrake);
 
+        // rollerFollower = new CANSparkMax(manipulatorRollerMotorFollowerID, MotorType.kBrushless);
+        // rollerFollower.restoreFactoryDefaults();
+        // rollerFollower.setIdleMode(IdleMode.kBrake);
+        // rollerFollower.follow(roller, true);
 
         // TODO: Determine if this helps encoder position update faster
         manipulator.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);

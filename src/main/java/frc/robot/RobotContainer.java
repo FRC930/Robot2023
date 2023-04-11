@@ -7,10 +7,8 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
@@ -27,9 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
@@ -38,9 +33,6 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorIORobot;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
-import frc.robot.subsystems.rotateintake.PitchIntakeIORobot;
-import frc.robot.subsystems.rotateintake.PitchIntakeIOSim;
-import frc.robot.subsystems.rotateintake.PitchIntakeSubsystem;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIORobot;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -53,9 +45,6 @@ import java.util.Map;
 
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.PitchIntakeCommand;
-import frc.robot.commands.PutToSmartDashboardCommand;
-import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.LEDCommand;
 import frc.robot.commands.RotateCommand;
 import frc.robot.autos.AutoCommandManager.subNames;
@@ -65,7 +54,6 @@ import frc.robot.subsystems.IntakeRollerMotorSubsystem;
 import frc.robot.commands.TravelToTarget;
 import frc.robot.commands.LEDCommand.LedPatterns;
 import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
-import frc.robot.commands.armcommands.SetArmDegreesCommand;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -133,7 +121,7 @@ public class RobotContainer {
   private final TravelToTarget m_travelToTarget = new TravelToTarget( new Pose2d(3, 4, new Rotation2d(0)), m_robotDrive);
   private final ArmIO armio = Robot.isReal() ? new ArmIORobot(5) : new ArmIOSim();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem(armio);
-  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15) : new ManipulatorIOSim());
+  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(Robot.isReal() ? new ManipulatorIORobot(4, 15, 17) : new ManipulatorIOSim());
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem(Robot.isReal() ? new ElevatorIORobot(6, 12)  : new ElevatorIOSim());
   private final MechanismSimulator m_mechanismSimulator = new MechanismSimulator(m_armSubsystem, m_elevatorSubsystem, m_manipulatorSubsystem, /*m_PitchIntakeSubsystem,*/ m_robotDrive);
   private final LEDsubsystem m_LEDsubsystem = new LEDsubsystem(0, 1,2,3 );
@@ -151,12 +139,12 @@ public class RobotContainer {
   private Command m_lowTargetCommand = 
     CommandFactoryUtility.createScoreLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, false);
   
-  private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
+  //private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
-  private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
-  private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
-  private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
-  private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
+  // private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
+  // private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
+  // private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
+  // private final IntakeRollerCommand m_EjectRoller = new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
   // private final PitchIntakeCommand m_HighPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, 90.0);
   // private final PitchIntakeCommand m_LowPitchIntakeCommand = new PitchIntakeCommand(m_PitchIntakeSubsystem, -90.0);
   //private PitchIntakeCommand m_CurrentPitchIntakeCommand;
@@ -211,7 +199,9 @@ public class RobotContainer {
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "manipulatorHold", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
-    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreGroundcube", 
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreGroundCube", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreMidCube", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
 
     //TODO remove
@@ -219,6 +209,9 @@ public class RobotContainer {
 
     m_autoManager = new AutoCommandManager();
     m_autoManager.addSubsystem(subNames.SwerveDriveSubsystem, m_robotDrive);
+    m_autoManager.addSubsystem(subNames.ElevatorSubsystem, m_elevatorSubsystem);
+    m_autoManager.addSubsystem(subNames.ArmSubsystem, m_armSubsystem);
+    m_autoManager.addSubsystem(subNames.ManipulatorSubsystem, m_manipulatorSubsystem);
     m_autoManager.initCommands(eventCommandMap);
 
     // Configure the button bindings
@@ -252,9 +245,9 @@ public class RobotContainer {
       .onFalse(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
         .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
 
-    m_driverController.b().and(m_driverController.rightBumper().negate())
-      .onTrue(new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem).withTimeout(0.5).andThen(new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)))
-      .onFalse(new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem));
+    // m_driverController.b().and(m_driverController.rightBumper().negate())
+    //   .onTrue(new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem).withTimeout(0.5).andThen(new IntakeRollerCommand(INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)))
+    //   .onFalse(new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem));
 
     m_driverController.povUp().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(15.0)));
     m_driverController.povDown().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(-15.0)));
@@ -296,6 +289,10 @@ public class RobotContainer {
           m_targetScorePositionUtility::isLow)
       );
     
+    m_driverController.x().and(m_driverController.b().negate())
+      .whileTrue(CommandFactoryUtility.createDoubleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
     // Slow drive
     m_driverController.leftStick().onTrue(new InstantCommand(() -> m_TeleopSwerve.toggleSpeed()));
     
@@ -352,6 +349,9 @@ public class RobotContainer {
     // m_codriverController.rightTrigger()
     //   .onTrue(new PutToSmartDashboardCommand("CodriverController/RightTrigger", true))
     //   .onFalse(new PutToSmartDashboardCommand("CodriverController/RightTrigger", false));
+
+    //m_codriverController.x().whileTrue(new AutoBalanceCommand(m_robotDrive, false));
+    //m_codriverController.y().whileTrue(new AutoBalanceCommand(m_robotDrive, true));
   }
 
   /**

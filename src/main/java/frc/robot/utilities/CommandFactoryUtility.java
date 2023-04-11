@@ -2,19 +2,11 @@ package frc.robot.utilities;
 
 import java.util.Map;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.ExtendIntakeCommand;
 import frc.robot.commands.IntakeRollerCommand;
@@ -42,9 +34,14 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
 
     //Arm substation
-    public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.0 * FACTOR; //not sure if correct?
-    public static final double ARM_SUBSTATION_ANGLE = 200.0;//115.0;
-    public static final double MANIPULATOR_SUBSTATION = 155.0;
+    public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.2; //29.1; //26.0 * FACTOR; //not sure if correct?
+    public static final double ARM_SUBSTATION_ANGLE = 207.7; //209.4; //200.0;
+    public static final double MANIPULATOR_SUBSTATION = 147.7; //155.1; //155.0;
+
+    //Arm Double substation
+    public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 12.2; //14.4 Maybe use these values
+    public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 86.5; //80.2
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6; //-5.8
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
@@ -53,9 +50,9 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_BACK_INTAKE = 244.0;
 
     //Values for backwards cone pickup in autonomous
-    public static final double AUTO_ELEVATOR_BACK_INTAKE_HEIGHT = 13;  // NO CONVESION FACTOR
-    public static final double AUTO_ARM_BACK_INTAKE_ANGLE = 205.0;
-    public static final double AUTO_MANIPULATOR_BACK_INTAKE = 250.0;
+    // public static final double AUTO_ELEVATOR_BACK_INTAKE_HEIGHT = 13;  // NO CONVESION FACTOR
+    // public static final double AUTO_ARM_BACK_INTAKE_ANGLE = 205.0;
+    // public static final double AUTO_MANIPULATOR_BACK_INTAKE = 250.0;
 
     public static final double ELEVATOR_BACK_CUBE_INTAKE_HEIGHT = 11.3;  // NO CONVESION FACTOR
     public static final double ARM_BACK_CUBE_INTAKE_ANGLE = 201.0;
@@ -128,6 +125,22 @@ public class CommandFactoryUtility {
             releaseAtEnd?0.4:-1.0);
     }
 
+    public static Command createAutoScoreHighCommand(ElevatorSubsystem m_elevatorSubsystem, ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        return new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+            .andThen(CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true)
+            .andThen(new WaitCommand(0.18)) //pause after scoring
+            .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+    }
+
+    public static Command createAutoScoreMidCommand(ElevatorSubsystem m_elevatorSubsystem, ArmSubsystem m_armSubsystem,
+    ManipulatorSubsystem m_manipulatorSubsystem) {
+    return new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
+        .andThen(CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, true)
+        .andThen(new WaitCommand(0.18)) //pause after scoring
+        .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+}
+
     public static Command createScoreMediumCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
@@ -158,13 +171,6 @@ public class CommandFactoryUtility {
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
         ManipulatorSubsystem m_manipulatorSubsystem) {
-        // final Command command = new ParallelCommandGroup(
-        //     new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)),
-        //     new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
-        //     .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
-        //         ArmSubsystem.STOW_POSITION, 
-        //         ManipulatorSubsystem.STOW_POSITION))
-        //     ); 
         final Command command = 
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED)
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
@@ -172,12 +178,7 @@ public class CommandFactoryUtility {
                 ManipulatorSubsystem.STOW_POSITION))
             .andThen(m_armSubsystem.createWaitUntilLessThanAngleCommand(170.0))    
             .andThen(m_armSubsystem.createWaitUntilGreaterThanAngleCommand(45.0))    
-            .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0)))
-                ;
-        
-                Logger.getInstance().recordOutput("CommandFactoryUtility/createStowArmCommand", "present");
-             
-
+            .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(0))) ;
         return command;
     }
 
@@ -281,6 +282,24 @@ public class CommandFactoryUtility {
         return command;
     }
 
+    public static Command createDoubleSubstationCommand(
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        final Command command = 
+            new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_DOUBLE_SUBSTATION_HEIGHT))
+                .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(0.5))
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
+                ARM_DOUBLE_SUBSTATION_ANGLE, 
+                MANIPULATOR_DOUBLE_SUBSTATION
+                ))
+                .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+                .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+            .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.DOUBLE_SUBSTATION_ROLLER_INTAKE_SPEED));
+
+        return command;
+    }
+
     public static Command createScoreGroundCubeCommand(
         ElevatorSubsystem m_elevatorSubsystem,
         ArmSubsystem m_armSubsystem,
@@ -324,10 +343,16 @@ public class CommandFactoryUtility {
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                         
                 break;
+            case "scoreMidCube":
+                autoCommand = //CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                    new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED)
+                    .andThen(new WaitCommand(0.4)); //pause after scoring
+                break;
+                
             case "scoreMidCone":
                 autoCommand = CommandFactoryUtility.createScoreMediumCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem,
                                     true)
-                                .andThen(new WaitCommand(3)) //pause after scoring
+                                .andThen(new WaitCommand(0.18)) //pause after scoring
                                 .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                 break;
             case "armIntakeCone":
@@ -387,15 +412,15 @@ public class CommandFactoryUtility {
             // TODO DONT USE YET (wrist issues)
             case "backIntakeElevatorPos":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
-                .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(AUTO_ELEVATOR_BACK_INTAKE_HEIGHT)));
+                .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_BACK_INTAKE_HEIGHT)));
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "backIntakeArmPos":
-                autoCommand = new SetArmDegreesCommand(m_armSubsystem, AUTO_ARM_BACK_INTAKE_ANGLE);
+                autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_BACK_INTAKE_ANGLE);
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "backIntakeManipulatorPos":
-                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  AUTO_MANIPULATOR_BACK_INTAKE);
+                autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_BACK_INTAKE);
                 // TODO why were we using waitUntil on intake commands
                 break;
             case "backCubeIntakeElevatorPos":
@@ -433,6 +458,5 @@ public class CommandFactoryUtility {
         }
      
     }
-
 
 }

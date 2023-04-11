@@ -2,6 +2,8 @@ package frc.robot.autos;
 
 import java.util.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
@@ -11,10 +13,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.PPSwerveControllerCommand;
 import frc.robot.subsystems.*;
-import frc.robot.utilities.LogUtil;
+import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
+import frc.robot.utilities.CommandFactoryUtility;
+
 
 /**
  * <h3>AutonomouseCommandManager</h3>
@@ -40,7 +47,10 @@ public class AutoCommandManager {
     private Field2d pp_field2d = new Field2d();
 
     public static enum subNames {
-        SwerveDriveSubsystem("SwerveDrive");
+        SwerveDriveSubsystem("SwerveDrive"),
+        ElevatorSubsystem("Elevator"),
+        ArmSubsystem("Arm"),
+        ManipulatorSubsystem("Manipulator");
 
         final String m_name;
 
@@ -91,7 +101,7 @@ public class AutoCommandManager {
                     // TODO May not want both pose and trajectory
                     pp_field2d.setRobotPose(targetPose);
                     // May just want dashboard not on field2d
-                    SmartDashboard.putNumberArray("PathPlanner/DesiredPose", LogUtil.toPoseArray2d(targetPose));
+                    Logger.getInstance().recordOutput("PathPlanner/DesiredPose",targetPose);
                 },
                 null, // logSetPoint
 
@@ -102,71 +112,49 @@ public class AutoCommandManager {
         SmartDashboard.putData("PP_Field", pp_field2d);
         //Subsystems used by auto commands
         SwerveDrive s_SwerveDrive = (SwerveDrive) subsystemMap.get(subNames.SwerveDriveSubsystem.toString());
+        ElevatorSubsystem m_elevatorSubsystem = (ElevatorSubsystem) subsystemMap.get(subNames.ElevatorSubsystem.toString());
+        ArmSubsystem m_armSubsystem = (ArmSubsystem) subsystemMap.get(subNames.ArmSubsystem.toString());
+        ManipulatorSubsystem m_manipulatorSubsystem = (ManipulatorSubsystem) subsystemMap.get(subNames.ManipulatorSubsystem.toString());
         
         //Autonomous Commands
-        Command MidScoreEngageCommand = new PathPlannerCommand(s_SwerveDrive, "MidScoreEngage", eventCommandMap, 
+        Command ScoreHighEngageCommand = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                .andThen(new WaitCommand(1.0)), 
+            s_SwerveDrive, "ScoreHighEngageV3", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
-        Command MidChargingStationCommand = new PathPlannerCommand(s_SwerveDrive, "MidChargingStation", eventCommandMap, 
-            new AutoBalanceCommand(s_SwerveDrive));
-        Command ScoreHighConeCommand = new PathPlannerCommand(s_SwerveDrive, "ScoreHighCone", eventCommandMap);
-        Command One_ConeCubeNoBump = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBump", eventCommandMap);
-        Command Two_ConeCubeBalanceNoBump = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBump", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Three_ConeCubeBalanceBump = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBump", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, false));
-        Command Four_ConeCubeBump = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBump", eventCommandMap);
-
-        Command One_ConeCubeNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "1_ConeCubeNoBumpV2", eventCommandMap);
-        Command Two_ConeCubeBalanceNoBumpV2 = new PathPlannerCommand(s_SwerveDrive, "2_ConeCubeBalanceNoBumpV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, false));
-        Command Three_ConeCubeBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeBalanceBumpV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Four_ConeCubeBumpV2 = new PathPlannerCommand(s_SwerveDrive, "4_ConeCubeBumpV2", eventCommandMap);
-        
-        Command BumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "BumpConeSConeSCubeEngaged", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command NoBumpConeSConeSCubeEngaged = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngaged", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command NoBumpConeSConeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeEngageV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, false));
-        Command NoBumpConeSConeSCubeS = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSConeSCubeS", eventCommandMap);
-        Command NoBumpConeSCubeSCubeEngageV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSCubeEngageV2", eventCommandMap,
-            new AutoBalanceCommand(s_SwerveDrive, true));
-        Command Three_ConeCubeNoBalanceBumpV2 = new PathPlannerCommand(s_SwerveDrive, "3_ConeCubeNoBalanceBumpV2", eventCommandMap);
-        Command NoBumpConeSCubeSV2 = new PathPlannerCommand(s_SwerveDrive, "NoBumpConeSCubeSV2", eventCommandMap);
+        Command ScoreHighConeCommand = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+            s_SwerveDrive, "ScoreHighConeV3", eventCommandMap);  
+        // Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
+        //      CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+        //     s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
+        Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+            s_SwerveDrive, "NoBumpMConeSMCubeSCubeSV3", eventCommandMap);
+        Command NoBumpMConeSMCubeSEngageV3 = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
+            s_SwerveDrive, "NoBumpMConeSMCubeSEngageV3", eventCommandMap,
+            new AutoBalanceCommand(s_SwerveDrive, true));    
+        Command twoScoreMidBump_ou = new PathPlannerCommand(
+                CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+                s_SwerveDrive, "TwoScoreMidBump_ou", eventCommandMap);
+        Command oneScoreMidBumpEngage_ou = new PathPlannerCommand(
+                CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+                s_SwerveDrive, "OneScoreMidBumpEngage_ou", eventCommandMap,
+                new AutoBalanceCommand(s_SwerveDrive, true)); 
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
 
-        //commented *** to show that the path is untested
-        //m_chooser.addOption("BumpConeSConeSCubeEngaged***", BumpConeSConeSCubeEngaged);
-        //m_chooser.addOption("NoBumpConeSConeSCubeEngaged***", NoBumpConeSConeSCubeEngaged);
-
-        //m_chooser.addOption("1_NoBumpConeSCubeS", One_ConeCubeNoBump);
-        //m_chooser.addOption("2_NoBumpConeSCubeNSEngaged***", Two_ConeCubeBalanceNoBump);
-        //m_chooser.addOption("3_BumpConeSCubeNSEngaged", Three_ConeCubeBalanceBump);
-        m_chooser.addOption("4_BumpConeSCubeS***", Four_ConeCubeBump);
-
-        // m_chooser.addOption("1_NoBumpConeSCubeSV2***", One_ConeCubeNoBumpV2);
-        // m_chooser.addOption("2_NoBumpConeSCubeNSEngagedV2***", Two_ConeCubeBalanceNoBumpV2);
-        m_chooser.addOption("3_BumpConeSCubeNSEngagedV2", Three_ConeCubeBalanceBumpV2);
-        m_chooser.addOption("*****3_BumpConeSCubeNSV2******", Three_ConeCubeNoBalanceBumpV2);
-        m_chooser.addOption("***4_BumpConeSCubeSV2***", Four_ConeCubeBumpV2);
-        m_chooser.addOption("***NoBumpConeSCubeSV2***", NoBumpConeSCubeSV2);
-
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
+        m_chooser.addOption("ScoreHighEngage", ScoreHighEngageCommand);
+        // m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
+        m_chooser.addOption("ThreeScoreMid_ouu", NoBumpMConeSMCubeSCubeSV3);
+        m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3);
+        m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);
+        m_chooser.addOption("OneScoreMidBumpEngage_ou", oneScoreMidBumpEngage_ou);
 
-        m_chooser.addOption("MidScoreEngage", MidScoreEngageCommand);
-        m_chooser.addOption("MidChargingStation", MidChargingStationCommand);
-        m_chooser.addOption("NoBumpConeSConeSCubeEngageV2", NoBumpConeSConeSCubeEngageV2);
-        m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
-        m_chooser.addOption("NoBumpConeSCubeSCubeEngageV2", NoBumpConeSCubeSCubeEngageV2);
-
-
-
-        
-        
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
     }
