@@ -106,19 +106,7 @@
     {
       "position": 0.89,
       "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 0.97,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "backCubeIntakeManipulatorPos"
+        "backCubeIntake"
       ]
     },
     {

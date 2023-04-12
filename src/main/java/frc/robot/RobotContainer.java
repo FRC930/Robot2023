@@ -203,6 +203,9 @@ public class RobotContainer {
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreMidCube", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "backCubeIntake", 
+        m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+    
 
     //TODO remove
     // eventCommandMap = eventCommandMap = new HashMap<>();
