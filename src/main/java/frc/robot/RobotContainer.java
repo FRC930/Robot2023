@@ -271,20 +271,10 @@ public class RobotContainer {
       )
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
-    // Intakes from ground or substation
+    // Intakes from substation
     m_driverController.rightBumper().and(m_driverController.b().negate())
-      .whileTrue(
-        new ConditionalCommand(
-          CommandFactoryUtility.createExtendIntakeCommand(m_ExtendIntakeMotorSubsystem,m_IntakeRollerMotorSubsystem),
-          CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-          m_targetScorePositionUtility::isLow)
-      )
-      .onFalse(
-        new ConditionalCommand(
-          CommandFactoryUtility.createRetractIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem),
-          CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-          m_targetScorePositionUtility::isLow)
-      );
+      .whileTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     
     m_driverController.x().and(m_driverController.b().negate())
       .whileTrue(CommandFactoryUtility.createDoubleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
@@ -308,6 +298,8 @@ public class RobotContainer {
     m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createArmBackIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
+    m_codriverController.rightBumper().onTrue(CommandFactoryUtility.createGroundIntakeExtendCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createGroundIntakeRetractCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     // m_codriverController.a().negate()
     //   .and(m_codriverController.y().negate())
     //    .and(m_codriverController.rightTrigger())
