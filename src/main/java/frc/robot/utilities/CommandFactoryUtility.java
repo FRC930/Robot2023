@@ -448,6 +448,9 @@ public class CommandFactoryUtility {
             case "scoreGroundCube":
                 autoCommand = CommandFactoryUtility.createScoreGroundCubeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
                 break;
+            case "backCubeIntake":
+                autoCommand = CommandFactoryUtility.createArmBackCubeIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
+                break;
         }
 
         if(autoCommand != null) {
