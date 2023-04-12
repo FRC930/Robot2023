@@ -63,8 +63,7 @@ import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
  */
 public class RobotContainer {
 
-  private final double INTAKE_EXTEND_VOLTAGE = 6.0;
-  private final double INTAKE_ROLLER_VOLTAGE = 7.0;
+  
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -276,15 +275,13 @@ public class RobotContainer {
     m_driverController.rightBumper().and(m_driverController.b().negate())
       .whileTrue(
         new ConditionalCommand(
-          new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem)
-            .withTimeout(0.5)
-            .andThen(new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)),
+          CommandFactoryUtility.createExtendIntakeCommand(m_ExtendIntakeMotorSubsystem,m_IntakeRollerMotorSubsystem),
           CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
           m_targetScorePositionUtility::isLow)
       )
       .onFalse(
         new ConditionalCommand(
-          new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem),
+          CommandFactoryUtility.createRetractIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem),
           CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
           m_targetScorePositionUtility::isLow)
       );
