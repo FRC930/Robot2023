@@ -294,7 +294,7 @@ public class RobotContainer {
     // Will eventually be Intake Handoff (Intake from bottom gives game bject to top)
     // m_codriverController.leftTrigger().onTrue()
 
-    // Substation intake
+    // Back Cone Pickup
     m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createArmBackIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
