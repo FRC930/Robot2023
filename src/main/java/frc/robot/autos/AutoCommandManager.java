@@ -120,20 +120,20 @@ public class AutoCommandManager {
         Command ScoreHighEngageCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
                 .andThen(new WaitCommand(1.0)), 
-            s_SwerveDrive, "ScoreHighEngageV3", eventCommandMap, 
+            s_SwerveDrive, "OneScoreHighEngage_o", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
         Command ScoreHighConeCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-            s_SwerveDrive, "ScoreHighConeV3", eventCommandMap);  
+            s_SwerveDrive, "OneScoreMid_o", eventCommandMap);  
         // Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
         //      CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
         //     s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
         Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-            s_SwerveDrive, "NoBumpMConeSMCubeSCubeSV3", eventCommandMap);
+            s_SwerveDrive, "ThreeScore_ouu", eventCommandMap);
         Command NoBumpMConeSMCubeSEngageV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-            s_SwerveDrive, "NoBumpMConeSMCubeSEngageV3", eventCommandMap,
+            s_SwerveDrive, "TwoMidScoreEngage_ou", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));    
         Command twoScoreMidBump_ou = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
