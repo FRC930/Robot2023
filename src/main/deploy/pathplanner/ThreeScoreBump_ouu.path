@@ -1,0 +1,182 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.6736952257446562,
+        "y": 0.47323157258121396
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8070073746985102,
+        "y": 0.47960506177422585
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.5087210024044113,
+        "y": 0.6127714511068132
+      },
+      "prevControl": {
+        "x": 2.8364796180964498,
+        "y": 0.5527498989364591
+      },
+      "nextControl": {
+        "x": 4.071265285387714,
+        "y": 0.6629986192303227
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": 1.1,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.9949430807952515,
+        "y": 1.0840164407601554
+      },
+      "prevControl": {
+        "x": 7.6717361233220505,
+        "y": 1.1398128953447395
+      },
+      "nextControl": {
+        "x": 3.988501238689324,
+        "y": 0.8361581071727293
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": 1.1,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "scoreMidCube"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.63,
+        "y": 1.0849068314677994
+      },
+      "prevControl": {
+        "x": 3.0884016576342175,
+        "y": 0.8347350821910533
+      },
+      "nextControl": {
+        "x": 1.2786347377206042,
+        "y": 1.1451794332160112
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "scoreMidCube"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.803623231306612,
+        "y": 2.069359326688579
+      },
+      "prevControl": {
+        "x": 4.594976884240198,
+        "y": -0.20621569756167712
+      },
+      "nextControl": {
+        "x": 7.135122540921772,
+        "y": 2.4109040699284425
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.650315781834572,
+        "y": 1.0949522650925005
+      },
+      "prevControl": {
+        "x": 6.140624612076292,
+        "y": -0.6027260174821097
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.1,
+  "maxAcceleration": 1.1,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.89,
+      "names": [
+        "backCubeIntake"
+      ]
+    },
+    {
+      "position": 2.01,
+      "names": [
+        "event",
+        "stowArm"
+      ]
+    },
+    {
+      "position": 3.2000000000002506,
+      "names": [
+        "backCubeIntake"
+      ]
+    },
+    {
+      "position": 4.242424242424365,
+      "names": [
+        "stowArm"
+      ]
+    }
+  ]
+}
