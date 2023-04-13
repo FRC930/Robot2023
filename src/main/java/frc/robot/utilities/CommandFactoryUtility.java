@@ -32,7 +32,7 @@ public class CommandFactoryUtility {
     // Extend Ground Intake
     // TODO: Check These Angles
     public static final double ELEVATOR_GROUNDINTAKE_HEIGHT = 50.0 * FACTOR;  // NO CONVESION FACTOR
-    public static final double ARM_GROUNDINTAKE_ANGLE = -20.0; 
+    public static final double ARM_GROUNDINTAKE_ANGLE = -22.0; //changed wednesday night 4/12/23 from -20 to -22 need to test 
     public static final double MANIPULATOR_GROUNDINTAKE = 250.0;
 
 
@@ -49,7 +49,7 @@ public class CommandFactoryUtility {
     //Arm Double substation
     public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 12.2; //14.4 Maybe use these values
     public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 86.5; //80.2
-    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6; //-5.8
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6; //-5.8 //2.8;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
