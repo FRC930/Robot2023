@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
@@ -43,6 +45,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.LEDCommand;
@@ -63,7 +67,10 @@ import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
  */
 public class RobotContainer {
 
-  
+  Alliance alliance = Alliance.Invalid;
+
+  private final double INTAKE_EXTEND_VOLTAGE = 6.0;
+  private final double INTAKE_ROLLER_VOLTAGE = 7.0;
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -157,6 +164,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
+
     // Auto Commands
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighCone", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
@@ -224,6 +234,18 @@ public class RobotContainer {
     //stow arm position as default
   }
 
+  void checkDSUpdate() {
+    Alliance currentAlliance = DriverStation.getAlliance();
+
+    // If we have data, and have a new alliance from last time
+    if (DriverStation.isDSAttached() && currentAlliance != alliance) {
+      m_robotDrive.setOriginBasedOnAlliance();
+      alliance = currentAlliance;
+    }
+
+    Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/currentAlliance", currentAlliance.toString());
+  } 
+  
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its subclasses ({@link
@@ -349,12 +371,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
 
-        // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
-    if(!DriverStation.isFMSAttached()) {
-      m_robotDrive.setOriginBasedOnAlliance();
-      
-    }
     // RANDOM LED for autonomous
     CommandScheduler.getInstance().schedule(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.RANDOMLED)));
     return m_autoManager.getAutonomousCommand();
@@ -377,6 +396,9 @@ public class RobotContainer {
   
 
   public void periodic() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
+
     m_fieldSim.periodic();
     m_mechanismSimulator.periodic();
 
