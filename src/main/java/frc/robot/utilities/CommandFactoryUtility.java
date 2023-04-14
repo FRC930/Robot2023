@@ -20,7 +20,7 @@ import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class CommandFactoryUtility {
     private final static double INTAKE_EXTEND_VOLTAGE = 6.0;
-    private final static double INTAKE_ROLLER_VOLTAGE = 7.0;
+    private final static double INTAKE_ROLLER_VOLTAGE = 5.0;
     // Conversion factor for Elevator (pulley sizes changed)
     private static double FACTOR = .68;
 
@@ -31,9 +31,9 @@ public class CommandFactoryUtility {
 
     // Extend Ground Intake
     // TODO: Check These Angles
-    public static final double ELEVATOR_GROUNDINTAKE_HEIGHT = 50.0 * FACTOR;  // NO CONVESION FACTOR
-    public static final double ARM_GROUNDINTAKE_ANGLE = -22.0; //changed wednesday night 4/12/23 from -20 to -22 need to test 
-    public static final double MANIPULATOR_GROUNDINTAKE = 250.0;
+    public static final double ELEVATOR_GROUNDINTAKE_HEIGHT = 0.0;
+    public static final double ARM_GROUNDINTAKE_ANGLE = 25.0; //changed wednesday night 4/12/23 from -20 to -22 need to test 
+    public static final double MANIPULATOR_GROUNDINTAKE = -65.0;
 
 
     // Arm Intake UpRight cone
@@ -344,8 +344,10 @@ public class CommandFactoryUtility {
         
         final Command command = 
             createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem)
-            .andThen(new WaitCommand(0.25)) // pause before we intake the peice (TODO:Confirm this time)
-            .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_GROUNDINTAKE_HEIGHT)))
+            .andThen(new WaitCommand(2.0)) // pause before we intake the peice (TODO:Confirm this time)
+            .andThen(
+                new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_GROUNDINTAKE_HEIGHT))
+                )
             .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(0.5))
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
                 ARM_GROUNDINTAKE_ANGLE, 
@@ -379,7 +381,7 @@ public class CommandFactoryUtility {
         
         final Command command = 
             createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
-            .andThen(new WaitCommand(0.25))
+            .andThen(new WaitCommand(2))
             .andThen(createRetractIntakeCommand(extendIntakeSubsystem, intakeSubsystem));
             
 
