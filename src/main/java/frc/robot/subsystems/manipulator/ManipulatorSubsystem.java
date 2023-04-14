@@ -116,6 +116,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
         return m_io.getRollerVoltage();
     }
 
+    public double getRollerCurrent(){
+        return m_io.getRollerCurrent();
+    }
+
     /**<h3>getRollerSpeed</h3>
      * Sets the roller speed
      * @return setRollerSpeed
@@ -135,5 +139,9 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public Command createWaitUntilAtAngleCommand() {
         return Commands.waitUntil(() -> this.atSetPoint());
+    }
+
+    public Command waitUntilCurrentPast(double amps) {
+        return Commands.waitUntil(() -> this.getRollerCurrent() > amps);
     }
 }

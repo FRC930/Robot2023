@@ -77,4 +77,9 @@ public class ManipulatorIOSim implements ManipulatorIO {
     public void setRollerSpeed(double speed) {
         roller.set(speed);
     }
+
+    @Override
+    public double getRollerCurrent() {
+        return roller.getOutputCurrent();
+    }
 }

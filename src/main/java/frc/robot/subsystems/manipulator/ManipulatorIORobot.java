@@ -35,6 +35,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
         manipulator.setIdleMode(IdleMode.kBrake);
         roller.restoreFactoryDefaults();
         roller.setIdleMode(IdleMode.kBrake);
+        
 
         // rollerFollower = new CANSparkMax(manipulatorRollerMotorFollowerID, MotorType.kBrushless);
         // rollerFollower.restoreFactoryDefaults();
@@ -112,5 +113,9 @@ public class ManipulatorIORobot implements ManipulatorIO {
     @Override
     public void setRollerSpeed(double speed) {
         roller.set(speed);
+    }
+    @Override
+    public double getRollerCurrent() {
+        return roller.getOutputCurrent();
     }
 }
