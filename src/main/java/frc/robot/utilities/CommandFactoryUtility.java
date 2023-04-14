@@ -344,7 +344,8 @@ public class CommandFactoryUtility {
         ManipulatorSubsystem m_manipulatorSubsystem) {
         
         final Command command = 
-            createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem)
+            new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
+            .andThen(createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem))
             .andThen(new WaitCommand(2.0)) // pause before we intake the peice (TODO:Confirm this time)
             .andThen(
                 new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_GROUNDINTAKE_HEIGHT))
@@ -356,7 +357,10 @@ public class CommandFactoryUtility {
                 ))
             .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
-        .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED));    
+        .andThen(m_manipulatorSubsystem.waitUntilCurrentPast(8.0))
+        .andThen(new IntakeRollerCommand(0.0, intakeSubsystem))
+        .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
+
 
         return command;
     }
