@@ -19,6 +19,7 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class CommandFactoryUtility {
+    private final static double MANIPULATOR_REDUCTION = 0.0;
     private final static double INTAKE_EXTEND_VOLTAGE = 6.0;
     private final static double INTAKE_ROLLER_VOLTAGE = 5.0;
     // Conversion factor for Elevator (pulley sizes changed)
@@ -27,7 +28,7 @@ public class CommandFactoryUtility {
     //Arm Intake ground/low
     public static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_INTAKE_ANGLE = -24.0;
-    public static final double MANIPULATOR_INTAKE = 17.0;
+    public static final double MANIPULATOR_INTAKE = 17.0 + MANIPULATOR_REDUCTION - 4;
 
     // Extend Ground Intake
     // TODO: Check These Angles
@@ -39,23 +40,23 @@ public class CommandFactoryUtility {
     // Arm Intake UpRight cone
     public static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_UPRIGHT_INTAKE_ANGLE = -15.5;
-    public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
+    public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5 + MANIPULATOR_REDUCTION;
 
     //Arm substation
     public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.2; //29.1; //26.0 * FACTOR; //not sure if correct?
     public static final double ARM_SUBSTATION_ANGLE = 207.7; //209.4; //200.0;
-    public static final double MANIPULATOR_SUBSTATION = 147.7; //155.1; //155.0;
+    public static final double MANIPULATOR_SUBSTATION = 147.7 + MANIPULATOR_REDUCTION; //155.1; //155.0;
 
     //Arm Double substation
     public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 12.2; //14.4 Maybe use these values
     public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 86.5; //80.2
-    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6; //-5.8 //2.8;
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
     public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 13.6;  // NO CONVESION FACTOR
     public static final double ARM_BACK_INTAKE_ANGLE = 197.0;
-    public static final double MANIPULATOR_BACK_INTAKE = 244.0;
+    public static final double MANIPULATOR_BACK_INTAKE = 244.0 + MANIPULATOR_REDUCTION;
 
     //Values for backwards cone pickup in autonomous
     // public static final double AUTO_ELEVATOR_BACK_INTAKE_HEIGHT = 13;  // NO CONVESION FACTOR
@@ -64,22 +65,22 @@ public class CommandFactoryUtility {
 
     public static final double ELEVATOR_BACK_CUBE_INTAKE_HEIGHT = 11.3;  // NO CONVESION FACTOR
     public static final double ARM_BACK_CUBE_INTAKE_ANGLE = 201.0;
-    public static final double MANIPULATOR_BACK_CUBE_INTAKE = 250.0;
+    public static final double MANIPULATOR_BACK_CUBE_INTAKE = 250.0 + MANIPULATOR_REDUCTION;
 
     // High Score
-    public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
+    public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  52.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
-    public static final double MANIPULATOR_HIGH_SCORE = -3.0;
+    public static final double MANIPULATOR_HIGH_SCORE = -3.0 + MANIPULATOR_REDUCTION;
 
     // Mid Score
-    public static final double ELEVATOR_MID_SCORE_HEIGHT =  20.0  * FACTOR; // 1.28/1.756  ;
+    public static final double ELEVATOR_MID_SCORE_HEIGHT =  22.0  * FACTOR; // 1.28/1.756  ;
     public static final double ARM_MID_SCORE_ANGLE = 58.0; 
-    public static final double MANIPULATOR_MID_SCORE = -3.0;
+    public static final double MANIPULATOR_MID_SCORE = -3.0 + MANIPULATOR_REDUCTION;
 
     // Low Score
     public static final double ELEVATOR_LOW_SCORE_HEIGHT = 0.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_LOW_SCORE_ANGLE = 70.0;
-    public static final double MANIPULATOR_LOW_SCORE = -5.0;
+    public static final double MANIPULATOR_LOW_SCORE = -5.0 + MANIPULATOR_REDUCTION;
 
 
 
