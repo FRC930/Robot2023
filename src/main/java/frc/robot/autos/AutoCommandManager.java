@@ -130,7 +130,7 @@ public class AutoCommandManager {
         //     s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
         Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-            s_SwerveDrive, "ThreeScore_ouu", eventCommandMap);
+            s_SwerveDrive, "ThreeMidScore_ouu", eventCommandMap);
         Command NoBumpMConeSMCubeSEngageV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
             s_SwerveDrive, "TwoMidScoreEngage_ou", eventCommandMap,
