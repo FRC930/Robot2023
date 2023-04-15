@@ -257,13 +257,27 @@ public class CommandFactoryUtility {
             MANIPULATOR_BACK_CUBE_INTAKE);
     }
 
+    /**
+   * <h3>createExtendIntakeCommand<h3/>
+   * 
+   * creates the enxtendIntakeCommand and determines whether or not to use the rollers for the ground intake
+   * 
+   * @param ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem subsystem for extending the intake motors
+   * @param IntakeRollerMotorSubsystem intakeRollerMotorSubsystem subsystem for the intake roller motors
+   * @param boolean runRoller determines whether or not to set roller speed or not
+   * 
+   */
     public static Command createExtendIntakeCommand(
         ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem, 
-        IntakeRollerMotorSubsystem intakeRollerMotorSubsystem) {
+        IntakeRollerMotorSubsystem intakeRollerMotorSubsystem, boolean runRoller) {
+            double rollerSpeed = 0.0;
+            if(runRoller ){
+                rollerSpeed = -INTAKE_ROLLER_VOLTAGE;
+            }
         return 
             new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, extendIntakeMotorSubsystem)
                 .withTimeout(0.5)
-            .andThen(new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, intakeRollerMotorSubsystem)); 
+            .andThen(new IntakeRollerCommand(rollerSpeed, intakeRollerMotorSubsystem)); 
     }
 
     public static Command createRetractIntakeCommand(
@@ -345,7 +359,7 @@ public class CommandFactoryUtility {
         
         final Command command = 
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
-            .andThen(createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem))
+            .andThen(createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem, true))
             .andThen(new WaitCommand(0.05)) // pause before we intake the peice
             .andThen(
                 new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_GROUNDINTAKE_HEIGHT))
