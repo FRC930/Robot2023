@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.CommandFactoryUtility;
 import frc.robot.utilities.RobotInformation;
@@ -43,6 +45,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.LEDCommand;
@@ -62,6 +66,8 @@ import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  Alliance alliance = Alliance.Invalid;
 
   private final double INTAKE_EXTEND_VOLTAGE = 6.0;
   private final double INTAKE_ROLLER_VOLTAGE = 7.0;
@@ -158,6 +164,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
+
     // Auto Commands
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighCone", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
@@ -225,6 +234,18 @@ public class RobotContainer {
     //stow arm position as default
   }
 
+  void checkDSUpdate() {
+    Alliance currentAlliance = DriverStation.getAlliance();
+
+    // If we have data, and have a new alliance from last time
+    if (DriverStation.isDSAttached() && currentAlliance != alliance) {
+      m_robotDrive.setOriginBasedOnAlliance();
+      alliance = currentAlliance;
+    }
+
+    Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/currentAlliance", currentAlliance.toString());
+  } 
+  
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its subclasses ({@link
@@ -272,22 +293,10 @@ public class RobotContainer {
       )
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
-    // Intakes from ground or substation
+    // Intakes from substation
     m_driverController.rightBumper().and(m_driverController.b().negate())
-      .whileTrue(
-        new ConditionalCommand(
-          new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem)
-            .withTimeout(0.5)
-            .andThen(new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)),
-          CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-          m_targetScorePositionUtility::isLow)
-      )
-      .onFalse(
-        new ConditionalCommand(
-          new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem),
-          CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-          m_targetScorePositionUtility::isLow)
-      );
+      .whileTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     
     m_driverController.x().and(m_driverController.b().negate())
       .whileTrue(CommandFactoryUtility.createDoubleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
@@ -307,10 +316,12 @@ public class RobotContainer {
     // Will eventually be Intake Handoff (Intake from bottom gives game bject to top)
     // m_codriverController.leftTrigger().onTrue()
 
-    // Substation intake
+    // Back Cone Pickup
     m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createArmBackIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
+    m_codriverController.rightBumper().onTrue(CommandFactoryUtility.createGroundIntakeExtendCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createGroundIntakeRetractCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     // m_codriverController.a().negate()
     //   .and(m_codriverController.y().negate())
     //    .and(m_codriverController.rightTrigger())
@@ -360,12 +371,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
 
-        // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
-    if(!DriverStation.isFMSAttached()) {
-      m_robotDrive.setOriginBasedOnAlliance();
-      
-    }
     // RANDOM LED for autonomous
     CommandScheduler.getInstance().schedule(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.RANDOMLED)));
     return m_autoManager.getAutonomousCommand();
@@ -388,6 +396,9 @@ public class RobotContainer {
   
 
   public void periodic() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
+
     m_fieldSim.periodic();
     m_mechanismSimulator.periodic();
 

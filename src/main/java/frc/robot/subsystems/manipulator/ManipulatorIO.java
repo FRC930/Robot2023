@@ -9,4 +9,5 @@ public interface ManipulatorIO {
     public double getVelocityDegreesPerSecond();
     public void setVoltage(double volts);
     public void setRollerSpeed(double speed);
+    public double getRollerCurrent();
 }

@@ -21,9 +21,9 @@ public class ManipulatorIORobot implements ManipulatorIO {
     private final int FREE_LIMIT = 20;
 
     // TRY to keep offset value away from flipping around to 359 it would flip around in side
-    public final static double SAFE_ZONE_OFFSET = 45.0;
+    public final static double SAFE_ZONE_OFFSET = 70.0;
 
-    private static double manipulatorOffset = (83 - SAFE_ZONE_OFFSET) % 360; // -45 needed to adjust to get angle back to where tested
+    private static double manipulatorOffset = (74 - SAFE_ZONE_OFFSET) % 360; // -45 needed to adjust to get angle back to where tested
 
 
     //----------Constructor---------\\
@@ -35,6 +35,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
         manipulator.setIdleMode(IdleMode.kBrake);
         roller.restoreFactoryDefaults();
         roller.setIdleMode(IdleMode.kBrake);
+        
 
         // rollerFollower = new CANSparkMax(manipulatorRollerMotorFollowerID, MotorType.kBrushless);
         // rollerFollower.restoreFactoryDefaults();
@@ -112,5 +113,9 @@ public class ManipulatorIORobot implements ManipulatorIO {
     @Override
     public void setRollerSpeed(double speed) {
         roller.set(speed);
+    }
+    @Override
+    public double getRollerCurrent() {
+        return roller.getOutputCurrent();
     }
 }
