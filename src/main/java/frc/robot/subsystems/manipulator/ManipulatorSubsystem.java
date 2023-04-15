@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -90,6 +91,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/RawEncoderValue", getRawPosition());
     }
 
     /**<h3>setPosition</h3>
@@ -106,6 +108,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
      */
     public double getPosition(){
         return m_io.getCurrentAngleDegrees();
+    }
+    
+    public double getRawPosition(){
+        return  m_io.getRealCurrentAngleDegrees();
     }
 
     /**<h3>getRollerVoltage</h3>
@@ -141,7 +147,8 @@ public class ManipulatorSubsystem extends SubsystemBase {
         return Commands.waitUntil(() -> this.atSetPoint());
     }
 
-    public Command waitUntilCurrentPast(double amps) {
-        return Commands.waitUntil(() -> this.getRollerCurrent() > amps);
+    public Command waitUntilCurrentPast(double amps) { 
+        Debouncer debouncer = new Debouncer(.1); //Creates a debouncer to confirm amps are greater than value for .1 seconds
+        return Commands.waitUntil(() -> debouncer.calculate(this.getRollerCurrent() > amps));
     }
 }
