@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.autos.AutoCommandManager;
 import frc.robot.utilities.FieldCentricOffset;
@@ -306,5 +307,20 @@ public class SwerveDrive extends SubsystemBase {
    */
   public void setOriginBasedOnAlliance() {
     m_aprilCameraOne.setOriginBasedOnAlliance();
+  }
+
+  /**
+   * sets the desired position of the wheels to a X position
+   */
+  public void lockPose(boolean isOpenLoop) {
+    SmartDashboard.putBoolean("SwerveDrive", true);
+    for (int i = 0; i < mSwerveMods.length; i++) {
+      SwerveModule module = mSwerveMods[i];
+      Translation2d modulePosition = kModuleTranslations[i];
+      SwerveModuleState desiredState = 
+        new SwerveModuleState(0, modulePosition.getAngle());
+        SmartDashboard.putNumber("SwerveDrive/mod"+i+"/angle", modulePosition.getAngle().getDegrees());
+      module.setDesiredState(desiredState, isOpenLoop);
+    }
   }
 }

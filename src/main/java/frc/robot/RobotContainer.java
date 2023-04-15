@@ -25,6 +25,7 @@ import frc.robot.autos.AutoCommandManager;
 import frc.robot.autos.AutoCommandManager.subNames;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.LEDCommand;
+import frc.robot.commands.SwerveLockCommand;
 import frc.robot.commands.LEDCommand.LedPatterns;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.TravelToTarget;
@@ -141,6 +142,8 @@ public class RobotContainer {
   
   //private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
+  private final SwerveLockCommand m_SwerveLockCommand = new SwerveLockCommand(m_robotDrive, true);
+
   // private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
   // private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
   // private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
@@ -302,7 +305,9 @@ public class RobotContainer {
     //Auto balance
     m_driverController.start().whileTrue(m_autoBalanceCommand);
   
-      
+    //Lock wheels in an X position
+    m_driverController.a().toggleOnTrue(m_SwerveLockCommand);
+
     //--CODRIVER CONTROLLER--//
     // Arm intake
     // m_codriverController.leftBumper().whileTrue(m_EjectRoller); // Eject intake button
