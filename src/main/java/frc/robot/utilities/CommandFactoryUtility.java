@@ -80,7 +80,7 @@ public class CommandFactoryUtility {
     // Low Score
     public static final double ELEVATOR_LOW_SCORE_HEIGHT = 0.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_LOW_SCORE_ANGLE = 70.0;
-    public static final double MANIPULATOR_LOW_SCORE = -15.0 + MANIPULATOR_REDUCTION;
+    public static final double MANIPULATOR_LOW_SCORE = -20.0 + MANIPULATOR_REDUCTION;
 
 
 
