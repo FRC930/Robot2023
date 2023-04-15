@@ -359,7 +359,7 @@ public class CommandFactoryUtility {
         
         final Command command = 
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
-            .andThen(createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem))
+            .andThen(createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem, true))
             .andThen(new WaitCommand(0.05)) // pause before we intake the peice (TODO:Confirm this time)
 
             .andThen(
