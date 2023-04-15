@@ -91,6 +91,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/RawEncoderValue", getRawPosition());
     }
 
     /**<h3>setPosition</h3>
@@ -107,6 +108,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
      */
     public double getPosition(){
         return m_io.getCurrentAngleDegrees();
+    }
+    
+    public double getRawPosition(){
+        return  m_io.getRealCurrentAngleDegrees();
     }
 
     /**<h3>getRollerVoltage</h3>
