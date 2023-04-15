@@ -301,12 +301,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.6725541289562402,
-        "y": 1.2091027507470695
+        "x": 1.67,
+        "y": 0.47
       },
       "prevControl": {
-        "x": 2.6055625507925617,
-        "y": 0.8473239749329852
+        "x": 2.6030084218363188,
+        "y": 0.10822122418591551
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -316,7 +316,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreHighCone",
+          "scoreMidCube",
           "stowArm"
         ],
         "executionBehavior": "sequential",

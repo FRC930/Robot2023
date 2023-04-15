@@ -143,9 +143,11 @@ public class AutoCommandManager {
                 s_SwerveDrive, "OneScoreMidBumpEngage_ou", eventCommandMap,
                 new AutoBalanceCommand(s_SwerveDrive, true)); 
         Command ThreeScoreBump_ouu = new PathPlannerCommand(
-            CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-            s_SwerveDrive, "ThreeScoreBump_ouu", eventCommandMap);
-        
+                CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+                s_SwerveDrive, "ThreeScoreBump_ouu", eventCommandMap);
+        Command ThreeScoreLowBump_ouu = new PathPlannerCommand(
+                CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+                s_SwerveDrive, "ThreeScoreLowBump_ouu", eventCommandMap);
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
         Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
@@ -159,6 +161,8 @@ public class AutoCommandManager {
         m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);
         m_chooser.addOption("OneScoreMidBumpEngage_ou", oneScoreMidBumpEngage_ou);
         m_chooser.addOption("ThreeScoreBump_ouu", ThreeScoreBump_ouu);
+        m_chooser.addOption("ThreeScoreLowBump_ouu", ThreeScoreLowBump_ouu);
+
 
         //Adding chooser to Shuffleboard/Smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
