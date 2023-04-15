@@ -4,56 +4,55 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utilities.CommandFactoryUtility;
-import frc.robot.utilities.RobotInformation;
-import frc.robot.utilities.SwerveModuleConstants;
-import frc.robot.utilities.TargetScorePositionUtility;
-// import frc.robot.utilities.TimeOfFlightUtility;
-import frc.robot.utilities.RobotInformation.WhichRobot;
-import frc.robot.utilities.TargetScorePositionUtility.Target;
-import frc.robot.simulation.FieldSim;
-import frc.robot.simulation.MechanismSimulator;
-import frc.robot.subsystems.LEDsubsystem;
-import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.ExtendIntakeCommand;
-import frc.robot.commands.IntakeRollerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autos.AutoCommandManager;
+import frc.robot.autos.AutoCommandManager.subNames;
+import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.LEDCommand;
+import frc.robot.commands.SwerveLockCommand;
+import frc.robot.commands.LEDCommand.LedPatterns;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.TravelToTarget;
+import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
+import frc.robot.simulation.FieldSim;
+import frc.robot.simulation.MechanismSimulator;
+import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
+import frc.robot.subsystems.IntakeRollerMotorSubsystem;
+import frc.robot.subsystems.LEDsubsystem;
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIORobot;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorIORobot;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
-import frc.robot.subsystems.arm.ArmIO;
-import frc.robot.subsystems.arm.ArmIORobot;
-import frc.robot.subsystems.arm.ArmIOSim;
-import frc.robot.subsystems.arm.ArmSubsystem;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import frc.robot.autos.AutoCommandManager;
-import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.LEDCommand;
-import frc.robot.commands.RotateCommand;
-import frc.robot.autos.AutoCommandManager.subNames;
-import frc.robot.commands.TeleopSwerve;
-import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
-import frc.robot.subsystems.IntakeRollerMotorSubsystem;
-import frc.robot.commands.TravelToTarget;
-import frc.robot.commands.LEDCommand.LedPatterns;
-import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
+import frc.robot.utilities.CommandFactoryUtility;
+import frc.robot.utilities.RobotInformation;
+// import frc.robot.utilities.TimeOfFlightUtility;
+import frc.robot.utilities.RobotInformation.WhichRobot;
+import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.utilities.TargetScorePositionUtility;
+import frc.robot.utilities.TargetScorePositionUtility.Target;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -62,6 +61,8 @@ import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  Alliance alliance = Alliance.Invalid;
 
   private final double INTAKE_EXTEND_VOLTAGE = 6.0;
   private final double INTAKE_ROLLER_VOLTAGE = 7.0;
@@ -141,6 +142,8 @@ public class RobotContainer {
   
   //private final RotateCommand m_rotateCommand = new RotateCommand(new Pose2d( 8.2423, 4.0513, new Rotation2d(0.0)), m_robotDrive);
   private final AutoBalanceCommand m_autoBalanceCommand = new AutoBalanceCommand(m_robotDrive);
+  private final SwerveLockCommand m_SwerveLockCommand = new SwerveLockCommand(m_robotDrive, true);
+
   // private final ExtendIntakeCommand m_ExtendIntakeCommand = new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
   // private final ExtendIntakeCommand m_RetractIntakeCommand = new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem);
   // private final IntakeRollerCommand m_IntakeRoller = new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem);
@@ -158,6 +161,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
+
     // Auto Commands
     CommandFactoryUtility.addAutoCommandEvent(eventCommandMap, "scoreHighCone", 
         m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
@@ -228,6 +234,18 @@ public class RobotContainer {
     //stow arm position as default
   }
 
+  void checkDSUpdate() {
+    Alliance currentAlliance = DriverStation.getAlliance();
+
+    // If we have data, and have a new alliance from last time
+    if (DriverStation.isDSAttached() && currentAlliance != alliance) {
+      m_robotDrive.setOriginBasedOnAlliance();
+      alliance = currentAlliance;
+    }
+
+    Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/currentAlliance", currentAlliance.toString());
+  } 
+  
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its subclasses ({@link
@@ -275,22 +293,10 @@ public class RobotContainer {
       )
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
-    // Intakes from ground or substation
+    // Intakes from substation
     m_driverController.rightBumper().and(m_driverController.b().negate())
-      .whileTrue(
-        new ConditionalCommand(
-          new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem)
-            .withTimeout(0.5)
-            .andThen(new IntakeRollerCommand(-INTAKE_ROLLER_VOLTAGE, m_IntakeRollerMotorSubsystem)),
-          CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-          m_targetScorePositionUtility::isLow)
-      )
-      .onFalse(
-        new ConditionalCommand(
-          new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, m_ExtendIntakeMotorSubsystem),
-          CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-          m_targetScorePositionUtility::isLow)
-      );
+      .whileTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
     
     m_driverController.x().and(m_driverController.b().negate())
       .whileTrue(CommandFactoryUtility.createDoubleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
@@ -302,7 +308,9 @@ public class RobotContainer {
     //Auto balance
     m_driverController.start().whileTrue(m_autoBalanceCommand);
   
-      
+    //Lock wheels in an X position
+    m_driverController.a().toggleOnTrue(m_SwerveLockCommand);
+
     //--CODRIVER CONTROLLER--//
     // Arm intake
     // m_codriverController.leftBumper().whileTrue(m_EjectRoller); // Eject intake button
@@ -310,22 +318,17 @@ public class RobotContainer {
     // Will eventually be Intake Handoff (Intake from bottom gives game bject to top)
     // m_codriverController.leftTrigger().onTrue()
 
-    // Substation intake
+    // Back Cone Pickup
     m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createArmBackIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
-    // m_codriverController.a().negate()
-    //   .and(m_codriverController.y().negate())
-    //    .and(m_codriverController.rightTrigger())
-    //      .whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
-    // m_codriverController.y()
-    //   .and(m_codriverController.rightTrigger())
-    //   .whileTrue(m_HighPitchIntakeCommand); 
-    // m_codriverController.a()
-    //   .and(m_codriverController.rightTrigger())
-    //   .whileTrue(m_LowPitchIntakeCommand);
-    // m_codriverController.rightTrigger().negate().onTrue(m_RetractIntakeCommand);
+    m_codriverController.rightBumper().onTrue(CommandFactoryUtility.createGroundIntakeExtendCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+      .onFalse(CommandFactoryUtility.createGroundIntakeRetractCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
   
+       m_codriverController.a().onTrue(CommandFactoryUtility.createExtendIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, false))
+      .onFalse(CommandFactoryUtility.createRetractIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem));
+
+
     //Arm positions
     m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
     m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
@@ -363,12 +366,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
 
-        // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
-    if(!DriverStation.isFMSAttached()) {
-      m_robotDrive.setOriginBasedOnAlliance();
-      
-    }
     // RANDOM LED for autonomous
     CommandScheduler.getInstance().schedule(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.RANDOMLED)));
     return m_autoManager.getAutonomousCommand();
@@ -391,6 +391,9 @@ public class RobotContainer {
   
 
   public void periodic() {
+    // If not FMS controlled add to teleop init too (for practice match and Red/Blue alliance need to be correctly set)
+    checkDSUpdate();
+
     m_fieldSim.periodic();
     m_mechanismSimulator.periodic();
 

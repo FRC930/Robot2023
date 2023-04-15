@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,11 +30,11 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static double INTAKE_POSITION = CommandFactoryUtility.MANIPULATOR_INTAKE; // low intake Position
     public static final double SUBSTATION_POSITION = CommandFactoryUtility.MANIPULATOR_SUBSTATION;//-125; want position to force long way if continuousinput commented out
 
-    public static final double ROLLER_INTAKE_SPEED = 1.0;
-    public static final double DOUBLE_SUBSTATION_ROLLER_INTAKE_SPEED = 1.0;
+    public static final double ROLLER_INTAKE_SPEED = 0.8; //1.0 larger gear
+    public static final double DOUBLE_SUBSTATION_ROLLER_INTAKE_SPEED = 1.0; //1.0 larger gear
     public static final double SHOOT_SPEED = -1.0;
-    public static final double RELEASE_SPEED = -0.7;
-    public static final double HOLD_SPEED = 0.25;
+    public static final double RELEASE_SPEED = -0.35; //-0.7 larger gear
+    public static final double HOLD_SPEED = 0.15; //0.25 larger gear
    
 
     /**<h3>ManipulatorSubsystem</h3>
@@ -44,12 +45,12 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         // Sets up PID controller TODO: Change these values
         // controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
-        controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(540, 720));
+        controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(540, 720)); //0.2
         controller.setTolerance(1, 1);
         //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!
 
         // Sets up Feetforward TODO: Change these values
-        ff = new ArmFeedforward(0.0, 0.35, 0);
+        ff = new ArmFeedforward(0.0, 0.35, 0); //g 0.35
 
         m_io = io;
 
@@ -90,6 +91,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
+        SmartDashboard.putNumber(this.getClass().getSimpleName()+"/RawEncoderValue", getRawPosition());
     }
 
     /**<h3>setPosition</h3>
@@ -107,6 +109,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public double getPosition(){
         return m_io.getCurrentAngleDegrees();
     }
+    
+    public double getRawPosition(){
+        return  m_io.getRealCurrentAngleDegrees();
+    }
 
     /**<h3>getRollerVoltage</h3>
      * Gets the voltage of the roller
@@ -114,6 +120,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
      */
     public double getRollerVoltage() {
         return m_io.getRollerVoltage();
+    }
+
+    public double getRollerCurrent(){
+        return m_io.getRollerCurrent();
     }
 
     /**<h3>getRollerSpeed</h3>
@@ -135,5 +145,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public Command createWaitUntilAtAngleCommand() {
         return Commands.waitUntil(() -> this.atSetPoint());
+    }
+
+    public Command waitUntilCurrentPast(double amps) { 
+        Debouncer debouncer = new Debouncer(.1); //Creates a debouncer to confirm amps are greater than value for .1 seconds
+        return Commands.waitUntil(() -> debouncer.calculate(this.getRollerCurrent() > amps));
     }
 }

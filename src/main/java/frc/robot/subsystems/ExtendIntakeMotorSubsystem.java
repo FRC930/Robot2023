@@ -14,7 +14,7 @@ public class ExtendIntakeMotorSubsystem extends SubsystemBase{
 
      // -------- CONSTANTS --------\\
     private final int m_freeLimit = 30;
-    private final int m_stallLimit = 5;
+    private final int m_stallLimit = 10;
 
     // -------- DECLARATIONS --------\\
     private final SparkMaxWrapper m_intakeMotor;

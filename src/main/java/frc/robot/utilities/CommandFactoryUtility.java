@@ -19,35 +19,44 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
 
 public class CommandFactoryUtility {
-
+    private final static double MANIPULATOR_REDUCTION = 0.0;
+    private final static double INTAKE_EXTEND_VOLTAGE = 6.0;
+    private final static double INTAKE_ROLLER_VOLTAGE = 5.0;
     // Conversion factor for Elevator (pulley sizes changed)
     private static double FACTOR = .68;
 
     //Arm Intake ground/low
     public static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_INTAKE_ANGLE = -24.0;
-    public static final double MANIPULATOR_INTAKE = 17.0;
+    public static final double MANIPULATOR_INTAKE = 17.0 + MANIPULATOR_REDUCTION - 4;
+
+    // Extend Ground Intake
+    // TODO: Check These Angles
+    public static final double ELEVATOR_GROUNDINTAKE_HEIGHT = 0.0;
+    public static final double ARM_GROUNDINTAKE_ANGLE = 25.0; //changed wednesday night 4/12/23 from -20 to -22 need to test 
+    public static final double MANIPULATOR_GROUNDINTAKE = -65.0;
+
 
     // Arm Intake UpRight cone
     public static final double ELEVATOR_UPRIGHT_INTAKE_HEIGHT = 17.4 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_UPRIGHT_INTAKE_ANGLE = -15.5;
-    public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5;
+    public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5 + MANIPULATOR_REDUCTION;
 
     //Arm substation
     public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.2; //29.1; //26.0 * FACTOR; //not sure if correct?
     public static final double ARM_SUBSTATION_ANGLE = 207.7; //209.4; //200.0;
-    public static final double MANIPULATOR_SUBSTATION = 147.7; //155.1; //155.0;
+    public static final double MANIPULATOR_SUBSTATION = 147.7 + MANIPULATOR_REDUCTION; //155.1; //155.0;
 
     //Arm Double substation
     public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 12.2; //14.4 Maybe use these values
     public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 86.5; //80.2
-    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6; //-5.8
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
     public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 13.6;  // NO CONVESION FACTOR
     public static final double ARM_BACK_INTAKE_ANGLE = 197.0;
-    public static final double MANIPULATOR_BACK_INTAKE = 244.0;
+    public static final double MANIPULATOR_BACK_INTAKE = 244.0 + MANIPULATOR_REDUCTION;
 
     //Values for backwards cone pickup in autonomous
     // public static final double AUTO_ELEVATOR_BACK_INTAKE_HEIGHT = 13;  // NO CONVESION FACTOR
@@ -56,24 +65,22 @@ public class CommandFactoryUtility {
 
     public static final double ELEVATOR_BACK_CUBE_INTAKE_HEIGHT = 11.3;  // NO CONVESION FACTOR
     public static final double ARM_BACK_CUBE_INTAKE_ANGLE = 201.0;
-    public static final double MANIPULATOR_BACK_CUBE_INTAKE = 250.0;
+    public static final double MANIPULATOR_BACK_CUBE_INTAKE = 250.0 + MANIPULATOR_REDUCTION;
 
     // High Score
-    public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
+    public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  52.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
-    public static final double MANIPULATOR_HIGH_SCORE = -3.0;
+    public static final double MANIPULATOR_HIGH_SCORE = -3.0 + MANIPULATOR_REDUCTION;
 
     // Mid Score
-    public static final double ELEVATOR_MID_SCORE_HEIGHT =  20.0  * FACTOR; // 1.28/1.756  ;
+    public static final double ELEVATOR_MID_SCORE_HEIGHT =  22.0  * FACTOR; // 1.28/1.756  ;
     public static final double ARM_MID_SCORE_ANGLE = 58.0; 
-    public static final double MANIPULATOR_MID_SCORE = -3.0;
+    public static final double MANIPULATOR_MID_SCORE = -3.0 + MANIPULATOR_REDUCTION;
 
     // Low Score
     public static final double ELEVATOR_LOW_SCORE_HEIGHT = 0.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_LOW_SCORE_ANGLE = 70.0;
-    public static final double MANIPULATOR_LOW_SCORE = -5.0;
-
-
+    public static final double MANIPULATOR_LOW_SCORE = -15.0 + MANIPULATOR_REDUCTION;
 
 
 
@@ -250,18 +257,35 @@ public class CommandFactoryUtility {
             MANIPULATOR_BACK_CUBE_INTAKE);
     }
 
+    /**
+   * <h3>createExtendIntakeCommand<h3/>
+   * 
+   * creates the enxtendIntakeCommand and determines whether or not to use the rollers for the ground intake
+   * 
+   * @param ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem subsystem for extending the intake motors
+   * @param IntakeRollerMotorSubsystem intakeRollerMotorSubsystem subsystem for the intake roller motors
+   * @param boolean runRoller determines whether or not to set roller speed or not
+   * 
+   */
     public static Command createExtendIntakeCommand(
         ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem, 
-        IntakeRollerMotorSubsystem intakeRollerMotorSubsystem) {
-        return new ExtendIntakeCommand(-6, 
-            extendIntakeMotorSubsystem)
-            .andThen(createIntakeRollerCommand(intakeRollerMotorSubsystem));
+        IntakeRollerMotorSubsystem intakeRollerMotorSubsystem, boolean runRoller) {
+            double rollerSpeed = 0.0;
+            if(runRoller ){
+                rollerSpeed = -INTAKE_ROLLER_VOLTAGE;
+            }
+        return 
+            new ExtendIntakeCommand(-INTAKE_EXTEND_VOLTAGE, extendIntakeMotorSubsystem)
+                .withTimeout(0.5)
+            .andThen(new IntakeRollerCommand(rollerSpeed, intakeRollerMotorSubsystem)); 
     }
 
-    public static Command createIntakeRollerCommand(
-        IntakeRollerMotorSubsystem m_IntakeRollerMotorSubsystem) {
-        return new IntakeRollerCommand(2, 
-        m_IntakeRollerMotorSubsystem);
+    public static Command createRetractIntakeCommand(
+        ExtendIntakeMotorSubsystem extendIntakeMotorSubsystem, 
+        IntakeRollerMotorSubsystem intakeRollerMotorSubsystem) {
+        return new ExtendIntakeCommand(INTAKE_EXTEND_VOLTAGE, extendIntakeMotorSubsystem)
+            .withTimeout(0.5)
+        .andThen(new IntakeRollerCommand(0.0, intakeRollerMotorSubsystem));
     }
 
     public static Command createSingleSubstationCommand(
@@ -316,6 +340,77 @@ public class CommandFactoryUtility {
 
         return command;
     }
+    /**<h3>createGroundIntakeExtendCommand</h3>
+     * Extends the ground intake and positions the arm in order to pick up a game peice
+     * 
+     * @param extendIntakeSubsystem
+     * @param intakeSubsystem
+     * @param m_elevatorSubsystem
+     * @param m_armSubsystem
+     * @param m_manipulatorSubsystem
+     * @return
+     */
+    public static Command createGroundIntakeExtendCommand(
+        ExtendIntakeMotorSubsystem extendIntakeSubsystem,
+        IntakeRollerMotorSubsystem intakeSubsystem,
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        
+        final Command command = 
+            new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
+            .andThen(createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem))
+            .andThen(new WaitCommand(0.05)) // pause before we intake the peice (TODO:Confirm this time)
+
+            .andThen(
+                new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_GROUNDINTAKE_HEIGHT))
+                )
+            .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand().withTimeout(0.5))
+            .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, 
+                ARM_GROUNDINTAKE_ANGLE, 
+                MANIPULATOR_GROUNDINTAKE
+                ))
+            .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+            .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
+        .andThen(m_manipulatorSubsystem.waitUntilCurrentPast(8.0))
+        .andThen(new IntakeRollerCommand(0.0, intakeSubsystem))
+        .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED))
+        .andThen(createGroundIntakeRetractCommand(extendIntakeSubsystem, intakeSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+
+
+        return command;
+    }
+
+
+    /**<h3>createGroundIntakeRetractCommand</h3>
+     * 
+     * Retracts the ground intake and puts the arm in the stow position
+     * 
+     * @param extendIntakeSubsystem
+     * @param intakeSubsystem
+     * @param m_elevatorSubsystem
+     * @param m_armSubsystem
+     * @param m_manipulatorSubsystem
+     * @return
+     */
+    public static Command createGroundIntakeRetractCommand(
+        ExtendIntakeMotorSubsystem extendIntakeSubsystem,
+        IntakeRollerMotorSubsystem intakeSubsystem,
+        ElevatorSubsystem m_elevatorSubsystem,
+        ArmSubsystem m_armSubsystem,
+        ManipulatorSubsystem m_manipulatorSubsystem) {
+        
+        final Command command = 
+            createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+            //.andThen(new WaitCommand(0.1))
+            .andThen(createRetractIntakeCommand(extendIntakeSubsystem, intakeSubsystem));
+            
+
+        return command;
+    }
+
+    
+    
     //Create command for pitch intake
 
 

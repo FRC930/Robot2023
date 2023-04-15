@@ -38,9 +38,9 @@ public class ElevatorSubsystem extends SubsystemBase{
         //45
         // this.controller = new ProfiledPIDController(30.0, 0.0, 0.0, 
         //          new Constraints(Units.inchesToMeters(110.0), Units.inchesToMeters(90.0))); //This is in meters //110 175
-        this.controller = new PIDController(30.0, 0.0, 0.0);
-        this.ff = new ElevatorFeedforward(0.0, 0.3, 0.0, 0.0);
-        this.topff = new ElevatorFeedforward(0, 0.3, 0.0, 0.0);
+        this.controller = new PIDController(30, 0, 0.3);
+        this.ff = new ElevatorFeedforward(0.0, 0.35, 0.0, 0.0);
+        this.topff = new ElevatorFeedforward(0, 0.35, 0.0, 0.0);
         // TODO set tolerance
         this.controller.setTolerance(0.5, 0.5);
     }
