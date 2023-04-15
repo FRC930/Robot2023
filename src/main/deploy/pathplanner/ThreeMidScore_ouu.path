@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.01,
+        "x": 7.0135513192641605,
         "y": 4.5983986504790115
       },
       "prevControl": {
-        "x": 7.196976161804437,
-        "y": 4.562911738597439
+        "x": 5.611009571584151,
+        "y": 4.761179384887861
       },
       "nextControl": {
-        "x": 2.824639331070931,
-        "y": 5.392754058235389
+        "x": 7.4686309372618735,
+        "y": 4.545581545708546
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.57,
-        "y": 4.43
+        "x": 1.565751495139354,
+        "y": 4.38
       },
       "prevControl": {
-        "x": 1.427122672096084,
-        "y": 4.373537634274115
+        "x": 3.524268593991735,
+        "y": 5.208953748816588
       },
       "nextControl": {
-        "x": 5.350393469877848,
-        "y": 5.923938624240885
+        "x": 1.2543434556612891,
+        "y": 4.248194736779052
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -77,20 +77,20 @@
     },
     {
       "anchorPoint": {
-        "x": 7.03,
-        "y": 3.41
+        "x": 7.032592307464901,
+        "y": 3.4083368879326836
       },
       "prevControl": {
-        "x": 7.1457989048174095,
-        "y": 3.4076966948667473
+        "x": 5.701410857367169,
+        "y": 6.194379661486597
       },
       "nextControl": {
-        "x": 6.746565616812075,
-        "y": 3.415637668773867
+        "x": 7.155869227636656,
+        "y": 3.1503294070101653
       },
       "holonomicAngle": 138.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -102,16 +102,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.385546828100782,
-        "y": 3.1512835472226777
+        "x": 4.763144526289053,
+        "y": 5.02
       },
       "prevControl": {
-        "x": 6.394577504856349,
-        "y": 3.1512835472226777
+        "x": 6.2173796338281635,
+        "y": 5.153445805522542
       },
       "nextControl": {
-        "x": 4.804796687978175,
-        "y": 3.1512835472226777
+        "x": 2.878284683224108,
+        "y": 4.8470385312863655
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -127,12 +127,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.9107049778080607,
-        "y": 3.1628119180408976
+        "x": 1.57,
+        "y": 4.38
       },
       "prevControl": {
-        "x": 4.0699320700243025,
-        "y": 3.191218211565055
+        "x": 2.3491583346803058,
+        "y": 4.595784746114948
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -141,7 +141,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "manipulatorHold",
+          "scoreHighCone"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -159,39 +162,15 @@
       ]
     },
     {
-      "position": 0.1818181818180911,
+      "position": 0.16,
       "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 0.2,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 0.23,
-      "names": [
-        "backCubeIntakeManipulatorPos"
+        "backCubeIntake"
       ]
     },
     {
       "position": 2.0363636363636646,
       "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 2.04,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 2.05,
-      "names": [
-        "backCubeIntakeManipulatorPos"
+        "backCubeIntake"
       ]
     },
     {
@@ -201,13 +180,13 @@
       ]
     },
     {
-      "position": 3.121212121212156,
+      "position": 3.2363636363638646,
       "names": [
         "stowArm"
       ]
     },
     {
-      "position": 1.0454545454545452,
+      "position": 1.1636363636361962,
       "names": [
         "stowArm"
       ]
