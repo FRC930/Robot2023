@@ -82,4 +82,9 @@ public class ManipulatorIOSim implements ManipulatorIO {
     public double getRollerCurrent() {
         return roller.getOutputCurrent();
     }
+
+    @Override
+    public double getRealCurrentAngleDegrees() {
+        return 0.0;
+    }
 }

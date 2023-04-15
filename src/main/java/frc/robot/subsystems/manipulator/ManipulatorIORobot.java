@@ -23,7 +23,7 @@ public class ManipulatorIORobot implements ManipulatorIO {
     // TRY to keep offset value away from flipping around to 359 it would flip around in side
     public final static double SAFE_ZONE_OFFSET = 70.0;
 
-    private static double manipulatorOffset = (74 - SAFE_ZONE_OFFSET) % 360; // -45 needed to adjust to get angle back to where tested
+    private static double manipulatorOffset = (74 - SAFE_ZONE_OFFSET);// % 360; // -45 needed to adjust to get angle back to where tested
 
 
     //----------Constructor---------\\
@@ -77,6 +77,17 @@ public class ManipulatorIORobot implements ManipulatorIO {
     public double getCurrentAngleDegrees() {
         return manipulatorEncoder.getPosition() - SAFE_ZONE_OFFSET;
     }
+
+    /**
+     * <h3>getCurrentAngleDegrees</h3>
+     * returns manipulator position
+     * @return manipulatorEncoder position
+     */
+    @Override
+    public double getRealCurrentAngleDegrees() {
+        return manipulatorEncoder.getPosition();
+    }
+    
      /**
      * <h3>getVelocityDegreesPerSecond</h3>
      * 
