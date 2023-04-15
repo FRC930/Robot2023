@@ -346,7 +346,7 @@ public class CommandFactoryUtility {
         final Command command = 
             new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
             .andThen(createExtendIntakeCommand(extendIntakeSubsystem, intakeSubsystem))
-            .andThen(new WaitCommand(2.0)) // pause before we intake the peice (TODO:Confirm this time)
+            .andThen(new WaitCommand(0.5)) // pause before we intake the peice (TODO:Confirm this time)
             .andThen(
                 new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_GROUNDINTAKE_HEIGHT))
                 )
