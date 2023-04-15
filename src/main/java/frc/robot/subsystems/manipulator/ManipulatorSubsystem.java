@@ -148,7 +148,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     }
 
     public Command waitUntilCurrentPast(double amps) { 
-        Debouncer debouncer = new Debouncer(.1); //Creates a debouncer to confirm amps are greater than value for .1 seconds
+        Debouncer debouncer = new Debouncer(.04); //Creates a debouncer to confirm amps are greater than value for .1 seconds
         return Commands.waitUntil(() -> debouncer.calculate(this.getRollerCurrent() > amps));
     }
 }
