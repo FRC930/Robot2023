@@ -4,60 +4,54 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utilities.CommandFactoryUtility;
-import frc.robot.utilities.RobotInformation;
-import frc.robot.utilities.SwerveModuleConstants;
-import frc.robot.utilities.TargetScorePositionUtility;
-// import frc.robot.utilities.TimeOfFlightUtility;
-import frc.robot.utilities.RobotInformation.WhichRobot;
-import frc.robot.utilities.TargetScorePositionUtility.Target;
-import frc.robot.simulation.FieldSim;
-import frc.robot.simulation.MechanismSimulator;
-import frc.robot.subsystems.LEDsubsystem;
-import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.ExtendIntakeCommand;
-import frc.robot.commands.IntakeRollerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autos.AutoCommandManager;
+import frc.robot.autos.AutoCommandManager.subNames;
+import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.LEDCommand;
+import frc.robot.commands.LEDCommand.LedPatterns;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.TravelToTarget;
+import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
+import frc.robot.simulation.FieldSim;
+import frc.robot.simulation.MechanismSimulator;
+import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
+import frc.robot.subsystems.IntakeRollerMotorSubsystem;
+import frc.robot.subsystems.LEDsubsystem;
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIORobot;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorIORobot;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.manipulator.ManipulatorIORobot;
 import frc.robot.subsystems.manipulator.ManipulatorIOSim;
 import frc.robot.subsystems.manipulator.ManipulatorSubsystem;
-import frc.robot.subsystems.arm.ArmIO;
-import frc.robot.subsystems.arm.ArmIORobot;
-import frc.robot.subsystems.arm.ArmIOSim;
-import frc.robot.subsystems.arm.ArmSubsystem;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.littletonrobotics.junction.Logger;
-
-import frc.robot.autos.AutoCommandManager;
-import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.LEDCommand;
-import frc.robot.commands.RotateCommand;
-import frc.robot.autos.AutoCommandManager.subNames;
-import frc.robot.commands.TeleopSwerve;
-import frc.robot.subsystems.ExtendIntakeMotorSubsystem;
-import frc.robot.subsystems.IntakeRollerMotorSubsystem;
-import frc.robot.commands.TravelToTarget;
-import frc.robot.commands.LEDCommand.LedPatterns;
-import frc.robot.commands.armcommands.RunManipulatorRollerCommand;
+import frc.robot.utilities.CommandFactoryUtility;
+import frc.robot.utilities.RobotInformation;
+// import frc.robot.utilities.TimeOfFlightUtility;
+import frc.robot.utilities.RobotInformation.WhichRobot;
+import frc.robot.utilities.SwerveModuleConstants;
+import frc.robot.utilities.TargetScorePositionUtility;
+import frc.robot.utilities.TargetScorePositionUtility.Target;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -322,18 +316,11 @@ public class RobotContainer {
 
     m_codriverController.rightBumper().onTrue(CommandFactoryUtility.createGroundIntakeExtendCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createGroundIntakeRetractCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
-    // m_codriverController.a().negate()
-    //   .and(m_codriverController.y().negate())
-    //    .and(m_codriverController.rightTrigger())
-    //      .whileTrue(m_ExtendIntakeCommand.alongWith(m_IntakeRoller));
-    // m_codriverController.y()
-    //   .and(m_codriverController.rightTrigger())
-    //   .whileTrue(m_HighPitchIntakeCommand); 
-    // m_codriverController.a()
-    //   .and(m_codriverController.rightTrigger())
-    //   .whileTrue(m_LowPitchIntakeCommand);
-    // m_codriverController.rightTrigger().negate().onTrue(m_RetractIntakeCommand);
   
+       m_codriverController.a().onTrue(CommandFactoryUtility.createExtendIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, false))
+      .onFalse(CommandFactoryUtility.createRetractIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem));
+
+
     //Arm positions
     m_codriverController.povUp().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.high));
     m_codriverController.povLeft().toggleOnTrue(m_targetScorePositionUtility.setDesiredTargetCommand(Target.medium));
