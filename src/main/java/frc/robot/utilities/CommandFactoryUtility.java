@@ -33,7 +33,7 @@ public class CommandFactoryUtility {
     // Extend Ground Intake
     // TODO: Check These Angles
     public static final double ELEVATOR_GROUNDINTAKE_HEIGHT = 0.0;
-    public static final double ARM_GROUNDINTAKE_ANGLE = 25.0; //changed wednesday night 4/12/23 from -20 to -22 need to test 
+    public static final double ARM_GROUNDINTAKE_ANGLE = 30.0; //changed wednesday night 4/12/23 from -20 to -22 need to test 
     public static final double MANIPULATOR_GROUNDINTAKE = -70.0;
 
 
@@ -375,8 +375,11 @@ public class CommandFactoryUtility {
 
         .andThen(m_manipulatorSubsystem.waitUntilCurrentPast(10.0))
         .andThen(new IntakeRollerCommand(0.0, intakeSubsystem))
-        .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED))
-        .andThen(createGroundIntakeRetractCommand(extendIntakeSubsystem, intakeSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+        .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED))
+        .andThen(createGroundIntakeRetractCommand(extendIntakeSubsystem, intakeSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+        .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED));
+        // .andThen(new WaitCommand(0.75))
+        // .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
 
 
         return command;
