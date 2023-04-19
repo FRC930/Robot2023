@@ -48,9 +48,9 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_SUBSTATION = 147.7 + MANIPULATOR_REDUCTION; //155.1; //155.0;
 
     //Arm Double substation
-    public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 12.2; //14.4 Maybe use these values
-    public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 86.5; //80.2
-    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
+    public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 0.0; //12.2; //14.4 Maybe use these values
+    public static final double ARM_DOUBLE_SUBSTATION_ANGLE = ArmSubsystem.STOW_POSITION; //86.5; //80.2
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = ManipulatorSubsystem.STOW_POSITION; // 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
