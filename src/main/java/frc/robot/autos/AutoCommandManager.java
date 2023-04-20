@@ -122,6 +122,10 @@ public class AutoCommandManager {
                 .andThen(new WaitCommand(1.0)), 
             s_SwerveDrive, "OneScoreHighEngage_o", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
+        Command OneScoreBumpCommand = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                .andThen(new WaitCommand(1.0)), 
+            s_SwerveDrive, "OneScoreBump_o", eventCommandMap);
         Command ScoreHighConeCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "OneScoreMid_o", eventCommandMap);  
@@ -155,6 +159,7 @@ public class AutoCommandManager {
 
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
         m_chooser.addOption("ScoreHighEngage", ScoreHighEngageCommand);
+        m_chooser.addOption("OneScoreBump_o", OneScoreBumpCommand);
         // m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
         m_chooser.addOption("ThreeScoreMid_ouu", NoBumpMConeSMCubeSCubeSV3);
         m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3);

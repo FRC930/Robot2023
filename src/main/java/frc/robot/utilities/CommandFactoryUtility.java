@@ -69,18 +69,18 @@ public class CommandFactoryUtility {
 
     // High Score
     public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
-    public static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
+    public static final double ARM_HIGH_SCORE_ANGLE = 52.0; 
     public static final double MANIPULATOR_HIGH_SCORE = -3.0 + MANIPULATOR_REDUCTION;
 
     // Mid Score
     public static final double ELEVATOR_MID_SCORE_HEIGHT =  22.0  * FACTOR; // 1.28/1.756  ;
     public static final double ARM_MID_SCORE_ANGLE = 58.0; 
-    public static final double MANIPULATOR_MID_SCORE = -3.0 + MANIPULATOR_REDUCTION;
+    public static final double MANIPULATOR_MID_SCORE = -6.0 + MANIPULATOR_REDUCTION;
 
     // Low Score
     public static final double ELEVATOR_LOW_SCORE_HEIGHT = 0.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_LOW_SCORE_ANGLE = 70.0;
-    public static final double MANIPULATOR_LOW_SCORE = -20.0 + MANIPULATOR_REDUCTION;
+    public static final double MANIPULATOR_LOW_SCORE = -25.0 + MANIPULATOR_REDUCTION;
 
 
 

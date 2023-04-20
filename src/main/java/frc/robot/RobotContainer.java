@@ -273,7 +273,7 @@ public class RobotContainer {
     m_driverController.povUp().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(15.0)));
     m_driverController.povDown().toggleOnTrue(new InstantCommand(()->armio.adjustOffsetDegrees(-15.0)));
 
-    m_driverController.leftTrigger()
+    m_codriverController.rightBumper()
       .onTrue(CommandFactoryUtility.createArmBackCubeIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
@@ -322,7 +322,7 @@ public class RobotContainer {
     m_codriverController.leftTrigger().onTrue(CommandFactoryUtility.createArmBackIntakeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
 
-    m_codriverController.rightBumper().onTrue(CommandFactoryUtility.createGroundIntakeExtendCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
+    m_driverController.leftTrigger().onTrue(CommandFactoryUtility.createGroundIntakeExtendCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
       .onFalse(CommandFactoryUtility.createGroundIntakeRetractCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
   
        m_codriverController.a().onTrue(CommandFactoryUtility.createExtendIntakeCommand(m_ExtendIntakeMotorSubsystem, m_IntakeRollerMotorSubsystem, false))
