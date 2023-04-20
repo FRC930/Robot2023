@@ -31,7 +31,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public static final double SUBSTATION_POSITION = CommandFactoryUtility.MANIPULATOR_SUBSTATION;//-125; want position to force long way if continuousinput commented out
 
     public static final double ROLLER_INTAKE_SPEED = 0.8; //1.0 larger gear
-    public static final double DOUBLE_SUBSTATION_ROLLER_INTAKE_SPEED = 1.0; //1.0 larger gear
+    public static final double DOUBLE_SUBSTATION_ROLLER_INTAKE_SPEED = 0.7; //1.0 larger gear
     public static final double SHOOT_SPEED = -1.0;
     public static final double RELEASE_SPEED = -0.35; //-0.7 larger gear
     public static final double HOLD_SPEED = 0.15; //0.25 larger gear

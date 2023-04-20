@@ -49,8 +49,8 @@ public class CommandFactoryUtility {
 
     //Arm Double substation
     public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 0.0; //12.2; //14.4 Maybe use these values
-    public static final double ARM_DOUBLE_SUBSTATION_ANGLE = ArmSubsystem.STOW_POSITION; //86.5; //80.2
-    public static final double MANIPULATOR_DOUBLE_SUBSTATION = ManipulatorSubsystem.STOW_POSITION; // 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
+    public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 75; //86.5; //80.2
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 45; // 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
 
     // Arm Back intake DONT USE
     // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
@@ -68,7 +68,7 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_BACK_CUBE_INTAKE = 250.0 + MANIPULATOR_REDUCTION;
 
     // High Score
-    public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  52.0 * FACTOR; // 1.28/1.756  ;
+    public static final double ELEVATOR_HIGH_SCORE_HEIGHT =  50.0 * FACTOR; // 1.28/1.756  ;
     public static final double ARM_HIGH_SCORE_ANGLE = 55.0; 
     public static final double MANIPULATOR_HIGH_SCORE = -3.0 + MANIPULATOR_REDUCTION;
 
