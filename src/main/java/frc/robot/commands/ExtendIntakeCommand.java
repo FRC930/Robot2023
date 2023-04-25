@@ -40,6 +40,6 @@ public class ExtendIntakeCommand extends CommandBase{
 
     @Override
     public boolean isFinished(){ 
-        return false;
+        return true;
     }
 }

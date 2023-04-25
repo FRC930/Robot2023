@@ -12,7 +12,7 @@
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 0.1,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.01,
-        "y": 4.5983986504790115
+        "x": 6.99,
+        "y": 4.55
       },
       "prevControl": {
-        "x": 7.196976161804437,
-        "y": 4.562911738597439
+        "x": 5.61904884954663,
+        "y": 4.683286917405189
       },
       "nextControl": {
-        "x": 2.824639331070931,
-        "y": 5.392754058235389
+        "x": 7.4459844241812085,
+        "y": 4.505668180982382
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.57,
-        "y": 4.43
+        "x": 1.56,
+        "y": 4.14
       },
       "prevControl": {
-        "x": 1.427122672096084,
-        "y": 4.373537634274115
+        "x": 3.5993114737859777,
+        "y": 5.181823341906239
       },
       "nextControl": {
-        "x": 5.350393469877848,
-        "y": 5.923938624240885
+        "x": 1.2588672518478898,
+        "y": 3.98616027023336
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -77,20 +77,20 @@
     },
     {
       "anchorPoint": {
-        "x": 7.03,
-        "y": 3.41
+        "x": 7.17,
+        "y": 2.96
       },
       "prevControl": {
-        "x": 7.1457989048174095,
-        "y": 3.4076966948667473
+        "x": 5.591220790832858,
+        "y": 5.632554156380176
       },
       "nextControl": {
-        "x": 6.746565616812075,
-        "y": 3.415637668773867
+        "x": 7.315437834564498,
+        "y": 2.713803136623944
       },
       "holonomicAngle": 138.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -102,20 +102,20 @@
     },
     {
       "anchorPoint": {
-        "x": 5.385546828100782,
-        "y": 3.1512835472226777
+        "x": 4.5354099799108685,
+        "y": 4.42
       },
       "prevControl": {
-        "x": 6.394577504856349,
-        "y": 3.1512835472226777
+        "x": 5.9918443731320155,
+        "y": 4.313199301250289
       },
       "nextControl": {
-        "x": 4.804796687978175,
-        "y": 3.1512835472226777
+        "x": 3.1872214653520214,
+        "y": 4.518863001362367
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 2.5,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -127,12 +127,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.9107049778080607,
-        "y": 3.1628119180408976
+        "x": 1.56,
+        "y": 3.84
       },
       "prevControl": {
-        "x": 4.0699320700243025,
-        "y": 3.191218211565055
+        "x": 2.7639400096982016,
+        "y": 4.326973273233958
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -141,7 +141,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "manipulatorHold",
+          "scoreHighCone"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -159,39 +162,15 @@
       ]
     },
     {
-      "position": 0.1818181818180911,
+      "position": 0.1,
       "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 0.2,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 0.23,
-      "names": [
-        "backCubeIntakeManipulatorPos"
+        "backCubeIntake"
       ]
     },
     {
       "position": 2.0363636363636646,
       "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 2.04,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 2.05,
-      "names": [
-        "backCubeIntakeManipulatorPos"
+        "backCubeIntake"
       ]
     },
     {
@@ -201,13 +180,13 @@
       ]
     },
     {
-      "position": 3.121212121212156,
+      "position": 3.2363636363638646,
       "names": [
         "stowArm"
       ]
     },
     {
-      "position": 1.0454545454545452,
+      "position": 1.1636363636361962,
       "names": [
         "stowArm"
       ]

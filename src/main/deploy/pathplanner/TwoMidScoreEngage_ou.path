@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.0135513192641605,
-        "y": 4.5983986504790115
+        "x": 6.99,
+        "y": 4.65
       },
       "prevControl": {
-        "x": 5.611009571584151,
-        "y": 4.761179384887861
+        "x": 7.1769761618044186,
+        "y": 4.614513088118428
       },
       "nextControl": {
-        "x": 7.4686309372618735,
-        "y": 4.545581545708546
+        "x": 2.8046393310709163,
+        "y": 5.444355407756378
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.565751495139354,
-        "y": 4.38
+        "x": 1.7,
+        "y": 4.44
       },
       "prevControl": {
-        "x": 3.524268593991735,
-        "y": 5.208953748816588
+        "x": 1.5571226720960838,
+        "y": 4.3835376342741155
       },
       "nextControl": {
-        "x": 1.2543434556612891,
-        "y": 4.248194736779052
+        "x": 5.480393469877848,
+        "y": 5.933938624240886
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -77,20 +77,20 @@
     },
     {
       "anchorPoint": {
-        "x": 7.032592307464901,
-        "y": 3.4083368879326836
+        "x": 7.07,
+        "y": 3.49
       },
       "prevControl": {
-        "x": 5.701410857367169,
-        "y": 6.194379661486597
+        "x": 7.18579890481741,
+        "y": 3.4876966948667474
       },
       "nextControl": {
-        "x": 7.155869227636656,
-        "y": 3.1503294070101653
+        "x": 6.786565616812075,
+        "y": 3.4956376687738673
       },
       "holonomicAngle": 138.0,
       "isReversal": false,
-      "velOverride": null,
+      "velOverride": 1.0,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -102,16 +102,16 @@
     },
     {
       "anchorPoint": {
-        "x": 4.763144526289053,
-        "y": 5.02
+        "x": 5.385546828100782,
+        "y": 3.1512835472226777
       },
       "prevControl": {
-        "x": 6.2173796338281635,
-        "y": 5.153445805522542
+        "x": 6.394577504856349,
+        "y": 3.1512835472226777
       },
       "nextControl": {
-        "x": 2.878284683224108,
-        "y": 4.8470385312863655
+        "x": 4.804796687978175,
+        "y": 3.1512835472226777
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -127,12 +127,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.57,
-        "y": 4.38
+        "x": 3.9107049778080607,
+        "y": 3.1628119180408976
       },
       "prevControl": {
-        "x": 2.3491583346803058,
-        "y": 4.595784746114948
+        "x": 4.0699320700243025,
+        "y": 3.191218211565055
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -141,10 +141,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "manipulatorHold",
-          "scoreHighCone"
-        ],
+        "names": [],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -162,39 +159,15 @@
       ]
     },
     {
-      "position": 0.16,
+      "position": 0.1818181818180911,
       "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 0.18,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 0.21,
-      "names": [
-        "backCubeIntakeManipulatorPos"
+        "backCubeIntake"
       ]
     },
     {
       "position": 2.0363636363636646,
       "names": [
-        "backCubeIntakeElevatorPos"
-      ]
-    },
-    {
-      "position": 2.0727272727272488,
-      "names": [
-        "backCubeIntakeArmPos"
-      ]
-    },
-    {
-      "position": 2.109090909090963,
-      "names": [
-        "backCubeIntakeManipulatorPos"
+        "backCubeIntake"
       ]
     },
     {
@@ -204,13 +177,13 @@
       ]
     },
     {
-      "position": 3.2363636363638646,
+      "position": 3.121212121212156,
       "names": [
         "stowArm"
       ]
     },
     {
-      "position": 1.1636363636361962,
+      "position": 1.0454545454545452,
       "names": [
         "stowArm"
       ]
