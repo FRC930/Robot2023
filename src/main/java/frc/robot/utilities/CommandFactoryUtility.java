@@ -27,7 +27,7 @@ public class CommandFactoryUtility {
 
     //Arm Intake ground/low
     public static final double ELEVATOR_INTAKE_HEIGHT = 12.0 * FACTOR; // 1.28/1.756  ;
-    public static final double ARM_INTAKE_ANGLE = -24.0;
+    public static final double ARM_INTAKE_ANGLE = -29.0;
     public static final double MANIPULATOR_INTAKE = 17.0 + MANIPULATOR_REDUCTION - 4;
 
     // Extend Ground Intake
