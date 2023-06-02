@@ -14,11 +14,9 @@ public class SetArmDegreesCommand extends CommandBase{
     /**
      * <h3>SetArmDegreesCommand</h3>
      * 
-     * Sets the positions of the shoulder and wrist motors to the desired positions.
+     * Sets the position of the shoulder motor to the desired position.
      * @param armSubsystem The arm subsystem
-     * @param manipulatorSubsystem The manipulator subsystem
      * @param armPosition The desired arm position in degrees
-     * @param manipulatorPosition The desired manipulator position in degrees
      */
     public SetArmDegreesCommand(ArmSubsystem armSubsystem, double armPosition) {
         m_arm = armSubsystem;
@@ -26,12 +24,28 @@ public class SetArmDegreesCommand extends CommandBase{
         addRequirements(armSubsystem);
     }
 
+    /**
+     * <h3>SetArmDegreesCommand</h3>
+     * 
+     * Sets the position of the wrist motor to the desired position.
+     * @param manipulatorSubsystem The manipulator subsystem
+     * @param manipulatorPosition The desired manipulator position in degrees
+     */
     public SetArmDegreesCommand(ManipulatorSubsystem manipulatorSubsystem, double manipulatorPosition) {
         m_manipulator = manipulatorSubsystem;
         m_manipulatorPos = manipulatorPosition;      
         addRequirements(manipulatorSubsystem);
     }
 
+    /**
+     * <h3>SetArmDegreesCommand</h3>
+     * 
+     * Sets the positions of the shoulder and wrist motors to the desired positions.
+     * @param armSubsystem The arm subsystem
+     * @param manipulatorSubsystem The manipulator subsystem
+     * @param armPosition The desired arm position in degrees
+     * @param manipulatorPosition The desired manipulator position in degrees
+     */
     public SetArmDegreesCommand(ArmSubsystem armSubsystem, ManipulatorSubsystem manipulatorSubsystem, double armPosition, double manipulatorPosition) {
         m_arm = armSubsystem;
         m_manipulator = manipulatorSubsystem;

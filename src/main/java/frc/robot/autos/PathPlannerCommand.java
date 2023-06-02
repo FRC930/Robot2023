@@ -33,7 +33,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
      * @param preCommand a command that is run before the path starts
      * @param s_Swerve the required subsystem
      * @param pathName name of path (pathPlanner's path)
-     * @param eventCommandMap a command that uses strings to returna command that we want to execute at a marker
+     * @param eventCommandMap a command that uses strings to return a command that we want to execute at a marker
      * @param postCommand a command that is run after the path completes
      */
     public PathPlannerCommand(Command preCommand, SwerveDrive s_Swerve, String pathName, Map<String, Command> eventCommandMap, Command postCommand) {
@@ -44,7 +44,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
             pathConstraints = new PathConstraints(MAX_VELOCITY, MAX_ACCELERATION);
         }
 
-        // Load Path Group trajectory to follow.  All units in meters.
+        // Load Path Group trajectory to follow. All units in meters.
         List<PathPlannerTrajectory> loadPathGroup = PathPlanner.loadPathGroup(pathName, 
              false, pathConstraints);
 
@@ -61,7 +61,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
                 true, // TODO Should the path be automatically mirrored depending on alliance color
                 s_Swerve);
 
-        // Adding a pre command to autonomous ex. highscore
+        // Adding a pre command to autonomous ex. autoBalance
         if(preCommand != null) {
             addCommands(preCommand);
         }
@@ -83,11 +83,11 @@ public class PathPlannerCommand extends SequentialCommandGroup {
      * 
      * <h3>PathPlannerCommand</h3>
      * 
-     * adding path constraints and builds auto command
+     * Adds path constraints and builds auto command
      * 
      * @param s_Swerve the required subsystem
      * @param pathName name of path (pathPlanner's path)
-     * @param eventCommandMap a command that uses strings to returna command that we want to execute at a marker
+     * @param eventCommandMap a command that uses strings to return a command that we want to execute at a marker
      * @param postCommand a command that is run after the path completes
      */
     public PathPlannerCommand(SwerveDrive s_Swerve, String pathName, Map<String, Command> eventCommandMap, Command postCommand) {
@@ -98,11 +98,11 @@ public class PathPlannerCommand extends SequentialCommandGroup {
     /**
      * <h3>PathPlannerCommand</h3>
      * 
-     * adding path constraints and builds auto command
+     * Adds path constraints and builds auto command
      * 
      * @param s_Swerve the required subsystem
      * @param pathName name of path (pathPlanner's path)
-     * @param eventCommandMap a command that uses strings to returna command that we want to execute at a marker
+     * @param eventCommandMap a command that uses strings to return a command that we want to execute at a marker
      */
     public PathPlannerCommand(SwerveDrive s_Swerve, String pathName, Map<String, Command> eventCommandMap) {
         this(s_Swerve, pathName, eventCommandMap, null);
@@ -112,12 +112,12 @@ public class PathPlannerCommand extends SequentialCommandGroup {
      * 
      * <h3>PathPlannerCommand</h3>
      * 
-     * adding path constraints and builds auto command
+     * Adds path constraints and builds auto command
      * 
      * @param preCommand a command that is run before the path starts
      * @param s_Swerve the required subsystem
      * @param pathName name of path (pathPlanner's path)
-     * @param eventCommandMap a command that uses strings to returna command that we want to execute at a marker
+     * @param eventCommandMap a command that uses strings to return a command that we want to execute at a marker
      */
     public PathPlannerCommand(Command preCommand, SwerveDrive s_Swerve, String pathName, Map<String, Command> eventCommandMap) {
         this(preCommand, s_Swerve, pathName, eventCommandMap, null);

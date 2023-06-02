@@ -60,10 +60,10 @@ public class AutoCommandManager {
     }
 
     /**
-     * Adds a subbsystem to the subystem map
+     * Adds a subsystem to the subystem map
      *
      * @param SubNames
-     * @param subsbystem
+     * @param subsystem
      */
     public void addSubsystem(subNames SubNames, Subsystem subsystem) {
         subsystemMap.put(SubNames.toString(), subsystem);
@@ -122,33 +122,42 @@ public class AutoCommandManager {
                 .andThen(new WaitCommand(1.0)), 
             s_SwerveDrive, "OneScoreHighEngage_o", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
+
         Command OneScoreBumpCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
                 .andThen(new WaitCommand(1.0)), 
             s_SwerveDrive, "OneScoreBump_o", eventCommandMap);
+
         Command ScoreHighConeCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "OneScoreMid_o", eventCommandMap);  
+
         // Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
         //      CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
         //     s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
+
         Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "ThreeMidScore_ouu", eventCommandMap);
+
         Command NoBumpMConeSMCubeSEngageV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
             s_SwerveDrive, "TwoMidScoreEngage_ou", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));    
+
         Command twoScoreMidBump_ou = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "TwoScoreMidBump_ou", eventCommandMap);
+
         Command oneScoreMidBumpEngage_ou = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "OneScoreMidBumpEngage_ou", eventCommandMap,
                 new AutoBalanceCommand(s_SwerveDrive, true)); 
+
         Command ThreeScoreBump_ouu = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "ThreeScoreBump_ouu", eventCommandMap);
+
         Command ThreeScoreLowBump_ouu = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "ThreeScoreLowBump_ouu", eventCommandMap);
@@ -174,13 +183,12 @@ public class AutoCommandManager {
     }
 
     /**
-    * <h3>usePIDVauleOrTune</h3>
+    * <h3>usePIDValueOrTune</h3>
     *
-    * manualy set a defautValue in robot container and if Tune_pid is true 
-    * it gives pidValue with the key and defultvalue if false gives just the defaultValue
+    * manually set a defaultValue in robot container and if TUNE_PID is true 
+    * it gives pidValue with the key and defaultValue if false gives just the defaultValue
     * @param key
     * @param defaultValue
-    * @return pidValue
     */
     public static double usePIDValueOrTune(String key, double defaultValue) {
         double pidValue;

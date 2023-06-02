@@ -1,6 +1,5 @@
 package frc.robot.subsystems.rotateintake;
 
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;

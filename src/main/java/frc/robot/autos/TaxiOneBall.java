@@ -25,7 +25,7 @@ public class TaxiOneBall extends SequentialCommandGroup {
         PPSwerveControllerCommand swerveControllerCommand = 
             new PPSwerveControllerCommand(
                 pathPlannerExample,
-                s_Swerve::getPose, //use Swere Estimator Pose
+                s_Swerve::getPose, //use Swerve Estimator Pose
                 SwerveDrive.getSwerveKinematics(),
                 s_Swerve.getAutoXController(),
                 s_Swerve.getAutoYController(),

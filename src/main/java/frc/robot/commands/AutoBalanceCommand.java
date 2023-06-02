@@ -14,9 +14,6 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class AutoBalanceCommand extends CommandBase {
     
-    /**
-     *
-     */
     private static final double INVERTED_DEADBAND = 8.0;
     private static final double NON_INVERTED_DEADBAND = 8.0;
     private final double MAX_SPEED = 0.14;
