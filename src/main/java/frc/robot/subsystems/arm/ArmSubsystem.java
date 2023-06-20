@@ -19,10 +19,9 @@ public class ArmSubsystem extends SubsystemBase {
     
     private final ProfiledPIDController controller;
     private final ArmFeedforward ff;
+    private final ArmIO m_armIO;
 
     private double targetPosition;
-
-    private final ArmIO m_armIO;
 
     //TODO use offsets for positions
     public static double HIGH_POSITION = CommandFactoryUtility.ARM_HIGH_SCORE_ANGLE; //at high arm position

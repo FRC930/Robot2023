@@ -89,8 +89,6 @@ public class TeleopSwerve extends CommandBase {
         double m_strafe = xAxis * m_percentSpeed;
         double m_rotation = rAxis * m_percentSpeed;
 
-        
-
         m_Swerve.drive(m_throttle, m_strafe, m_rotation, m_fieldRelative, m_openLoop);
     }
 
