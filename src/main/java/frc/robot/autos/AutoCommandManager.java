@@ -98,7 +98,6 @@ public class AutoCommandManager {
 
                 (Pose2d targetPose) -> {
                     // Log target pose
-                    // TODO May not want both pose and trajectory
                     pp_field2d.setRobotPose(targetPose);
                     // May just want dashboard not on field2d
                     Logger.getInstance().recordOutput("PathPlanner/DesiredPose",targetPose);
@@ -106,7 +105,6 @@ public class AutoCommandManager {
                 null, // logSetPoint
 
                 null // loggError
-                // TODO  how to set default log error
 
         );
         SmartDashboard.putData("PP_Field", pp_field2d);
