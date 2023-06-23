@@ -20,11 +20,6 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
     //private AbsoluteEncoder m_RotateIntakeRollerEncoder;
     private RelativeEncoder m_RotateIntakeRollerEncoder;
 
-    // TODO find actual values
-    private final int m_freeLimit = 20;
-    private final int m_stallLimit = 10;
-
-    private static double flipperOffset = 0;
 
     private static double gearRatio = (25 * 2.67);
     
