@@ -58,7 +58,7 @@ public class PathPlannerCommand extends SequentialCommandGroup {
                 new PIDConstants(1.9, 0.0, 0.19), //PID constants to correct for rotation error (used to create the rotation controller)
                 s_Swerve::setSwerveModuleStates,
                 eventCommandMap, 
-                true, // TODO Should the path be automatically mirrored depending on alliance color
+                true, 
                 s_Swerve);
 
         // Adding a pre command to autonomous ex. autoBalance

@@ -5,9 +5,7 @@ import java.util.*;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -72,7 +70,7 @@ public class AutoCommandManager {
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     private static final boolean TUNE_PID = true;
-    //TODO TUNE FOR GHOST
+
     public static final double kPXController = usePIDValueOrTune("kPX",3.596); //0.076301;
     public static final double kIXController = usePIDValueOrTune("kIX",0.0);; 
     public static final double kDXController = usePIDValueOrTune("kDX",0.0);; 
@@ -92,7 +90,7 @@ public class AutoCommandManager {
      */
     public void initCommands(Map<String, Command> eventCommandMap) {
         // Setup Logging for PathPlanner (for Ghost image)
-        // NOTE: Make sure same as setting correct PPSwerveControllerCommand (ours or theirs)
+        // NOTE: This is a copy of a WPILib command that we copied and adjusted
         PPSwerveControllerCommand.setLoggingCallbacks(
                 null, 
 
@@ -130,10 +128,6 @@ public class AutoCommandManager {
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "OneScoreMid_o", eventCommandMap);  
 
-        // Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
-        //      CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-        //     s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
-
         Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "ThreeMidScore_ouu", eventCommandMap);
@@ -161,7 +155,6 @@ public class AutoCommandManager {
                 s_SwerveDrive, "ThreeScoreLowBump_ouu", eventCommandMap);
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
-        Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
 
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);

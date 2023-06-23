@@ -43,13 +43,13 @@ public class ManipulatorSubsystem extends SubsystemBase {
      */
     public ManipulatorSubsystem (ManipulatorIO io) {
 
-        // Sets up PID controller TODO: Change these values
+        // Sets up PID controller 
         // controller = new ProfiledPIDController(0.2, 0, 0, new Constraints(360, 720));
         controller = new ProfiledPIDController(0.2, 0, 0.02, new Constraints(540, 720)); //0.2
         controller.setTolerance(1, 1);
         //controller.enableContinuousInput(0, 360); // commented out for substation want to go long way!!
 
-        // Sets up Feetforward TODO: Change these values
+        // Sets up Feetforward 
         ff = new ArmFeedforward(0.0, 0.35, 0); //g 0.35
 
         m_io = io;

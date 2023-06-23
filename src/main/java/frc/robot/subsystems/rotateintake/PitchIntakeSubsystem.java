@@ -37,13 +37,12 @@ public class PitchIntakeSubsystem extends SubsystemBase{
     public PitchIntakeSubsystem(IntakeMotorIO intakeMotorIO) {
         m_RotateIntakerollerMotorIO = intakeMotorIO;
 
-        // Sets up PID controller TODO: Change these values
-        //controller = new ProfiledPIDController(0.35, 0, 0, new Constraints(50, 50));
+        // Sets up PID controller 
         controller = new ProfiledPIDController(0.0 /* 0.1 */, 0.0, 0.0, new Constraints(360, 720));
         controller.setTolerance(1, 1);
         controller.enableContinuousInput(0, 360);
 
-        // Sets up Feetforward TODO: Change these values
+        // Sets up Feetforward 
         ff = new ArmFeedforward(0.0, 0.0, 0.0);
     }
 
@@ -75,10 +74,8 @@ public class PitchIntakeSubsystem extends SubsystemBase{
      * 
      */
     public double getEncoderPosition() {
-        //Logger.getInstance().recordOutput("EncoderPosition", m_RotateIntakerollerMotorIO.getCurrentAngleDegrees());
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderPosition", m_RotateIntakerollerMotorIO.getCurrentAngleDegrees());
         return m_RotateIntakerollerMotorIO.getCurrentAngleDegrees();
-        // TODO should we be using set current limit
     }
 
     /**

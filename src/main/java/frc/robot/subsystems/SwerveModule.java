@@ -68,10 +68,8 @@ public class SwerveModule extends SubsystemBase {
 
   private double m_simDriveEncoderPosition;
   private double m_simDriveEncoderVelocity;
-  private double m_simAngleDifference;
-  private double m_simTurnAngleIncrement;
   private int m_moduleNumber;
-  // private Pose2d m_pose;
+
 
   /**
    * Constructs a SwerveModule.
@@ -83,7 +81,7 @@ public class SwerveModule extends SubsystemBase {
     m_turningMotor = new CANSparkMax(swerveModuleConstants.turningMotorChannel,
         CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    m_angleEncoder = new CANCoder(swerveModuleConstants.cancoderID, "rio"); // TODO CanBUS Pass in
+    m_angleEncoder = new CANCoder(swerveModuleConstants.cancoderID, "rio"); 
     m_angleOffset = swerveModuleConstants.angleOffset;
 
     // Set the distance per pulse for the drive encoder. We can simply use the
@@ -134,7 +132,6 @@ public class SwerveModule extends SubsystemBase {
     // reset angle to Absolute is being called from swerve drive
   }
 
-  // TODO DO we need? maybe for debugging in
   public SwerveModule(int moduleNumber, SwerveModuleConstants frontLeftModuleConstants) {
     this(frontLeftModuleConstants);
     m_moduleNumber = moduleNumber;
@@ -212,16 +209,11 @@ public class SwerveModule extends SubsystemBase {
 
     if (RobotBase.isSimulation()) {
       simUpdateDrivePosition(desiredState);
-      // simTurnPosition(angle); // TODO Determine why commented out in REVexample
+      // simTurnPosition(angle); 
       m_currentAngle = angle;
 
     }
   }
-
-  // // gets the swerve module number
-  // private int getModuleNumber() {
-  //   return m_moduleNumber;
-  // }
 
   private void simUpdateDrivePosition(SwerveModuleState state) {
     m_simDriveEncoderVelocity = state.speedMetersPerSecond;
@@ -230,35 +222,10 @@ public class SwerveModule extends SubsystemBase {
     m_simDriveEncoderPosition += distancePer20Ms;
   }
 
-  // private void simTurnPosition(double angle) {
-  //   if (angle != m_currentAngle && m_simTurnAngleIncrement == 0) {
-  //     m_simAngleDifference = angle - m_currentAngle;
-  //     m_simTurnAngleIncrement = m_simAngleDifference / 20.0;// 10*20ms = .2 sec move time
-  //   }
-
-  //   if (m_simTurnAngleIncrement != 0) {
-  //     m_currentAngle += m_simTurnAngleIncrement;
-
-  //     if ((Math.abs(angle - m_currentAngle)) < .1) {
-  //       m_currentAngle = angle;
-  //       m_simTurnAngleIncrement = 0;
-  //     }
-  //   }
-  // }
-
   public SwerveDriveKinematics getSwerveKinematics() {
     return SwerveDrive.kDriveKinematics;
   }
 
-  // // TODO NOT SURE WHAT FOR m_pose never gotten
-  // public void setModulePose(Pose2d pose) {
-  //   m_pose = pose;
-  // }
-
-  // // TODO NOT SURE WHAT FOR
-  // public Pose2d getModulePose() {
-  //   return m_pose;
-  // }
 
   @Override
   public void simulationPeriodic() {
