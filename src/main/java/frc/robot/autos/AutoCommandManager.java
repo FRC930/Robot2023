@@ -74,7 +74,8 @@ public class AutoCommandManager {
     private static final boolean TUNE_PID = true;
     //TODO TUNE FOR GHOST
     public static final double kPXController = usePIDValueOrTune("kPX",3.596); //0.076301;
-    public static final double kIXController = usePIDValueOrTune("kIX",0.0);; 
+    public static final double kIXController = usePIDValueOrTune("kIX"
+    ,0.0);; 
     public static final double kDXController = usePIDValueOrTune("kDX",0.0);; 
     public static final double kPYController = usePIDValueOrTune("kPY",3.596); //0.076301;
     public static final double kIYController = usePIDValueOrTune("kIY",0.0); 
