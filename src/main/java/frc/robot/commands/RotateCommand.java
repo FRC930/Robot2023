@@ -60,9 +60,7 @@ public class RotateCommand extends CommandBase {
         m_turningAngle = 0.0;
         m_calculatedHeading = 0.0;
 
-        // TODO: determine PID values
         m_thetaController = new PIDController(0.0, 0.0, 0.0);
-
     }
 
     @Override

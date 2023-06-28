@@ -178,17 +178,6 @@ public class SwerveDrive extends SubsystemBase {
   public void updateOdometry() {
     m_odometry.update(getHeadingRotation2d(), getModulePositions());
 
-    // for (int i = 0; i < mSwerveMods.length; i++) {
-    //   SwerveModule module = mSwerveMods[i];
-    //   var modulePositionFromChassis = kModuleTranslations[i]
-    //       .rotateBy(getHeadingRotation2d())
-    //       .plus(getPoseMeters().getTranslation());
-    //   // TODO WHAT IS THIS FOR
-    //   module.setModulePose(
-    //       new Pose2d(
-    //           modulePositionFromChassis,
-    //           module.getHeadingRotation2d().plus(getHeadingRotation2d())));
-    // }
     // Logs information about the robot with AdvantageScope
     Logger.getInstance().recordOutput("SwerveModuleStates/Measured",
         getModuleStates());
@@ -216,8 +205,6 @@ public class SwerveDrive extends SubsystemBase {
       Logger.getInstance().recordOutput("SwerveModuleStates/Subsystem", moduleStates);
     }
     m_aprilCameraOne.updateCameraPos(getHeadingRotation2d(), getModulePositions(), getPoseMeters());
-    // kDriveKinematics, getHeadingRotation2d(), getModulePositions(),
-    // getPoseMeters()
   }
 
   @Override

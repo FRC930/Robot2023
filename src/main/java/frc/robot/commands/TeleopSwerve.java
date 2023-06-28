@@ -71,7 +71,7 @@ public class TeleopSwerve extends CommandBase {
         // Gets the inputs from the joysticks
         double yAxis = -m_controller.getHID().getRawAxis(m_translationAxis);
         double xAxis = -m_controller.getHID().getRawAxis(m_strafeAxis);
-        // TODO REVIEW BEFORE ENABLING SINCE Y() was used by drive to release cone/cube
+        // Auto aim button that needs to be tested
         // if (m_controller.getHID().getYButton()) {
         //     rAxis = m_rotationMathUtility.rotationSpeed(m_Swerve.getPose(), m_rotatePositions.getPose2dForRotation(), m_Swerve.getHeadingDegrees());
         // }
@@ -88,8 +88,6 @@ public class TeleopSwerve extends CommandBase {
         double m_throttle = yAxis * m_percentSpeed;
         double m_strafe = xAxis * m_percentSpeed;
         double m_rotation = rAxis * m_percentSpeed;
-
-        
 
         m_Swerve.drive(m_throttle, m_strafe, m_rotation, m_fieldRelative, m_openLoop);
     }

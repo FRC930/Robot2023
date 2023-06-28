@@ -27,7 +27,6 @@ public class ArmIORobot implements ArmIO {
 
         m_armMotor.restoreFactoryDefaults(); 
         m_armMotor.setIdleMode(IdleMode.kBrake);
-        // TODO: Determine if this helps encoder position update faster
         m_armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
         m_armMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 

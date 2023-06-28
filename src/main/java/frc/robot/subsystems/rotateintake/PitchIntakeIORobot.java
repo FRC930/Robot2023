@@ -1,8 +1,5 @@
 package frc.robot.subsystems.rotateintake;
 
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -23,11 +20,6 @@ public class PitchIntakeIORobot implements IntakeMotorIO {
     //private AbsoluteEncoder m_RotateIntakeRollerEncoder;
     private RelativeEncoder m_RotateIntakeRollerEncoder;
 
-    // TODO find actual values
-    private final int m_freeLimit = 20;
-    private final int m_stallLimit = 10;
-
-    private static double flipperOffset = 0;
 
     private static double gearRatio = (25 * 2.67);
     

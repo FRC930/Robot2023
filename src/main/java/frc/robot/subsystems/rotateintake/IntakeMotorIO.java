@@ -1,6 +1,7 @@
 package frc.robot.subsystems.rotateintake;
 
-// TODO document interface
+// this defines what functions each mechanical arm must contain
+    // these functions are primarily used during simulation
 public interface IntakeMotorIO {
     public void updateInputs();
     public double getOutputVoltage();

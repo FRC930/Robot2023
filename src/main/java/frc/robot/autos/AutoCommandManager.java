@@ -5,9 +5,7 @@ import java.util.*;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,10 +58,10 @@ public class AutoCommandManager {
     }
 
     /**
-     * Adds a subbsystem to the subystem map
+     * Adds a subsystem to the subystem map
      *
      * @param SubNames
-     * @param subsbystem
+     * @param subsystem
      */
     public void addSubsystem(subNames SubNames, Subsystem subsystem) {
         subsystemMap.put(SubNames.toString(), subsystem);
@@ -72,9 +70,10 @@ public class AutoCommandManager {
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
     private static final boolean TUNE_PID = true;
-    //TODO TUNE FOR GHOST
+
     public static final double kPXController = usePIDValueOrTune("kPX",3.596); //0.076301;
-    public static final double kIXController = usePIDValueOrTune("kIX",0.0);; 
+    public static final double kIXController = usePIDValueOrTune("kIX"
+    ,0.0);; 
     public static final double kDXController = usePIDValueOrTune("kDX",0.0);; 
     public static final double kPYController = usePIDValueOrTune("kPY",3.596); //0.076301;
     public static final double kIYController = usePIDValueOrTune("kIY",0.0); 
@@ -92,13 +91,12 @@ public class AutoCommandManager {
      */
     public void initCommands(Map<String, Command> eventCommandMap) {
         // Setup Logging for PathPlanner (for Ghost image)
-        // NOTE: Make sure same as setting correct PPSwerveControllerCommand (ours or theirs)
+        // NOTE: This is a copy of a WPILib command that we copied and adjusted
         PPSwerveControllerCommand.setLoggingCallbacks(
                 null, 
 
                 (Pose2d targetPose) -> {
                     // Log target pose
-                    // TODO May not want both pose and trajectory
                     pp_field2d.setRobotPose(targetPose);
                     // May just want dashboard not on field2d
                     Logger.getInstance().recordOutput("PathPlanner/DesiredPose",targetPose);
@@ -106,7 +104,6 @@ public class AutoCommandManager {
                 null, // logSetPoint
 
                 null // loggError
-                // TODO  how to set default log error
 
         );
         SmartDashboard.putData("PP_Field", pp_field2d);
@@ -122,39 +119,43 @@ public class AutoCommandManager {
                 .andThen(new WaitCommand(1.0)), 
             s_SwerveDrive, "OneScoreHighEngage_o", eventCommandMap, 
             new AutoBalanceCommand(s_SwerveDrive, true));
+
         Command OneScoreBumpCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
                 .andThen(new WaitCommand(1.0)), 
             s_SwerveDrive, "OneScoreBump_o", eventCommandMap);
+
         Command ScoreHighConeCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "OneScoreMid_o", eventCommandMap);  
-        // Command NoBumpConeSConeSCubeS = new PathPlannerCommand(
-        //      CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
-        //     s_SwerveDrive, "NoBumpConeSConeSCubeSV3", eventCommandMap);
+
         Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
             s_SwerveDrive, "ThreeMidScore_ouu", eventCommandMap);
+
         Command NoBumpMConeSMCubeSEngageV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
             s_SwerveDrive, "TwoMidScoreEngage_ou", eventCommandMap,
             new AutoBalanceCommand(s_SwerveDrive, true));    
+
         Command twoScoreMidBump_ou = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "TwoScoreMidBump_ou", eventCommandMap);
+
         Command oneScoreMidBumpEngage_ou = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "OneScoreMidBumpEngage_ou", eventCommandMap,
                 new AutoBalanceCommand(s_SwerveDrive, true)); 
+
         Command ThreeScoreBump_ouu = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "ThreeScoreBump_ouu", eventCommandMap);
+
         Command ThreeScoreLowBump_ouu = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "ThreeScoreLowBump_ouu", eventCommandMap);
 
         // Adding options to the chooser in Shuffleboard/smartdashboard
-        Boolean isBlue = (DriverStation.getAlliance() == Alliance.Blue);
         m_chooser.setDefaultOption("None", null);
 
         m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
@@ -174,13 +175,12 @@ public class AutoCommandManager {
     }
 
     /**
-    * <h3>usePIDVauleOrTune</h3>
+    * <h3>usePIDValueOrTune</h3>
     *
-    * manualy set a defautValue in robot container and if Tune_pid is true 
-    * it gives pidValue with the key and defultvalue if false gives just the defaultValue
+    * manually set a defaultValue in robot container and if TUNE_PID is true 
+    * it gives pidValue with the key and defaultValue if false gives just the defaultValue
     * @param key
     * @param defaultValue
-    * @return pidValue
     */
     public static double usePIDValueOrTune(String key, double defaultValue) {
         double pidValue;

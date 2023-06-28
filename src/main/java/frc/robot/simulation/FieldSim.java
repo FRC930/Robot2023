@@ -64,6 +64,6 @@ public class FieldSim {
     SmartDashboard.putData(this.getClass().getSimpleName()+"/Field2d", m_field2d);
   }
 
-  // TODO comment why keeping (from wpilib)
+  // For future use of simulation 
   public void simulationPeriodic() {}
 }
