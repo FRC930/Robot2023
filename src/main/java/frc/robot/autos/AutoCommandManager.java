@@ -158,16 +158,16 @@ public class AutoCommandManager {
         // Adding options to the chooser in Shuffleboard/smartdashboard
         m_chooser.setDefaultOption("None", null);
 
-        m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
-        m_chooser.addOption("ScoreHighEngage", ScoreHighEngageCommand);
-        m_chooser.addOption("OneScoreBump_o", OneScoreBumpCommand);
+        // m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand); 
+        m_chooser.addOption("B_ScoreHighEngage", ScoreHighEngageCommand); 
+        // m_chooser.addOption("OneScoreBump_o", OneScoreBumpCommand);
         // m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
-        m_chooser.addOption("ThreeScoreMid_ouu", NoBumpMConeSMCubeSCubeSV3);
-        m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3);
-        m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);
-        m_chooser.addOption("OneScoreMidBumpEngage_ou", oneScoreMidBumpEngage_ou);
-        m_chooser.addOption("ThreeScoreBump_ouu", ThreeScoreBump_ouu);
-        m_chooser.addOption("ThreeScoreLowBump_ouu", ThreeScoreLowBump_ouu);
+        m_chooser.addOption("B_ThreeScoreMid_ouu", NoBumpMConeSMCubeSCubeSV3); 
+        // m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3); 
+        m_chooser.addOption("B_TwoScoreMidBump_ou", twoScoreMidBump_ou); 
+        m_chooser.addOption("B_OneScoreMidBumpEngage_ou", oneScoreMidBumpEngage_ou); 
+        // m_chooser.addOption("ThreeScoreBump_ouu", ThreeScoreBump_ouu);
+        // m_chooser.addOption("ThreeScoreLowBump_ouu", ThreeScoreLowBump_ouu);
 
 
         //Adding chooser to Shuffleboard/Smartdashboard
