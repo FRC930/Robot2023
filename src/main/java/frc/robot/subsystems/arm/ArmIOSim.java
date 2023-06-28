@@ -58,7 +58,6 @@ public class ArmIOSim implements ArmIO {
 
     @Override
     public void adjustOffsetDegrees(double offsetDegrees) {
-        // TODO Auto-generated method stub
         
     }
 

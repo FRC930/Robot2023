@@ -14,9 +14,6 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class AutoBalanceCommand extends CommandBase {
     
-    /**
-     *
-     */
     private static final double INVERTED_DEADBAND = 8.0;
     private static final double NON_INVERTED_DEADBAND = 8.0;
     private final double MAX_SPEED = 0.14;
@@ -56,7 +53,7 @@ public class AutoBalanceCommand extends CommandBase {
         m_robotPitchInDegrees =m_swerveDrive.getPitch().getDegrees();
         degrees = m_robotPitchInDegrees;
         m_robotPitchInDegrees = MathUtil.applyDeadband(m_robotPitchInDegrees, 
-            m_inverted?INVERTED_DEADBAND:NON_INVERTED_DEADBAND, // TODO TUNE deadband to balance
+            m_inverted?INVERTED_DEADBAND:NON_INVERTED_DEADBAND, 
             15.0); 
 
         // Gets percentage of max speed to set swerve drive to

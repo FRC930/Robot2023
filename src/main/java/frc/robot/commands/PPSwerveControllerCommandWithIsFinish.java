@@ -19,12 +19,11 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class PPSwerveControllerCommandWithIsFinish extends PPSwerveControllerCommand {
 
-
-    // TODO tune the value
+    // the x and y coordinates the robot should be in range of
     private static final double DELTA_X = Units.inchesToMeters(3.15);
     private static final double DELTA_Y = Units.inchesToMeters(3.15);
 
-    // TODO Passing or constanst from auto?
+    // sets the max speed and acceleration and creates a target position 
     private double MAX_SPEED = 3.0;
     private double MAX_ACCELERATION = 1.0;
     private Pose2d m_targetPose;

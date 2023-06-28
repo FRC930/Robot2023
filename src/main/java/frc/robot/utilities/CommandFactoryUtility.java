@@ -31,7 +31,6 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_INTAKE = 17.0 + MANIPULATOR_REDUCTION - 4;
 
     // Extend Ground Intake
-    // TODO: Check These Angles
     public static final double ELEVATOR_GROUNDINTAKE_HEIGHT = 0.0;
     public static final double ARM_GROUNDINTAKE_ANGLE = 30.0; //changed wednesday night 4/12/23 from -20 to -22 need to test 
     public static final double MANIPULATOR_GROUNDINTAKE = -70.0;
@@ -52,16 +51,10 @@ public class CommandFactoryUtility {
     public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 75; //86.5; //80.2
     public static final double MANIPULATOR_DOUBLE_SUBSTATION = 45; // 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
 
-    // Arm Back intake DONT USE
-    // TODO DONT USE YET WRIST WILL CRASH INTO ARM (need to find way to move safely)
-    public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 13.6;  // NO CONVESION FACTOR
+    // Arm Back intake 
+    public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 13.6;  // NO CONVERSION FACTOR
     public static final double ARM_BACK_INTAKE_ANGLE = 197.0;
     public static final double MANIPULATOR_BACK_INTAKE = 244.0 + MANIPULATOR_REDUCTION;
-
-    //Values for backwards cone pickup in autonomous
-    // public static final double AUTO_ELEVATOR_BACK_INTAKE_HEIGHT = 13;  // NO CONVESION FACTOR
-    // public static final double AUTO_ARM_BACK_INTAKE_ANGLE = 205.0;
-    // public static final double AUTO_MANIPULATOR_BACK_INTAKE = 250.0;
 
     public static final double ELEVATOR_BACK_CUBE_INTAKE_HEIGHT = 11.3;  // NO CONVESION FACTOR
     public static final double ARM_BACK_CUBE_INTAKE_ANGLE = 201.0;
@@ -98,8 +91,6 @@ public class CommandFactoryUtility {
         Command command;
         
         command = new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(elevatorHeight))
-            // .andThen(m_elevatorSubsystem.createWaitUntilAtHeightCommand()
-            //     .withTimeout(waitSecondAfterElevator))
             .andThen(new SetArmDegreesCommand(m_armSubsystem, m_manipulatorSubsystem, armPosition, manipulatorPosition));
         // iF wish to wait for arm/manipulator gets to position than release or DONT release DRIVER will control this
         if(waitSecondArm >= 0.0) {
@@ -110,7 +101,7 @@ public class CommandFactoryUtility {
                 .withTimeout(waitSecondArm/2.0))
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand()
                 .withTimeout(waitSecondArm/2.0))
-            // .andThen(new WaitCommand(0.1)) // TODO WHY waiting
+            // .andThen(new WaitCommand(0.1)) 
             .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.RELEASE_SPEED)
             );
         }
@@ -378,8 +369,6 @@ public class CommandFactoryUtility {
         .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED))
         .andThen(createGroundIntakeRetractCommand(extendIntakeSubsystem, intakeSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
         .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED));
-        // .andThen(new WaitCommand(0.75))
-        // .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED));
 
 
         return command;
@@ -406,16 +395,11 @@ public class CommandFactoryUtility {
         
         final Command command = 
             createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
-            //.andThen(new WaitCommand(0.1))
             .andThen(createRetractIntakeCommand(extendIntakeSubsystem, intakeSubsystem));
             
 
         return command;
     }
-
-    
-    
-    //Create command for pitch intake
 
 
     /**
@@ -443,7 +427,7 @@ public class CommandFactoryUtility {
                         
                 break;
             case "scoreMidCube":
-                autoCommand = //CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+                autoCommand =
                     new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.SHOOT_SPEED)
                     .andThen(new WaitCommand(0.4)); //pause after scoring
                 break;
@@ -456,22 +440,18 @@ public class CommandFactoryUtility {
                 break;
             case "armIntakeCone":
                 autoCommand = CommandFactoryUtility.createArmIntakeLowCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
-                                //.andThen(new WaitCommand(2))
-                                //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+                                
                 break;
             case "armIntakeUprightCone":
                 autoCommand = CommandFactoryUtility.createArmIntakeUpRightCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);
-                                //.andThen(new WaitCommand(2))
-                                //.andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)));
+                               
                 break;
             case "waitTilArmDown":
                 autoCommand = m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5)
                 .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5));   
                 break;
             case "stowArm":
-                autoCommand = new WaitCommand(0.5) // TODO why not check distance (low intake) versus a wait
-                    // .andThen(m_armSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
-                    // .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))   
+                autoCommand = new WaitCommand(0.5)  
                     .andThen(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
                 break;
             case "scoreHighElevator":
@@ -498,42 +478,42 @@ public class CommandFactoryUtility {
             case "intakeElevatorPos":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
                 .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_INTAKE_HEIGHT)));
-                // TODO why were we using waitUntil on intake commands
+              
                 break;
             case "intakeArmPos":
                 autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_INTAKE_ANGLE);
-                // TODO why were we using waitUntil on intake commands
+           
                 break;
             case "intakeManipulatorPos":
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_INTAKE);
-                // TODO why were we using waitUntil on intake commands
+              
                 break;
-            // TODO DONT USE YET (wrist issues)
+            
             case "backIntakeElevatorPos":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
                 .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_BACK_INTAKE_HEIGHT)));
-                // TODO why were we using waitUntil on intake commands
+           
                 break;
             case "backIntakeArmPos":
                 autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_BACK_INTAKE_ANGLE);
-                // TODO why were we using waitUntil on intake commands
+             
                 break;
             case "backIntakeManipulatorPos":
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_BACK_INTAKE);
-                // TODO why were we using waitUntil on intake commands
+               
                 break;
             case "backCubeIntakeElevatorPos":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED)
                 .andThen(new ElevatorMoveCommand(m_elevatorSubsystem, Units.inchesToMeters(ELEVATOR_BACK_CUBE_INTAKE_HEIGHT)));
-                // TODO why were we using waitUntil on intake commands
+       
                 break;
             case "backCubeIntakeArmPos":
                 autoCommand = new SetArmDegreesCommand(m_armSubsystem, ARM_BACK_CUBE_INTAKE_ANGLE);
-                // TODO why were we using waitUntil on intake commands
+              
                 break;
             case "backCubeIntakeManipulatorPos":
                 autoCommand = new SetArmDegreesCommand(m_manipulatorSubsystem,  MANIPULATOR_BACK_CUBE_INTAKE);
-                // TODO why were we using waitUntil on intake commands
+           
                 break;
             case "scoreHighNoStow":
                 autoCommand = CommandFactoryUtility.createScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem, 
@@ -542,7 +522,7 @@ public class CommandFactoryUtility {
                 break;
             case "manipulatorHold":
                 autoCommand =  new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.HOLD_SPEED);
-                // TODO why were we using waitUntil on intake commands
+               
                 break;
             case "scoreGroundCube":
                 autoCommand = CommandFactoryUtility.createScoreGroundCubeCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem);

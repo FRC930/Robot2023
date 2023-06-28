@@ -16,7 +16,7 @@ public class ElevatorIORobot implements ElevatorIO {
 
     public ElevatorIORobot(int rightMotorID,int leftMotorID){//int leftMotorID, int rightMotorID){
 
-        // TODO refollower methods  (look at last year)
+        // TODO refollower methods if we enable test mode (look at last year)
         // Competition robot will require two motors
         leftElevatorFollower = new CANSparkMax(leftMotorID, MotorType.kBrushless);
         rightElevatorMaster = new CANSparkMax(rightMotorID, MotorType.kBrushless);

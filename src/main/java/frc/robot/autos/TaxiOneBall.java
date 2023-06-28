@@ -10,7 +10,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-// TODO explain why keeping this Class
+// This is example code
 public class TaxiOneBall extends SequentialCommandGroup {
     public TaxiOneBall(SwerveDrive s_Swerve) {
         addRequirements(s_Swerve);
@@ -25,7 +25,7 @@ public class TaxiOneBall extends SequentialCommandGroup {
         PPSwerveControllerCommand swerveControllerCommand = 
             new PPSwerveControllerCommand(
                 pathPlannerExample,
-                s_Swerve::getPose, //use Swere Estimator Pose
+                s_Swerve::getPose, //use Swerve Estimator Pose
                 SwerveDrive.getSwerveKinematics(),
                 s_Swerve.getAutoXController(),
                 s_Swerve.getAutoYController(),

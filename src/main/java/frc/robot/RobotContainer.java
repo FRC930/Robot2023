@@ -337,27 +337,6 @@ public class RobotContainer {
   
     //Cube and Cone selector
     m_codriverController.b().onTrue(new InstantCommand(() -> m_RunLEDPattern.toggleConeCubePattern()));
-    // OLD method required to request cone/cube (but required user to hold)
-    // m_codriverController.b().onTrue(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.CONEREQUEST)))
-    //   .onFalse(new InstantCommand(() -> m_RunLEDPattern.setPattern(LedPatterns.CUBEREQUEST)));
-
-    // TODO REMOVE this is not how determine it xboxcontroller is working!!
-    // // Trigger indicator
-    // m_driverController.leftTrigger()
-    //   .onTrue(new PutToSmartDashboardCommand("DriverController/LeftTrigger", true))
-    //   .onFalse(new PutToSmartDashboardCommand("DriverController/LeftTrigger", false));
-    // m_driverController.rightTrigger()
-    //   .onTrue(new PutToSmartDashboardCommand("DriverController/RightTrigger", true))
-    //   .onFalse(new PutToSmartDashboardCommand("DriverController/RightTrigger", false));
-    // m_codriverController.leftTrigger()
-    //   .onTrue(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", true))
-    //   .onFalse(new PutToSmartDashboardCommand("CodriverController/LeftTrigger", false));
-    // m_codriverController.rightTrigger()
-    //   .onTrue(new PutToSmartDashboardCommand("CodriverController/RightTrigger", true))
-    //   .onFalse(new PutToSmartDashboardCommand("CodriverController/RightTrigger", false));
-
-    //m_codriverController.x().whileTrue(new AutoBalanceCommand(m_robotDrive, false));
-    //m_codriverController.y().whileTrue(new AutoBalanceCommand(m_robotDrive, true));
   }
 
   /**
@@ -397,13 +376,6 @@ public class RobotContainer {
     m_fieldSim.periodic();
     m_mechanismSimulator.periodic();
 
-    // TODO: Fix, This crashes code
-    // if(m_timeOfFlight.sensorDetected()){
-    //   m_CurrentPitchIntakeCommand = m_LowPitchIntakeCommand;
-    // }
-    // else{
-    //   m_CurrentPitchIntakeCommand = m_HighPitchIntakeCommand;
-    // }
   }
 
   public void disabledInit() {

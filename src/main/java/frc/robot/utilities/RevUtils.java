@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.autos.AutoCommandManager;
 
-// TODO Move used code to swerve module
+
 public final class RevUtils {
   public static final double kFFDrive = AutoCommandManager.usePIDValueOrTune("kDriveFF", 0.15751);
   public static final double kPDrive = AutoCommandManager.usePIDValueOrTune("kDriveP", 0.23983);
@@ -23,7 +23,6 @@ public final class RevUtils {
   public static final double kDTurn = AutoCommandManager.usePIDValueOrTune("kTurnD", 0.1);
 
   public static void setTurnMotorConfig(CANSparkMax motorController) {
-    // TODO Tune Manually
     motorController.getPIDController().setFF(kFFTurn);
     motorController.getPIDController().setP(kDTurn);
     motorController.getPIDController().setI(kITurn);
@@ -38,7 +37,6 @@ public final class RevUtils {
   }
 
   public static void setDriveMotorConfig(CANSparkMax motorController) {
-    // TODO TUNE
     motorController.getPIDController().setFF(kFFDrive);
     motorController.getPIDController().setP(kPDrive);
     motorController.getPIDController().setI(kIDrive);
