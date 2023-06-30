@@ -308,7 +308,8 @@ public class OdometryUtility {
      */
     public void updateCameraPos(Rotation2d rotation2d, SwerveModulePosition[] swerveModulePositions, Pose2d pose2d) {
         m_PoseEstimator.update(rotation2d, swerveModulePositions);
-        updateCameraPositions();
+        //TODO uncomment cameras if wanted back
+        //updateCameraPositions();
     }
     
 
