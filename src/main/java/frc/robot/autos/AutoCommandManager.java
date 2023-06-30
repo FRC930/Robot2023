@@ -127,12 +127,13 @@ public class AutoCommandManager {
 
         Command ScoreHighConeCommand = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreHighCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-            s_SwerveDrive, "OneScoreMid_o", eventCommandMap);  
-
-        Command NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
+            s_SwerveDrive, "OneScoreMid_o", eventCommandMap);
+        Command b_NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-            s_SwerveDrive, "ThreeMidScore_ouu", eventCommandMap);
-
+            s_SwerveDrive, "B_ThreeMidScore_ouu", eventCommandMap);
+        Command r_NoBumpMConeSMCubeSCubeSV3 = new PathPlannerCommand(
+            CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+            s_SwerveDrive, "R_ThreeMidScore_ouu", eventCommandMap);
         Command NoBumpMConeSMCubeSEngageV3 = new PathPlannerCommand(
             CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem),
             s_SwerveDrive, "TwoMidScoreEngage_ou", eventCommandMap,
@@ -141,10 +142,13 @@ public class AutoCommandManager {
         Command twoScoreMidBump_ou = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
                 s_SwerveDrive, "TwoScoreMidBump_ou", eventCommandMap);
-
-        Command oneScoreMidBumpEngage_ou = new PathPlannerCommand(
+        Command b_oneScoreMidBumpEngage_ou = new PathPlannerCommand(
                 CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
-                s_SwerveDrive, "OneScoreMidBumpEngage_ou", eventCommandMap,
+                s_SwerveDrive, "B_OneScoreMidBumpEngage_ou", eventCommandMap,
+                new AutoBalanceCommand(s_SwerveDrive, true)); 
+        Command r_oneScoreMidBumpEngage_ou = new PathPlannerCommand(
+                CommandFactoryUtility.createAutoScoreMidCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem), 
+                s_SwerveDrive, "R_OneScoreMidBumpEngage_ou", eventCommandMap,
                 new AutoBalanceCommand(s_SwerveDrive, true)); 
 
         Command ThreeScoreBump_ouu = new PathPlannerCommand(
@@ -158,16 +162,18 @@ public class AutoCommandManager {
         // Adding options to the chooser in Shuffleboard/smartdashboard
         m_chooser.setDefaultOption("None", null);
 
-        // m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand); 
-        m_chooser.addOption("B_ScoreHighEngage", ScoreHighEngageCommand); 
-        // m_chooser.addOption("OneScoreBump_o", OneScoreBumpCommand);
+        m_chooser.addOption("ScoreHighCone", ScoreHighConeCommand);
+        m_chooser.addOption("ScoreHighEngage", ScoreHighEngageCommand);
+        //m_chooser.addOption("OneScoreBump_o", OneScoreBumpCommand);
         // m_chooser.addOption("NoBumpConeSConeSCubeS", NoBumpConeSConeSCubeS);
-        m_chooser.addOption("B_ThreeScoreMid_ouu", NoBumpMConeSMCubeSCubeSV3); 
-        // m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3); 
-        m_chooser.addOption("B_TwoScoreMidBump_ou", twoScoreMidBump_ou); 
-        m_chooser.addOption("B_OneScoreMidBumpEngage_ou", oneScoreMidBumpEngage_ou); 
-        // m_chooser.addOption("ThreeScoreBump_ouu", ThreeScoreBump_ouu);
-        // m_chooser.addOption("ThreeScoreLowBump_ouu", ThreeScoreLowBump_ouu);
+        m_chooser.addOption("B_ThreeScoreMid_ouu", b_NoBumpMConeSMCubeSCubeSV3);
+        m_chooser.addOption("R_ThreeScoreMid_ouu", r_NoBumpMConeSMCubeSCubeSV3);
+        //m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3);
+        //m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);
+        m_chooser.addOption("B_OneScoreMidBumpEngage_ou", b_oneScoreMidBumpEngage_ou);
+        m_chooser.addOption("R_OneScoreMidBumpEngage_ou", r_oneScoreMidBumpEngage_ou);
+        //m_chooser.addOption("ThreeScoreBump_ouu", ThreeScoreBump_ouu);
+        //m_chooser.addOption("ThreeScoreLowBump_ouu", ThreeScoreLowBump_ouu);
 
 
         //Adding chooser to Shuffleboard/Smartdashboard
