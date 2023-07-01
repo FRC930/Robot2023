@@ -295,12 +295,16 @@ public class RobotContainer {
 
     // Intakes from substation
     m_driverController.rightBumper().and(m_driverController.b().negate())
-      .whileTrue(CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
-      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+      .whileTrue(new InstantCommand(() -> m_TeleopSwerve.forceSlowSpeed()).andThen(
+          CommandFactoryUtility.createSingleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+        .andThen(new InstantCommand(() -> m_TeleopSwerve.forceNormalSpeed())));
     
     m_codriverController.rightTrigger().and(m_driverController.b().negate())
-      .whileTrue(CommandFactoryUtility.createDoubleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
-      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem));
+      .whileTrue(new InstantCommand(() -> m_TeleopSwerve.forceSlowSpeed()).andThen(
+        CommandFactoryUtility.createDoubleSubstationCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)))
+      .onFalse(CommandFactoryUtility.createStowArmCommand(m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem)
+        .andThen(new InstantCommand(() -> m_TeleopSwerve.forceNormalSpeed())));
 
     // Slow drive
     m_driverController.leftStick().onTrue(new InstantCommand(() -> m_TeleopSwerve.toggleSpeed()));
