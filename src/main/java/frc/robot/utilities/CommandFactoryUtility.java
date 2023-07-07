@@ -42,7 +42,7 @@ public class CommandFactoryUtility {
     public static final double MANIPULATOR_UPRIGHT_INTAKE = 8.5 + MANIPULATOR_REDUCTION;
 
     //Arm substation
-    public static final double ELEVATOR_SUBSTATION_HEIGHT = 26.2; //29.1; //26.0 * FACTOR; //not sure if correct?
+    public static final double ELEVATOR_SUBSTATION_HEIGHT = 25.2; //26.2 29.1; //26.0 * FACTOR; //not sure if correct?
     public static final double ARM_SUBSTATION_ANGLE = 207.7; //209.4; //200.0;
     public static final double MANIPULATOR_SUBSTATION = 147.7 + MANIPULATOR_REDUCTION; //155.1; //155.0;
 
@@ -364,7 +364,7 @@ public class CommandFactoryUtility {
             .andThen(m_manipulatorSubsystem.createWaitUntilAtAngleCommand().withTimeout(0.5))
          .andThen(new WaitCommand(0.3)) 
 
-        .andThen(m_manipulatorSubsystem.waitUntilCurrentPast(10.0))
+        .andThen(m_manipulatorSubsystem.waitUntilCurrentPast(12.0)) //Possibly Increase to avoid retract (was 10a)
         .andThen(new IntakeRollerCommand(0.0, intakeSubsystem))
         .andThen(new RunManipulatorRollerCommand(m_manipulatorSubsystem, ManipulatorSubsystem.ROLLER_INTAKE_SPEED))
         .andThen(createGroundIntakeRetractCommand(extendIntakeSubsystem, intakeSubsystem, m_elevatorSubsystem, m_armSubsystem, m_manipulatorSubsystem))
