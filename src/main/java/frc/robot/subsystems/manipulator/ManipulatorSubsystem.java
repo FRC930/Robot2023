@@ -92,6 +92,10 @@ public class ManipulatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/RawEncoderValue", getRawPosition());
+
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/RawEncoderValue", getRawPosition());
     }
 
     /**<h3>setPosition</h3>

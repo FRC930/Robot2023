@@ -1,5 +1,7 @@
 package frc.robot.subsystems.elevator;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -90,6 +92,11 @@ public class ElevatorSubsystem extends SubsystemBase{
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetElevatorPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getElevatorPosition());
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue(Inches)", Units.metersToInches(getElevatorPosition()));
+        
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/TargetPosition", targetElevatorPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/EncoderValue", getElevatorPosition());
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/EncoderValue(Inches)", Units.metersToInches(getElevatorPosition()));
+    
     }
     private Boolean pastHeight(double meters) {
         double height = getElevatorPosition();

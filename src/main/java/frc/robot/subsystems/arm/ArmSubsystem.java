@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -85,6 +87,10 @@ public class ArmSubsystem extends SubsystemBase {
         
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
         SmartDashboard.putNumber(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
+        
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/TargetPosition", targetPosition);
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/EncoderValue", getPosition());
+    
     }
 
     /**
