@@ -169,7 +169,7 @@ public class AutoCommandManager {
         m_chooser.addOption("B_ThreeScoreMid_ouu", b_NoBumpMConeSMCubeSCubeSV3);
         m_chooser.addOption("R_ThreeScoreMid_ouu", r_NoBumpMConeSMCubeSCubeSV3);
         //m_chooser.addOption("TwoScoreMidEngage_ou", NoBumpMConeSMCubeSEngageV3);
-        //m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);
+        m_chooser.addOption("TwoScoreMidBump_ou", twoScoreMidBump_ou);
         m_chooser.addOption("B_OneScoreMidBumpEngage_ou", b_oneScoreMidBumpEngage_ou);
         m_chooser.addOption("R_OneScoreMidBumpEngage_ou", r_oneScoreMidBumpEngage_ou);
         //m_chooser.addOption("ThreeScoreBump_ouu", ThreeScoreBump_ouu);
