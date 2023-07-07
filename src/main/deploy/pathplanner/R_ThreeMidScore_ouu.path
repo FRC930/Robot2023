@@ -131,18 +131,18 @@
         "y": 3.84
       },
       "prevControl": {
-        "x": 2.7639400096982016,
-        "y": 4.326973273233958
+        "x": 2.861284923709572,
+        "y": 4.368344942112459
       },
       "nextControl": {
-        "x": 0.35605999030179847,
-        "y": 3.353026726766042
+        "x": 1.5091198667806027,
+        "y": 3.8193417563281655
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [
           "manipulatorHold",
