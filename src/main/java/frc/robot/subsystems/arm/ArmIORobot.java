@@ -19,7 +19,7 @@ public class ArmIORobot implements ArmIO {
     private static double m_armOffsetDegrees = Preferences.getDouble(PREFERENCE_NAME, -12.0);
 
     // 6.3 encoder value is 0
-    private static double m_armOffset = 36.0; //119.0; //1.3-12.0 this is minus 10.0  // 92.7+36.5;
+    private static double m_armOffset = 6.0;
     
 
     public ArmIORobot(int armMotorID) {
