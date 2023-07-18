@@ -49,7 +49,7 @@ public class CommandFactoryUtility {
     //Arm Double substation
     public static final double ELEVATOR_DOUBLE_SUBSTATION_HEIGHT = 0.0; //12.2; //14.4 Maybe use these values
     public static final double ARM_DOUBLE_SUBSTATION_ANGLE = 75; //86.5; //80.2
-    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 45; // 14.6 + MANIPULATOR_REDUCTION; //-5.8 //2.8;
+    public static final double MANIPULATOR_DOUBLE_SUBSTATION = 50;
 
     // Arm Back intake 
     public static final double ELEVATOR_BACK_INTAKE_HEIGHT = 13.6;  // NO CONVERSION FACTOR
