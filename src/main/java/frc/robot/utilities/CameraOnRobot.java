@@ -1,6 +1,5 @@
 package frc.robot.utilities;
 
-import org.photonvision.PhotonCamera;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -11,7 +10,7 @@ import frc.robot.Robot;
 
 public class CameraOnRobot {
 
-    private final PhotonCamera m_PhotonCamera;
+    // private final PhotonCamera m_PhotonCamera;
     private final Transform3d m_RobotToCameraPose;
     private String m_CameraIpName;
     private String m_CameraName;  // TODO comment why keep
@@ -48,16 +47,16 @@ public class CameraOnRobot {
                         double cameraRotationPitch,
                         double cameraRotationYaw) {
 
-        m_PhotonCamera = new PhotonCamera(cameraName);
-        m_PhotonCamera.setDriverMode(false);
-        m_CameraIpName = cameraIpName;
-        PortForwarder.add(portToForward, cameraIpName, 5800);
-        m_PhotonCamera.setPipelineIndex(pipelineIndex);
+        // m_PhotonCamera = new PhotonCamera(cameraName);
+        // m_PhotonCamera.setDriverMode(false);
+        // m_CameraIpName = cameraIpName;
+        // PortForwarder.add(portToForward, cameraIpName, 5800);
+        // m_PhotonCamera.setPipelineIndex(pipelineIndex);
 
-        if (Robot.isSimulation()) { 
-            // disable version check when running simulation 
-            PhotonCamera.setVersionCheckEnabled(false); 
-        }
+        // if (Robot.isSimulation()) { 
+        //     // disable version check when running simulation 
+        //     PhotonCamera.setVersionCheckEnabled(false); 
+        // }
 
         m_RobotToCameraPose = new Transform3d(
             new Translation3d(
@@ -81,9 +80,9 @@ public class CameraOnRobot {
         this.m_CameraIpName = m_CameraIpName;
     }
 
-    public PhotonCamera getPhotonCamera() {
-        return m_PhotonCamera;
-    }
+    // public PhotonCamera getPhotonCamera() {
+    //     return m_PhotonCamera;
+    // }
 
     public Transform3d getRobotToCameraPose() {
         return m_RobotToCameraPose;

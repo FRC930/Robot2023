@@ -2,6 +2,10 @@ package frc.robot.simulation;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -134,6 +138,16 @@ public class MechanismSimulator {
             0,
             swerve.getHeadingDegrees()};
         Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ElevatorPos", elevatorPosition);
+
+        double[] elevator3DPosition = {
+            -(elevator.getElevatorPosition() * Math.cos(Units.degreesToRadians(45))),
+            0.0,
+            (elevator.getElevatorPosition() * Math.sin(Units.degreesToRadians(45))),
+        };
+
+        Pose3d elevatorPose =
+            new Pose3d(elevator3DPosition[0], elevator3DPosition[1], elevator3DPosition[2], new Rotation3d(0.0, 0.0, 0.0));
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ElevatorPos/3d", elevatorPose);
         
         // Arm Position in Advantage Scope
         double[] armPosition = {
@@ -147,6 +161,20 @@ public class MechanismSimulator {
         };
         Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ArmPos", armPosition);
 
+
+        Pose3d armPose = new Pose3d(
+            -0.07 + armXOffset + elevator3DPosition[0],
+            Units.inchesToMeters(3) + armYOffset,
+            0.377 + armZOffset + elevator3DPosition[2],
+            new Rotation3d(0.0, Units.degreesToRadians(arm.getPosition()-84), 0.0)
+        );
+
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ArmPos/3d", armPose);
+
+        // Pose3d pivot =
+        //     new Pose3d(elevatorPosition[0], 0.0, elevatorPosition[1], new Rotation3d(0.0, 0.0, 0.0));
+        // Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ElevatorPos/3d", pivot);
+
         // Manipulator Position in Advantage Scope
         double[] manipulatorPosition = {
             manipulatorXOffset + swerve.getPose().getX(),
@@ -158,6 +186,19 @@ public class MechanismSimulator {
             swerve.getHeadingDegrees()
         };
         Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ManipulatorPos", manipulatorPosition);
+
+        Pose3d manipPose = armPose.transformBy(
+            new Transform3d(
+                new Translation3d(
+                    Units.inchesToMeters(1),
+                    Units.inchesToMeters(-16.5),
+                    Units.inchesToMeters(ArmSubsystem.ARM_LENGTH)
+                ),
+                new Rotation3d(Units.degreesToRadians(0.0) , Units.degreesToRadians(manipulator.getPosition()-(arm.getPosition()-84)), Units.degreesToRadians(0.0))
+            )
+        );
+
+        Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/ManipPose/3d", manipPose);
 
         // Sends system simulations to logger
         Logger.getInstance().recordOutput(this.getClass().getSimpleName()+"/Mech2d", mech);
